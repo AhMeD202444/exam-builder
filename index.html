@@ -1468,6 +1468,10 @@
       localStorage.setItem(SAVED_KEY, JSON.stringify(models));
     }
 
+    function normalizeModelTitle(value) {
+      return String(value || "").replace(/\s+/g, " ").trim();
+    }
+
     function saveDraft() {
       localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
     }
@@ -2247,12 +2251,36 @@
     function saveModel() {
       const models = getSavedModels();
       const payload = clone(state);
-      payload.saveName = state.saveName || autoSaveName();
+      payload.saveName = normalizeModelTitle(state.saveName || autoSaveName());
+      const nowLabel = new Date().toLocaleString("ar-IQ");
+      const existingIndex = models.findIndex(model => normalizeModelTitle(model.title) === payload.saveName);
+
+      if (existingIndex !== -1) {
+        const existing = models[existingIndex];
+        models.splice(existingIndex, 1);
+        models.unshift({
+          ...existing,
+          title: payload.saveName,
+          updatedAt: nowLabel,
+          payload
+        });
+
+        setSavedModels(models);
+        state.saveName = payload.saveName;
+        document.getElementById("saveName").value = state.saveName;
+        saveDraft();
+        renderSavedList();
+        showToast("تم تحديث النموذج المحفوظ داخل المتصفح.", "success");
+        setTimeout(() => {
+          showToast("هذا النموذج موجود مسبقًا، لذلك تم تحديثه بدل إنشاء نسخة جديدة.", "warning", { duration: 4600 });
+        }, 80);
+        return;
+      }
 
       models.unshift({
         id: uid(),
         title: payload.saveName,
-        createdAt: new Date().toLocaleString("ar-IQ"),
+        createdAt: nowLabel,
         payload
       });
 
