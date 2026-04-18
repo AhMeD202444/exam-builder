@@ -1373,16 +1373,21 @@
         .replace(/'/g, "&#39;");
     }
 
-    function nlToBr(value) {
-      return escapeHtml(value).replace(/\n/g, "<br>");
-    }
-
-    function renderBlanks(value) {
+    function renderExamText(value) {
       let safe = escapeHtml(value).replace(/\n/g, "<br>");
+      safe = safe.replace(/[\(﴾（]\s*فراغ\s*[\)﴿）]/g, '<span class="blank-line" style="width:96px"></span>');
       return safe.replace(/_{3,}/g, (match) => {
         const width = Math.min(Math.max(match.length * 8, 58), 230);
         return `<span class="blank-line" style="width:${width}px"></span>`;
       });
+    }
+
+    function nlToBr(value) {
+      return renderExamText(value);
+    }
+
+    function renderBlanks(value) {
+      return renderExamText(value);
     }
 
     function autoSaveName() {
@@ -1863,9 +1868,9 @@
             ${commonHeader}
             <div class="field">
               <label>نص الفراغات</label>
-              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="اكتب النص واستعمل ___ بمكان الفراغ">${escapeHtml(block.prompt)}</textarea>
+              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(block.prompt)}</textarea>
             </div>
-            <div class="small-note">لإظهار الفراغ في الطباعة اكتب ثلاث شرطات سفلية أو أكثر مثل: ___</div>
+            <div class="small-note">لإظهار الفراغ في الطباعة اكتب (فراغ) أو ثلاث شرطات سفلية أو أكثر مثل: ___</div>
           </div>
         `;
       }
@@ -2022,7 +2027,7 @@
                   <div class="def-item">
                     <span class="dot">${toArabicDigits(index + 1)}-</span>
                     <div>
-                      ${escapeHtml(item.text || "نقطة فارغة")}
+                      ${renderExamText(item.text || "نقطة فارغة")}
                       ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
                     </div>
                   </div>
@@ -2044,7 +2049,7 @@
                 ${(block.options || []).map((option, index) => `
                   <div class="mcq-item">
                     <span class="dot">${nextLabel(index)}.</span>
-                    <div>${escapeHtml(option.text || "خيار فارغ")}</div>
+                    <div>${renderExamText(option.text || "خيار فارغ")}</div>
                   </div>
                 `).join("")}
               </div>
@@ -2066,7 +2071,7 @@
                   <div class="tf-item">
                     <span class="dot">${toArabicDigits(index + 1)}.</span>
                     <div>
-                      ${escapeHtml(item.text || "عبارة فارغة")}
+                      ${renderExamText(item.text || "عبارة فارغة")}
                       <span style="font-weight:900; white-space:nowrap;"> ( &nbsp;&nbsp; ) صح / ( &nbsp;&nbsp; ) خطأ </span>
                     </div>
                   </div>
@@ -2089,7 +2094,7 @@
                   ${(block.leftItems || []).map((item, index) => `
                     <div class="match-item">
                       <span class="match-token">${toArabicDigits(index + 1)}.</span>
-                      <div>${escapeHtml(item.text || "بند فارغ")}</div>
+                      <div>${renderExamText(item.text || "بند فارغ")}</div>
                     </div>
                   `).join("")}
                 </div>
@@ -2097,7 +2102,7 @@
                   ${(block.rightItems || []).map((item, index) => `
                     <div class="match-item">
                       <span class="match-token">${nextLabel(index)}.</span>
-                      <div>${escapeHtml(item.text || "بند فارغ")}</div>
+                      <div>${renderExamText(item.text || "بند فارغ")}</div>
                     </div>
                   `).join("")}
                 </div>
@@ -2118,7 +2123,7 @@
                 ${(block.items || []).map((item, index) => `
                   <div class="ordering-item">
                     <span class="dot">${toArabicDigits(index + 1)}.</span>
-                    <div>${escapeHtml(item.text || "بند فارغ")}</div>
+                    <div>${renderExamText(item.text || "بند فارغ")}</div>
                   </div>
                 `).join("")}
               </div>
