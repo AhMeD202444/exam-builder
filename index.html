@@ -1972,8 +1972,8 @@
         elementsPaddingLeft: 0,
         listMarginTop: 0.7,
         listGap: 0.7,
-        definitionsRowGap: 1.1,
-        definitionsColumnGap: 6.2,
+        definitionsRowGap: 1.5,
+        definitionsColumnGap: 7.2,
         matchingGap: 4,
         noteFontSize: 12,
         noteFontWeight: "800",
@@ -2152,7 +2152,7 @@
         `--definitions-row-gap:${settings.definitionsRowGap}mm`,
         `--definitions-column-gap:${settings.definitionsColumnGap}mm`,
         `--matching-gap:${settings.matchingGap}mm`,
-        `--definitions-justify:flex-start`,
+        `--definitions-justify:center`,
         `--note-font-size:${settings.noteFontSize}pt`,
         `--note-font-weight:${settings.noteFontWeight}`,
         `--note-line-height:${settings.noteLineHeight}`,
@@ -2214,8 +2214,8 @@
   --elements-padding-left: 0mm;
   --list-margin-top: 0.7mm;
   --list-gap: 0.7mm;
-  --definitions-row-gap: 1.1mm;
-  --definitions-column-gap: 6.2mm;
+  --definitions-row-gap: 1.5mm;
+  --definitions-column-gap: 7.2mm;
   --matching-gap: 4mm;
   --definitions-justify: flex-start;
   --note-font-size: 12pt;
@@ -2363,8 +2363,8 @@
   gap: var(--definitions-row-gap) var(--definitions-column-gap) !important;
   width: 100% !important;
   flex: 0 0 100% !important;
-  justify-content: flex-start !important;
-  text-align: right !important;
+  justify-content: var(--definitions-justify) !important;
+  text-align: center !important;
 }
 .print-scope .ordering-list,
 .print-scope .tf-list,
