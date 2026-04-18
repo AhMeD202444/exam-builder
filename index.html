@@ -1657,7 +1657,7 @@
     function renderBlockEditor(block, qIndex, bIndex) {
       const commonHeader = `
         <div class="question-top">
-          <div class="chip">${escapeHtml(block.label || nextLabel(bIndex))}</div>
+          <div class="chip">${escapeHtml(toArabicDigits(block.label || nextLabel(bIndex)))}</div>
           <div class="inline-actions">
             <button class="btn btn-soft" data-action="duplicate-block" data-q="${qIndex}" data-b="${bIndex}">نسخ العنصر</button>
             <button class="btn btn-danger" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}">حذف العنصر</button>
@@ -1666,7 +1666,7 @@
         <div class="grid-4">
           <div class="field">
             <label>رمز العنصر</label>
-            <input data-scope="block" data-field="label" data-q="${qIndex}" data-b="${bIndex}" type="text" value="${escapeHtml(block.label)}" />
+            <input data-scope="block" data-field="label" data-q="${qIndex}" data-b="${bIndex}" type="text" value="${escapeHtml(toArabicDigits(block.label || ""))}" />
           </div>
           <div class="field">
             <label>نوع العنصر</label>
@@ -2012,7 +2012,7 @@
 
     function renderBlockPreview(block) {
       const label = escapeHtml(block.label || "");
-      const labelPrefix = label ? `<span class="element-label">${label}-</span>` : "";
+      const labelPrefix = label ? `<span class="element-label">${escapeHtml(toArabicDigits(label))}-</span>` : "";
       const degreeBadge = block.degree ? `<span class="element-degree">(${escapeHtml(formatDegree(block.degree))})</span>` : "";
       const prompt = block.prompt ? nlToBr(block.prompt) : '<span class="empty-hint">عنصر فارغ</span>';
 
@@ -2811,8 +2811,12 @@
 
         if (t.dataset.scope === "block") {
           const block = state.questions[Number(t.dataset.q)].blocks[Number(t.dataset.b)];
-          block[t.dataset.field] = t.value;
-          if (t.dataset.field === "label") block.autoLabel = false;
+          const value = t.dataset.field === "label" ? toArabicDigits(t.value) : t.value;
+          block[t.dataset.field] = value;
+          if (t.dataset.field === "label") {
+            block.autoLabel = false;
+            t.value = value;
+          }
           saveDraft();
           renderPreview();
         }
