@@ -947,6 +947,123 @@
       color: var(--muted);
     }
 
+    .advanced-card details {
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 18px;
+      background: rgba(248, 250, 252, 0.42);
+      overflow: hidden;
+    }
+
+    .advanced-card summary {
+      list-style: none;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 16px 18px;
+      user-select: none;
+    }
+
+    .advanced-card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .advanced-summary-text h2 {
+      margin: 0 0 4px;
+    }
+
+    .advanced-summary-text p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.85;
+    }
+
+    .advanced-pill {
+      flex-shrink: 0;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(37, 99, 235, 0.1);
+      color: var(--primary-strong);
+      font-size: 12px;
+      font-weight: 800;
+      align-self: center;
+    }
+
+    .advanced-body {
+      border-top: 1px solid rgba(148, 163, 184, 0.18);
+      padding: 16px 18px 18px;
+      display: grid;
+      gap: 14px;
+    }
+
+    .advanced-toggle {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: rgba(37, 99, 235, 0.07);
+      color: var(--text);
+      font-weight: 800;
+    }
+
+    .advanced-toggle input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    .advanced-actions {
+      display: flex;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .advanced-group {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 16px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.68);
+      display: grid;
+      gap: 12px;
+    }
+
+    .advanced-group-title {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--primary-strong);
+    }
+
+    .advanced-group-note {
+      margin: -6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.75;
+    }
+
+    #advancedSettingsFields {
+      border: none;
+      margin: 0;
+      padding: 0;
+      display: grid;
+      gap: 12px;
+      min-inline-size: 0;
+    }
+
+    #advancedSettingsFields[disabled] {
+      opacity: 0.58;
+      filter: saturate(0.85);
+    }
+
+    .advanced-card details[open] {
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.42);
+    }
+
     @media (max-width: 1180px) {
       .workspace { grid-template-columns: 1fr; }
       .panel-stack {
@@ -1132,6 +1249,7 @@
       }
     }
   </style>
+  <style id="advancedDynamicStyle"></style>
 </head>
 <body>
   <div class="app-shell">
@@ -1218,6 +1336,288 @@
           <input id="leftName" type="hidden" value="" />
         </div>
 
+        <div class="card advanced-card">
+          <details id="advancedSettingsCard">
+            <summary>
+              <div class="advanced-summary-text">
+                <h2>إعدادات متقدمة للطباعة</h2>
+                <p>هذه الخانة اختيارية واحترافية. تتحكم بالملاحظة والأسئلة والتوقيع فقط، بينما هيدر الورقة يبقى ثابت كما هو حتى لا يخترب التنسيق الأساسي.</p>
+              </div>
+              <span class="advanced-pill">احترافي</span>
+            </summary>
+
+            <div class="advanced-body">
+              <label class="advanced-toggle">
+                <input id="advancedSettingsEnabled" data-print-setting="enabled" type="checkbox" />
+                <span>تفعيل الإعدادات المتقدمة بدل الوضع الطبيعي</span>
+              </label>
+
+              <div class="hint">
+                إذا بقيت هذه الخانة مطفأة، المعاينة والطباعة تمشي على المقاسات الافتراضية الحالية بدون أي تغيير.
+              </div>
+
+              <div class="advanced-actions">
+                <button class="btn btn-soft" type="button" data-action="reset-advanced-settings">استرجاع القيم الافتراضية</button>
+              </div>
+
+              <fieldset id="advancedSettingsFields">
+                <div class="advanced-group">
+                  <div class="advanced-group-title">السؤال الرئيسي</div>
+                  <div class="advanced-group-note">هذا القسم يضبط منطوق السؤال ورقم الدرجة المقابل له.</div>
+                  <div class="grid-4">
+                    <div class="field">
+                      <label>حجم خط السؤال (pt)</label>
+                      <input data-print-setting="questionFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>وزن خط السؤال</label>
+                      <select data-print-setting="questionFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>ارتفاع سطر السؤال</label>
+                      <input data-print-setting="questionLineHeight" data-print-type="number" type="number" step="0.05" min="1" />
+                    </div>
+                    <div class="field">
+                      <label>محاذاة نص السؤال</label>
+                      <select data-print-setting="questionTextAlign">
+                        <option value="right">يمين</option>
+                        <option value="center">توسيط</option>
+                        <option value="left">يسار</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>محاذاة عمودية للسؤال</label>
+                      <select data-print-setting="questionVerticalAlign">
+                        <option value="flex-start">أعلى</option>
+                        <option value="center">وسط</option>
+                        <option value="flex-end">أسفل</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>حجم خط الدرجة (pt)</label>
+                      <input data-print-setting="questionDegreeSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>وزن خط الدرجة</label>
+                      <select data-print-setting="questionDegreeWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="advanced-group">
+                  <div class="advanced-group-title">المسافات بين الأسئلة</div>
+                  <div class="advanced-group-note">تتحكم بالفراغ بين سؤال وسؤال والخط الفاصل السفلي.</div>
+                  <div class="grid-4">
+                    <div class="field">
+                      <label>المسافة بين الأسئلة (mm)</label>
+                      <input data-print-setting="questionGap" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>الحاشية السفلية للسؤال (mm)</label>
+                      <input data-print-setting="questionPaddingBottom" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>بعد الخط الفاصل عن السؤال (mm)</label>
+                      <input data-print-setting="questionSeparatorTop" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>إزاحة الخط من الجانبين (mm)</label>
+                      <input data-print-setting="questionSeparatorInset" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>سماكة الخط الفاصل (px)</label>
+                      <input data-print-setting="questionSeparatorThickness" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="advanced-group">
+                  <div class="advanced-group-title">الفروع والعناصر داخل السؤال</div>
+                  <div class="advanced-group-note">يشمل النصوص الفرعية، الخيارات، صح/خطأ، الترتيب، المطابقة والتعاريف.</div>
+                  <div class="grid-4">
+                    <div class="field">
+                      <label>حجم خط العناصر (pt)</label>
+                      <input data-print-setting="elementsFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>وزن خط العناصر</label>
+                      <select data-print-setting="elementsFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>ارتفاع سطر العناصر</label>
+                      <input data-print-setting="elementsLineHeight" data-print-type="number" type="number" step="0.05" min="1" />
+                    </div>
+                    <div class="field">
+                      <label>محاذاة عناصر السؤال</label>
+                      <select data-print-setting="elementsTextAlign">
+                        <option value="right">يمين</option>
+                        <option value="center">توسيط</option>
+                        <option value="left">يسار</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>محاذاة عمودية للعناصر</label>
+                      <select data-print-setting="elementsVerticalAlign">
+                        <option value="flex-start">أعلى</option>
+                        <option value="center">وسط</option>
+                        <option value="flex-end">أسفل</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>المسافة فوق العناصر (mm)</label>
+                      <input data-print-setting="elementsMarginTop" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>المسافة بين العناصر (mm)</label>
+                      <input data-print-setting="elementsGap" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>إزاحة العناصر يمين (mm)</label>
+                      <input data-print-setting="elementsPaddingRight" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>إزاحة العناصر يسار (mm)</label>
+                      <input data-print-setting="elementsPaddingLeft" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>المسافة فوق القوائم (mm)</label>
+                      <input data-print-setting="listMarginTop" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>المسافة بين بنود القوائم (mm)</label>
+                      <input data-print-setting="listGap" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>فراغ عمودي بين عمودي المطابقة (mm)</label>
+                      <input data-print-setting="matchingGap" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="advanced-group">
+                  <div class="advanced-group-title">الملاحظة</div>
+                  <div class="advanced-group-note">يشمل خط الملاحظة، محاذاتها، وبعدها عن الهيدر وعن بقية الأسئلة.</div>
+                  <div class="grid-4">
+                    <div class="field">
+                      <label>حجم خط الملاحظة (pt)</label>
+                      <input data-print-setting="noteFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>وزن خط الملاحظة</label>
+                      <select data-print-setting="noteFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>ارتفاع سطر الملاحظة</label>
+                      <input data-print-setting="noteLineHeight" data-print-type="number" type="number" step="0.05" min="1" />
+                    </div>
+                    <div class="field">
+                      <label>محاذاة الملاحظة</label>
+                      <select data-print-setting="noteTextAlign">
+                        <option value="right">يمين</option>
+                        <option value="center">توسيط</option>
+                        <option value="left">يسار</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>المسافة فوق الملاحظة (mm)</label>
+                      <input data-print-setting="noteMarginTop" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>المسافة تحت الملاحظة (mm)</label>
+                      <input data-print-setting="noteMarginBottom" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>حشوة أعلى الملاحظة (mm)</label>
+                      <input data-print-setting="notePaddingTop" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                  </div>
+                </div>
+
+                <div class="advanced-group">
+                  <div class="advanced-group-title">التوقيع</div>
+                  <div class="advanced-group-note">يشمل موضع صندوق التوقيع، حجمه، وخط العنوان والاسم.</div>
+                  <div class="grid-4">
+                    <div class="field">
+                      <label>المسافة فوق التوقيع (mm)</label>
+                      <input data-print-setting="footerMarginTop" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>مكان صندوق التوقيع</label>
+                      <select data-print-setting="signaturePlacement">
+                        <option value="left">يسار</option>
+                        <option value="center">وسط</option>
+                        <option value="right">يمين</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>أقل عرض للصندوق (mm)</label>
+                      <input data-print-setting="signatureMinWidth" data-print-type="number" type="number" step="0.1" min="20" />
+                    </div>
+                    <div class="field">
+                      <label>ارتفاع سطر التوقيع</label>
+                      <input data-print-setting="signatureLineHeight" data-print-type="number" type="number" step="0.05" min="0.8" />
+                    </div>
+                    <div class="field">
+                      <label>حجم عنوان التوقيع (pt)</label>
+                      <input data-print-setting="signatureTitleFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>وزن عنوان التوقيع</label>
+                      <select data-print-setting="signatureTitleWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>حجم اسم المدرس (pt)</label>
+                      <input data-print-setting="signatureNameFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>وزن اسم المدرس</label>
+                      <select data-print-setting="signatureNameWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>محاذاة نص التوقيع</label>
+                      <select data-print-setting="signatureTextAlign">
+                        <option value="right">يمين</option>
+                        <option value="center">توسيط</option>
+                        <option value="left">يسار</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+            </div>
+          </details>
+        </div>
+
         <div class="card">
           <h2>أوامر سريعة</h2>
           <div class="toolbar">
@@ -1257,7 +1657,7 @@
         <div class="card">
           <div class="preview-toolbar">
             <h2>المعاينة النهائية للطباعة</h2>
-            <div class="preview-note">الخط الأساسي في الورقة 14pt، بينما العناوين والأسئلة أوضح وأثخن للطباعة.</div>
+            <div class="preview-note">يمكنك تفعيل الإعدادات المتقدمة للتحكم بالملاحظة والأسئلة والتوقيع بدقة، بينما الهيدر يبقى ثابت حتى تبقى الطباعة نظيفة.</div>
           </div>
           <div class="sheet-stage">
             <div class="exam-sheet" id="sheetPreview"></div>
@@ -1402,6 +1802,425 @@
       return parts.join(" - ").trim() || "نموذج امتحاني";
     }
 
+    function defaultPrintSettings() {
+      return {
+        enabled: false,
+        questionFontSize: 13.1,
+        questionFontWeight: "900",
+        questionLineHeight: 1.35,
+        questionTextAlign: "right",
+        questionVerticalAlign: "flex-start",
+        questionDegreeSize: 12,
+        questionDegreeWeight: "900",
+        questionGap: 1.1,
+        questionPaddingBottom: 1.5,
+        questionSeparatorTop: 1.6,
+        questionSeparatorInset: 6,
+        questionSeparatorThickness: 1,
+        elementsFontSize: 12.2,
+        elementsFontWeight: "700",
+        elementsLineHeight: 1.35,
+        elementsTextAlign: "right",
+        elementsVerticalAlign: "flex-start",
+        elementsMarginTop: 0.8,
+        elementsGap: 1.7,
+        elementsPaddingRight: 2,
+        elementsPaddingLeft: 0,
+        listMarginTop: 0.7,
+        listGap: 0.7,
+        matchingGap: 4,
+        noteFontSize: 12,
+        noteFontWeight: "800",
+        noteLineHeight: 1.45,
+        noteTextAlign: "center",
+        noteMarginTop: 4.2,
+        noteMarginBottom: 2.8,
+        notePaddingTop: 1,
+        footerMarginTop: 7.4,
+        signaturePlacement: "left",
+        signatureMinWidth: 54,
+        signatureLineHeight: 1.02,
+        signatureTitleFontSize: 12.1,
+        signatureTitleWeight: "900",
+        signatureNameFontSize: 12,
+        signatureNameWeight: "900",
+        signatureTextAlign: "center"
+      };
+    }
+
+    function sanitizeChoice(value, allowed, fallback) {
+      return allowed.includes(value) ? value : fallback;
+    }
+
+    function sanitizeNumber(value, fallback) {
+      if (value === "" || value === null || typeof value === "undefined") return fallback;
+      const numeric = Number(value);
+      return Number.isFinite(numeric) ? numeric : fallback;
+    }
+
+    function normalizePrintSettings(value) {
+      const defaults = defaultPrintSettings();
+      const source = value && typeof value === "object" ? value : {};
+
+      return {
+        enabled: Boolean(source.enabled),
+        questionFontSize: sanitizeNumber(source.questionFontSize, defaults.questionFontSize),
+        questionFontWeight: sanitizeChoice(String(source.questionFontWeight || defaults.questionFontWeight), ["400","700","800","900"], defaults.questionFontWeight),
+        questionLineHeight: sanitizeNumber(source.questionLineHeight, defaults.questionLineHeight),
+        questionTextAlign: sanitizeChoice(source.questionTextAlign, ["right","center","left"], defaults.questionTextAlign),
+        questionVerticalAlign: sanitizeChoice(source.questionVerticalAlign, ["flex-start","center","flex-end"], defaults.questionVerticalAlign),
+        questionDegreeSize: sanitizeNumber(source.questionDegreeSize, defaults.questionDegreeSize),
+        questionDegreeWeight: sanitizeChoice(String(source.questionDegreeWeight || defaults.questionDegreeWeight), ["400","700","800","900"], defaults.questionDegreeWeight),
+        questionGap: sanitizeNumber(source.questionGap, defaults.questionGap),
+        questionPaddingBottom: sanitizeNumber(source.questionPaddingBottom, defaults.questionPaddingBottom),
+        questionSeparatorTop: sanitizeNumber(source.questionSeparatorTop, defaults.questionSeparatorTop),
+        questionSeparatorInset: sanitizeNumber(source.questionSeparatorInset, defaults.questionSeparatorInset),
+        questionSeparatorThickness: sanitizeNumber(source.questionSeparatorThickness, defaults.questionSeparatorThickness),
+        elementsFontSize: sanitizeNumber(source.elementsFontSize, defaults.elementsFontSize),
+        elementsFontWeight: sanitizeChoice(String(source.elementsFontWeight || defaults.elementsFontWeight), ["400","700","800","900"], defaults.elementsFontWeight),
+        elementsLineHeight: sanitizeNumber(source.elementsLineHeight, defaults.elementsLineHeight),
+        elementsTextAlign: sanitizeChoice(source.elementsTextAlign, ["right","center","left"], defaults.elementsTextAlign),
+        elementsVerticalAlign: sanitizeChoice(source.elementsVerticalAlign, ["flex-start","center","flex-end"], defaults.elementsVerticalAlign),
+        elementsMarginTop: sanitizeNumber(source.elementsMarginTop, defaults.elementsMarginTop),
+        elementsGap: sanitizeNumber(source.elementsGap, defaults.elementsGap),
+        elementsPaddingRight: sanitizeNumber(source.elementsPaddingRight, defaults.elementsPaddingRight),
+        elementsPaddingLeft: sanitizeNumber(source.elementsPaddingLeft, defaults.elementsPaddingLeft),
+        listMarginTop: sanitizeNumber(source.listMarginTop, defaults.listMarginTop),
+        listGap: sanitizeNumber(source.listGap, defaults.listGap),
+        matchingGap: sanitizeNumber(source.matchingGap, defaults.matchingGap),
+        noteFontSize: sanitizeNumber(source.noteFontSize, defaults.noteFontSize),
+        noteFontWeight: sanitizeChoice(String(source.noteFontWeight || defaults.noteFontWeight), ["400","700","800","900"], defaults.noteFontWeight),
+        noteLineHeight: sanitizeNumber(source.noteLineHeight, defaults.noteLineHeight),
+        noteTextAlign: sanitizeChoice(source.noteTextAlign, ["right","center","left"], defaults.noteTextAlign),
+        noteMarginTop: sanitizeNumber(source.noteMarginTop, defaults.noteMarginTop),
+        noteMarginBottom: sanitizeNumber(source.noteMarginBottom, defaults.noteMarginBottom),
+        notePaddingTop: sanitizeNumber(source.notePaddingTop, defaults.notePaddingTop),
+        footerMarginTop: sanitizeNumber(source.footerMarginTop, defaults.footerMarginTop),
+        signaturePlacement: sanitizeChoice(source.signaturePlacement, ["left","center","right"], defaults.signaturePlacement),
+        signatureMinWidth: sanitizeNumber(source.signatureMinWidth, defaults.signatureMinWidth),
+        signatureLineHeight: sanitizeNumber(source.signatureLineHeight, defaults.signatureLineHeight),
+        signatureTitleFontSize: sanitizeNumber(source.signatureTitleFontSize, defaults.signatureTitleFontSize),
+        signatureTitleWeight: sanitizeChoice(String(source.signatureTitleWeight || defaults.signatureTitleWeight), ["400","700","800","900"], defaults.signatureTitleWeight),
+        signatureNameFontSize: sanitizeNumber(source.signatureNameFontSize, defaults.signatureNameFontSize),
+        signatureNameWeight: sanitizeChoice(String(source.signatureNameWeight || defaults.signatureNameWeight), ["400","700","800","900"], defaults.signatureNameWeight),
+        signatureTextAlign: sanitizeChoice(source.signatureTextAlign, ["right","center","left"], defaults.signatureTextAlign)
+      };
+    }
+
+    function normalizeState(value) {
+      const base = defaultState();
+      const source = value && typeof value === "object" ? value : {};
+      const meta = source.meta && typeof source.meta === "object" ? source.meta : {};
+      const signatures = source.signatures && typeof source.signatures === "object" ? source.signatures : {};
+      const questions = Array.isArray(source.questions) && source.questions.length ? source.questions : base.questions;
+
+      return {
+        ...base,
+        ...source,
+        meta: { ...base.meta, ...meta },
+        signatures: { ...base.signatures, ...signatures },
+        saveName: typeof source.saveName === "string" ? source.saveName : "",
+        questions,
+        printSettings: normalizePrintSettings(source.printSettings)
+      };
+    }
+
+    function getCurrentPrintSettings() {
+      return normalizePrintSettings(state && state.printSettings ? state.printSettings : defaultPrintSettings());
+    }
+
+    function getEffectivePrintSettings() {
+      const current = getCurrentPrintSettings();
+      return current.enabled ? current : defaultPrintSettings();
+    }
+
+    function mapRtlJustify(textAlign) {
+      if (textAlign === "center") return "center";
+      if (textAlign === "left") return "flex-end";
+      return "flex-start";
+    }
+
+    function mapFooterPlacement(value) {
+      if (value === "center") return "center";
+      if (value === "right") return "flex-end";
+      return "flex-start";
+    }
+
+    function buildPrintScopeVars() {
+      const settings = getEffectivePrintSettings();
+      const vars = [
+        `--question-font-size:${settings.questionFontSize}pt`,
+        `--question-font-weight:${settings.questionFontWeight}`,
+        `--question-line-height:${settings.questionLineHeight}`,
+        `--question-text-align:${settings.questionTextAlign}`,
+        `--question-vertical-align:${settings.questionVerticalAlign}`,
+        `--question-degree-size:${settings.questionDegreeSize}pt`,
+        `--question-degree-weight:${settings.questionDegreeWeight}`,
+        `--question-gap:${settings.questionGap}mm`,
+        `--question-padding-bottom:${settings.questionPaddingBottom}mm`,
+        `--question-separator-top:${settings.questionSeparatorTop}mm`,
+        `--question-separator-inset:${settings.questionSeparatorInset}mm`,
+        `--question-separator-thickness:${settings.questionSeparatorThickness}px`,
+        `--elements-font-size:${settings.elementsFontSize}pt`,
+        `--elements-font-weight:${settings.elementsFontWeight}`,
+        `--elements-line-height:${settings.elementsLineHeight}`,
+        `--elements-text-align:${settings.elementsTextAlign}`,
+        `--elements-vertical-align:${settings.elementsVerticalAlign}`,
+        `--elements-margin-top:${settings.elementsMarginTop}mm`,
+        `--elements-gap:${settings.elementsGap}mm`,
+        `--elements-padding-right:${settings.elementsPaddingRight}mm`,
+        `--elements-padding-left:${settings.elementsPaddingLeft}mm`,
+        `--list-margin-top:${settings.listMarginTop}mm`,
+        `--list-gap:${settings.listGap}mm`,
+        `--matching-gap:${settings.matchingGap}mm`,
+        `--definitions-justify:${mapRtlJustify(settings.elementsTextAlign)}`,
+        `--note-font-size:${settings.noteFontSize}pt`,
+        `--note-font-weight:${settings.noteFontWeight}`,
+        `--note-line-height:${settings.noteLineHeight}`,
+        `--note-text-align:${settings.noteTextAlign}`,
+        `--note-margin-top:${settings.noteMarginTop}mm`,
+        `--note-margin-bottom:${settings.noteMarginBottom}mm`,
+        `--note-padding-top:${settings.notePaddingTop}mm`,
+        `--footer-margin-top:${settings.footerMarginTop}mm`,
+        `--signature-placement:${mapFooterPlacement(settings.signaturePlacement)}`,
+        `--signature-min-width:${settings.signatureMinWidth}mm`,
+        `--signature-line-height:${settings.signatureLineHeight}`,
+        `--signature-title-size:${settings.signatureTitleFontSize}pt`,
+        `--signature-title-weight:${settings.signatureTitleWeight}`,
+        `--signature-name-size:${settings.signatureNameFontSize}pt`,
+        `--signature-name-weight:${settings.signatureNameWeight}`,
+        `--signature-text-align:${settings.signatureTextAlign}`
+      ];
+      return vars.join("; ");
+    }
+
+    function buildPrintScopeCss() {
+      return `
+.print-scope {
+  --question-font-size: 13.1pt;
+  --question-font-weight: 900;
+  --question-line-height: 1.35;
+  --question-text-align: right;
+  --question-vertical-align: flex-start;
+  --question-degree-size: 12pt;
+  --question-degree-weight: 900;
+  --question-gap: 1.1mm;
+  --question-padding-bottom: 1.5mm;
+  --question-separator-top: 1.6mm;
+  --question-separator-inset: 6mm;
+  --question-separator-thickness: 1px;
+  --elements-font-size: 12.2pt;
+  --elements-font-weight: 700;
+  --elements-line-height: 1.35;
+  --elements-text-align: right;
+  --elements-vertical-align: flex-start;
+  --elements-margin-top: 0.8mm;
+  --elements-gap: 1.7mm;
+  --elements-padding-right: 2mm;
+  --elements-padding-left: 0mm;
+  --list-margin-top: 0.7mm;
+  --list-gap: 0.7mm;
+  --matching-gap: 4mm;
+  --definitions-justify: flex-start;
+  --note-font-size: 12pt;
+  --note-font-weight: 800;
+  --note-line-height: 1.45;
+  --note-text-align: center;
+  --note-margin-top: 4.2mm;
+  --note-margin-bottom: 2.8mm;
+  --note-padding-top: 1mm;
+  --footer-margin-top: 7.4mm;
+  --signature-placement: flex-start;
+  --signature-min-width: 54mm;
+  --signature-line-height: 1.02;
+  --signature-title-size: 12.1pt;
+  --signature-title-weight: 900;
+  --signature-name-size: 12pt;
+  --signature-name-weight: 900;
+  --signature-text-align: center;
+}
+.print-scope .sheet-note {
+  margin: var(--note-margin-top) auto var(--note-margin-bottom);
+  padding-top: var(--note-padding-top);
+  font-size: var(--note-font-size);
+  font-weight: var(--note-font-weight);
+  line-height: var(--note-line-height);
+  text-align: var(--note-text-align);
+}
+.print-scope .sheet-note span {
+  font-weight: inherit;
+}
+.print-scope .questions-area {
+  gap: var(--question-gap);
+}
+.print-scope .question-block {
+  border-bottom: none;
+  padding-bottom: var(--question-padding-bottom);
+}
+.print-scope .question-block::after {
+  content: "";
+  display: block;
+  width: calc(100% - var(--question-separator-inset) - var(--question-separator-inset));
+  margin: var(--question-separator-top) auto 0;
+  border-top: var(--question-separator-thickness) solid #444;
+}
+.print-scope .question-block:last-child {
+  padding-bottom: 0;
+}
+.print-scope .question-block:last-child::after {
+  display: none;
+}
+.print-scope .question-row {
+  align-items: var(--question-vertical-align);
+  font-size: var(--question-font-size);
+  font-weight: var(--question-font-weight);
+  line-height: var(--question-line-height);
+}
+.print-scope .question-text {
+  text-align: var(--question-text-align);
+}
+.print-scope .question-text strong {
+  font-weight: inherit;
+}
+.print-scope .degree-badge {
+  font-size: var(--question-degree-size);
+  font-weight: var(--question-degree-weight);
+}
+.print-scope .question-elements {
+  margin-top: var(--elements-margin-top);
+  gap: var(--elements-gap);
+  padding-right: var(--elements-padding-right);
+  padding-left: var(--elements-padding-left);
+  font-size: var(--elements-font-size);
+  font-weight: var(--elements-font-weight);
+  line-height: var(--elements-line-height);
+  text-align: var(--elements-text-align);
+}
+.print-scope .element-line,
+.print-scope .def-item,
+.print-scope .ordering-item,
+.print-scope .tf-item,
+.print-scope .mcq-item,
+.print-scope .match-item {
+  align-items: var(--elements-vertical-align);
+}
+.print-scope .element-body,
+.print-scope .matching-col,
+.print-scope .definitions-list,
+.print-scope .ordering-list,
+.print-scope .tf-list,
+.print-scope .mcq-list {
+  text-align: var(--elements-text-align);
+}
+.print-scope .element-label,
+.print-scope .dot,
+.print-scope .mini-degree,
+.print-scope .element-degree,
+.print-scope .match-token,
+.print-scope .tf-answer-hint {
+  font-weight: var(--elements-font-weight);
+}
+.print-scope .definitions-list {
+  margin-top: var(--list-margin-top);
+  justify-content: var(--definitions-justify);
+}
+.print-scope .ordering-list,
+.print-scope .tf-list,
+.print-scope .mcq-list {
+  margin-top: var(--list-margin-top);
+  gap: var(--list-gap);
+  padding-right: var(--elements-padding-right);
+  padding-left: var(--elements-padding-left);
+}
+.print-scope .matching-grid {
+  margin-top: var(--list-margin-top);
+  gap: var(--matching-gap);
+  padding-right: var(--elements-padding-right);
+  padding-left: var(--elements-padding-left);
+}
+.print-scope .matching-col {
+  gap: var(--list-gap);
+}
+.print-scope .sheet-footer {
+  margin-top: var(--footer-margin-top);
+  justify-content: var(--signature-placement);
+}
+.print-scope .signature-box {
+  min-width: var(--signature-min-width);
+  line-height: var(--signature-line-height);
+  text-align: var(--signature-text-align);
+  align-items: stretch;
+}
+.print-scope .signature-title {
+  font-size: var(--signature-title-size);
+  font-weight: var(--signature-title-weight);
+}
+.print-scope .signature-name {
+  font-size: var(--signature-name-size);
+  font-weight: var(--signature-name-weight);
+}`;
+    }
+
+    function syncAdvancedStyleElement() {
+      const styleElement = document.getElementById("advancedDynamicStyle");
+      if (styleElement) {
+        styleElement.textContent = buildPrintScopeCss();
+      }
+    }
+
+    function fillPrintSettingsFields() {
+      const settings = getCurrentPrintSettings();
+      document.querySelectorAll("[data-print-setting]").forEach((element) => {
+        const key = element.dataset.printSetting;
+        if (!key || !(key in settings)) return;
+        if (element.type === "checkbox") {
+          element.checked = Boolean(settings[key]);
+        } else {
+          element.value = settings[key];
+        }
+      });
+
+      const fieldset = document.getElementById("advancedSettingsFields");
+      if (fieldset) {
+        fieldset.disabled = !settings.enabled;
+      }
+    }
+
+    function updatePrintSettingField(element) {
+      const key = element.dataset.printSetting;
+      if (!key) return false;
+
+      if (!state.printSettings) {
+        state.printSettings = defaultPrintSettings();
+      }
+
+      const defaults = defaultPrintSettings();
+      let value;
+
+      if (element.type === "checkbox") {
+        value = element.checked;
+      } else if (element.dataset.printType === "number" || element.type === "number") {
+        value = sanitizeNumber(element.value, defaults[key]);
+      } else {
+        value = element.value;
+      }
+
+      state.printSettings[key] = value;
+      state.printSettings = normalizePrintSettings(state.printSettings);
+      fillPrintSettingsFields();
+      saveDraft();
+      renderPreview();
+      return true;
+    }
+
+    function resetPrintSettings() {
+      state.printSettings = defaultPrintSettings();
+      fillPrintSettingsFields();
+      saveDraft();
+      renderPreview();
+      showToast("تمت إعادة الإعدادات المتقدمة إلى الوضع الافتراضي.", "success");
+    }
+
     function makePoint() {
       return { id: uid(), text: "", degree: "" };
     }
@@ -1511,6 +2330,7 @@
           leftTitle: "",
           leftName: ""
         },
+        printSettings: defaultPrintSettings(),
         saveName: "",
         questions: [makeQuestion()]
       };
@@ -1539,7 +2359,7 @@
     function loadState() {
       try {
         const draft = JSON.parse(localStorage.getItem(DRAFT_KEY) || "null");
-        state = draft || defaultState();
+        state = normalizeState(draft || defaultState());
       } catch (error) {
         state = defaultState();
       }
@@ -1571,6 +2391,8 @@
         const el = document.getElementById(id);
         if (el) el.value = value ?? "";
       });
+
+      fillPrintSettingsFields();
     }
 
     function syncStaticField(id, value) {
@@ -1935,9 +2757,11 @@
     }
 
     function renderPreview() {
+      syncAdvancedStyleElement();
       const sheet = document.getElementById("sheetPreview");
       const meta = state.meta;
       const sig = state.signatures;
+      const scopeStyle = buildPrintScopeVars();
 
       const questionsHtml = state.questions.map((question, qIndex) => {
         const degreeText = question.degree ? `(${escapeHtml(formatDegree(question.degree))})` : "";
@@ -1984,19 +2808,21 @@
 
         <hr class="sheet-rule" />
 
-        <div class="sheet-note">
-          ملاحظة:
-          <span>${meta.note ? nlToBr(meta.note) : "........................................................"}</span>
-        </div>
+        <div class="print-scope" style="${scopeStyle}">
+          <div class="sheet-note">
+            ملاحظة:
+            <span>${meta.note ? nlToBr(meta.note) : "........................................................"}</span>
+          </div>
 
-        <div class="questions-area">
-          ${questionsHtml}
-        </div>
+          <div class="questions-area">
+            ${questionsHtml}
+          </div>
 
-        <div class="sheet-footer">
-          <div class="signature-box">
-            <div class="signature-title">${escapeHtml(sig.rightTitle || "مدرس المادة")}</div>
-            <div class="signature-name">${escapeHtml(sig.rightName || "")}</div>
+          <div class="sheet-footer">
+            <div class="signature-box">
+              <div class="signature-title">${escapeHtml(sig.rightTitle || "مدرس المادة")}</div>
+              <div class="signature-name">${escapeHtml(sig.rightName || "")}</div>
+            </div>
           </div>
         </div>
       `;
@@ -2075,7 +2901,7 @@
                     <span class="dot">${toArabicDigits(index + 1)}.</span>
                     <div>
                       ${renderExamText(item.text || "عبارة فارغة")}
-                      <span style="font-weight:900; white-space:nowrap;"> ( &nbsp;&nbsp; ) صح / ( &nbsp;&nbsp; ) خطأ </span>
+                      <span class="tf-answer-hint" style="white-space:nowrap;"> ( &nbsp;&nbsp; ) صح / ( &nbsp;&nbsp; ) خطأ </span>
                     </div>
                   </div>
                 `).join("")}
@@ -2352,7 +3178,7 @@
     function loadModel(id) {
       const model = getSavedModels().find(item => item.id === id);
       if (!model) return;
-      state = clone(model.payload);
+      state = normalizeState(clone(model.payload));
       fillStaticFields();
       saveDraft();
       renderAll();
@@ -2463,6 +3289,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;800;900&display=swap" rel="stylesheet">
   <style>
+${buildPrintScopeCss()}
     * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     html, body {
       margin: 0;
@@ -2810,6 +3637,12 @@
     function bindDelegation() {
       document.addEventListener("input", (event) => {
         const t = event.target;
+
+        if (t.dataset.printSetting) {
+          updatePrintSettingField(t);
+          return;
+        }
+
         if (t.dataset.scope === "question") {
           state.questions[Number(t.dataset.q)][t.dataset.field] = t.value;
           saveDraft();
@@ -2839,6 +3672,12 @@
 
       document.addEventListener("change", (event) => {
         const t = event.target;
+
+        if (t.dataset.printSetting) {
+          updatePrintSettingField(t);
+          return;
+        }
+
         if (t.dataset.scope === "block-type") {
           changeBlockType(Number(t.dataset.q), Number(t.dataset.b), t.value);
         }
@@ -2854,6 +3693,7 @@
         const i = Number(button.dataset.i);
         const id = button.dataset.id;
 
+        if (action === "reset-advanced-settings") resetPrintSettings();
         if (action === "remove-question") removeQuestion(q);
         if (action === "add-block") {
           const select = document.getElementById(`blockType-${button.dataset.questionId}`);
@@ -3019,6 +3859,7 @@
       });
     }
 
+    syncAdvancedStyleElement();
     loadState();
     bindStaticInputs();
     bindMainButtons();
