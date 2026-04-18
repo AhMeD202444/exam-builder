@@ -822,18 +822,18 @@
       flex: 1 1 auto;
       min-width: 0;
       flex-wrap: wrap;
-      gap: 0.8mm 4mm;
+      gap: 0.8mm 5.2mm;
       padding-inline: 0;
       align-items: flex-start;
-      justify-content: center;
+      justify-content: flex-start;
       width: auto;
-      text-align: center;
+      text-align: right;
     }
 
     .definitions-list.compact-row {
       flex-wrap: nowrap;
-      gap: 0.8mm 2mm;
-      justify-content: space-between;
+      gap: 0.8mm 5.2mm;
+      justify-content: flex-start;
     }
 
     .definitions-list.compact-row .def-item {
@@ -1289,7 +1289,7 @@
 
     <section class="workspace">
       <aside class="panel-stack">
-        <div class="card">
+        <div class="card" id="headerInfoCard">
           <h2>معلومات الهيدر</h2>
           <div class="grid-2">
             <div class="field">
@@ -1357,7 +1357,7 @@
             <summary>
               <div class="advanced-summary-text">
                 <h2>إعدادات متقدمة للطباعة</h2>
-                <p>هذه الخانة اختيارية واحترافية. تتحكم بالملاحظة والأسئلة والتوقيع فقط، بينما هيدر الورقة يبقى ثابت كما هو حتى لا يخترب التنسيق الأساسي.</p>
+                <p>هذه الخانة اختيارية واحترافية. تتحكم بالهيدر والملاحظة والأسئلة والتوقيع بدقة كاملة حتى تبقى الطباعة مرتبة ومرنة.</p>
               </div>
               <span class="advanced-pill">احترافي</span>
             </summary>
@@ -1673,7 +1673,7 @@
         <div class="card">
           <div class="preview-toolbar">
             <h2>المعاينة النهائية للطباعة</h2>
-            <div class="preview-note">يمكنك تفعيل الإعدادات المتقدمة للتحكم بالملاحظة والأسئلة والتوقيع بدقة، بينما الهيدر يبقى ثابت حتى تبقى الطباعة نظيفة.</div>
+            <div class="preview-note">يمكنك تفعيل الإعدادات المتقدمة للتحكم بالهيدر والملاحظة والأسئلة والتوقيع بدقة كاملة.</div>
           </div>
           <div class="sheet-stage">
             <div class="exam-sheet" id="sheetPreview"></div>
@@ -1771,6 +1771,21 @@
 
     let state = null;
 
+    function moveHeaderCardIntoAdvancedSettings() {
+      const headerCard = document.getElementById("headerInfoCard");
+      const advancedBody = document.querySelector("#advancedSettingsCard .advanced-body");
+      const advancedActions = advancedBody?.querySelector(".advanced-actions");
+      if (!headerCard || !advancedBody || headerCard.dataset.moved === "1") return;
+
+      const title = headerCard.querySelector("h2");
+      if (title) title.textContent = "إعدادات الهيدر";
+
+      advancedBody.insertBefore(headerCard, advancedActions || advancedBody.firstChild);
+      headerCard.dataset.moved = "1";
+    }
+
+    moveHeaderCardIntoAdvancedSettings();
+
     function uid() {
       return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
     }
@@ -1780,7 +1795,21 @@
     }
 
     function toArabicDigits(value) {
-      return String(value).replace(/\d/g, d => "٠١٢٣٤٥٦٧٨٩"[d]);
+      return String(value ?? "").replace(/[٠-٩۰-۹]/g, d => ({
+        "٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9",
+        "۰":"0","۱":"1","۲":"2","۳":"3","۴":"4","۵":"5","۶":"6","۷":"7","۸":"8","۹":"9"
+      }[d] || d));
+    }
+
+    function convertRenderedDigitsToEnglish(root = document) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const targets = [];
+      while (walker.nextNode()) {
+        targets.push(walker.currentNode);
+      }
+      targets.forEach((node) => {
+        node.nodeValue = toArabicDigits(node.nodeValue);
+      });
     }
 
     function escapeHtml(value) {
@@ -2865,6 +2894,7 @@
       `;
       balanceHeaderColumns();
       applyAdaptiveDefinitions(sheet);
+      convertRenderedDigitsToEnglish(sheet);
     }
 
     function applyAdaptiveDefinitions(root = document) {
@@ -3523,17 +3553,17 @@ ${buildPrintScopeCss()}
       flex: 1 1 auto;
       min-width: 0;
       flex-wrap: wrap;
-      gap: 0.8mm 4mm;
+      gap: 0.8mm 5.2mm;
       padding-inline: 0;
       align-items: flex-start;
-      justify-content: center;
+      justify-content: flex-start;
       width: auto;
-      text-align: center;
+      text-align: right;
     }
     .definitions-list.compact-row {
       flex-wrap: nowrap;
-      gap: 0.8mm 2mm;
-      justify-content: space-between;
+      gap: 0.8mm 5.2mm;
+      justify-content: flex-start;
     }
     .definitions-list.compact-row .def-item {
       font-size: 0.96em;
@@ -3672,6 +3702,24 @@ ${buildPrintScopeCss()}
   <div class="print-shell">${previewHtml}</div>
 
   <script>
+    function toArabicDigits(value) {
+      return String(value ?? "").replace(/[٠-٩۰-۹]/g, d => ({
+        "٠":"0","١":"1","٢":"2","٣":"3","٤":"4","٥":"5","٦":"6","٧":"7","٨":"8","٩":"9",
+        "۰":"0","۱":"1","۲":"2","۳":"3","۴":"4","۵":"5","۶":"6","۷":"7","۸":"8","۹":"9"
+      }[d] || d));
+    }
+
+    function convertRenderedDigitsToEnglish(root = document) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      const targets = [];
+      while (walker.nextNode()) {
+        targets.push(walker.currentNode);
+      }
+      targets.forEach((node) => {
+        node.nodeValue = toArabicDigits(node.nodeValue);
+      });
+    }
+
     function applyAdaptiveDefinitions(root = document) {
       const lists = root.querySelectorAll(".definitions-list");
       lists.forEach((list) => {
@@ -3690,6 +3738,7 @@ ${buildPrintScopeCss()}
 
     window.addEventListener('load', function(){
       applyAdaptiveDefinitions(document);
+      convertRenderedDigitsToEnglish(document.body);
       setTimeout(function(){
         window.focus();
         window.print();
