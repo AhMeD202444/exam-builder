@@ -780,6 +780,10 @@
       line-height: 1.35;
     }
 
+    .question-elements.question-elements-merged {
+      margin-top: 0;
+    }
+
     .element-line {
       display: flex;
       gap: 4px;
@@ -2096,6 +2100,9 @@
   line-height: var(--elements-line-height);
   text-align: var(--elements-text-align);
 }
+.print-scope .question-elements.question-elements-merged {
+  margin-top: 0;
+}
 .print-scope .element-line,
 .print-scope .def-item,
 .print-scope .ordering-item,
@@ -2767,18 +2774,26 @@
 
       const questionsHtml = state.questions.map((question, qIndex) => {
         const degreeText = question.degree ? `(${escapeHtml(formatDegree(question.degree))})` : "";
+        const questionNumberLabel = `س${toArabicDigits(qIndex + 1)}/`;
+        const mergeFirstBranch = !String(question.title || "").trim() && Array.isArray(question.blocks) && question.blocks.length && question.blocks[0].type === "normal";
+
         return `
           <div class="question-block">
-            <div class="question-row">
-              <div class="question-text">
-                <strong>س${toArabicDigits(qIndex + 1)}/</strong>
-                ${question.title ? nlToBr(question.title) : ''}
+            ${mergeFirstBranch ? `` : `
+              <div class="question-row">
+                <div class="question-text">
+                  <strong>${questionNumberLabel}</strong>
+                  ${question.title ? nlToBr(question.title) : ''}
+                </div>
+                ${degreeText ? `<div class="degree-badge">${degreeText}</div>` : ``}
               </div>
-              ${degreeText ? `<div class="degree-badge">${degreeText}</div>` : ``}
-            </div>
+            `}
             ${question.blocks && question.blocks.length ? `
-              <div class="question-elements">
-                ${question.blocks.map(renderBlockPreview).join("")}
+              <div class="question-elements ${mergeFirstBranch ? "question-elements-merged" : ""}">
+                ${question.blocks.map((block, blockIndex) => renderBlockPreview(block, {
+                  mergedQuestionLabel: mergeFirstBranch && blockIndex === 0 ? questionNumberLabel : "",
+                  mergedQuestionDegree: mergeFirstBranch && blockIndex === 0 && degreeText ? `<span class="degree-badge">${degreeText}</span>` : ""
+                })).join("")}
               </div>
             ` : ``}
           </div>
@@ -2841,11 +2856,16 @@
       return trimmed;
     }
 
-    function renderBlockPreview(block) {
+    function renderBlockPreview(block, options = {}) {
       const label = escapeHtml(block.label || "");
-      const labelPrefix = label ? `<span class="element-label">${escapeHtml(toArabicDigits(label))}-</span>` : "";
+      const mergedQuestionLabel = options.mergedQuestionLabel || "";
+      const mergedQuestionDegree = options.mergedQuestionDegree || "";
+      const labelPrefix = mergedQuestionLabel
+        ? `<span class="element-label"><strong>${mergedQuestionLabel}</strong> ${escapeHtml(toArabicDigits(label))}-</span>`
+        : (label ? `<span class="element-label">${escapeHtml(toArabicDigits(label))}-</span>` : "");
       const degreeBadge = block.degree ? `<span class="element-degree">(${escapeHtml(formatDegree(block.degree))})</span>` : "";
       const prompt = block.prompt ? nlToBr(block.prompt) : '<span class="empty-hint">عنصر فارغ</span>';
+      const trailingBadge = `${degreeBadge}${mergedQuestionDegree}`;
 
       if (block.type === "definitions") {
         return `
@@ -2865,7 +2885,7 @@
                 `).join("")}
               </div>
             </div>
-            ${degreeBadge}
+            ${trailingBadge}
           </div>
         `;
       }
@@ -2885,7 +2905,7 @@
                 `).join("")}
               </div>
             </div>
-            ${degreeBadge}
+            ${trailingBadge}
           </div>
         `;
       }
@@ -2909,7 +2929,7 @@
                 `).join("")}
               </div>
             </div>
-            ${degreeBadge}
+            ${trailingBadge}
           </div>
         `;
       }
@@ -2939,7 +2959,7 @@
                 </div>
               </div>
             </div>
-            ${degreeBadge}
+            ${trailingBadge}
           </div>
         `;
       }
@@ -2959,7 +2979,7 @@
                 `).join("")}
               </div>
             </div>
-            ${degreeBadge}
+            ${trailingBadge}
           </div>
         `;
       }
@@ -2973,7 +2993,7 @@
               ${prompt}
               <span class="numeric-line" style="min-width:${width}mm;"></span>
             </div>
-            ${degreeBadge}
+            ${trailingBadge}
           </div>
         `;
       }
@@ -2983,7 +3003,7 @@
           <div class="element-line">
             ${labelPrefix}
             <div class="element-body">${block.prompt ? renderBlanks(block.prompt) : '<span class="empty-hint">اكتب النص واستعمل ___ بمكان الفراغ</span>'}</div>
-            ${degreeBadge}
+            ${trailingBadge}
           </div>
         `;
       }
@@ -2992,7 +3012,7 @@
         <div class="element-line">
           ${labelPrefix}
           <div class="element-body">${prompt}</div>
-          ${degreeBadge}
+          ${trailingBadge}
         </div>
       `;
     }
