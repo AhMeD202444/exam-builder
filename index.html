@@ -830,6 +830,16 @@
       text-align: center;
     }
 
+    .definitions-list.compact-row {
+      flex-wrap: nowrap;
+      gap: 0.8mm 2mm;
+      justify-content: space-between;
+    }
+
+    .definitions-list.compact-row .def-item {
+      font-size: 0.96em;
+    }
+
     .ordering-list,
     .tf-list,
     .mcq-list {
@@ -2846,6 +2856,23 @@
         </div>
       `;
       balanceHeaderColumns();
+      applyAdaptiveDefinitions(sheet);
+    }
+
+    function applyAdaptiveDefinitions(root = document) {
+      const lists = root.querySelectorAll(".definitions-list");
+      lists.forEach((list) => {
+        list.classList.remove("compact-row");
+        const items = list.querySelectorAll(".def-item");
+        if (!items.length || items.length > 8) return;
+
+        list.classList.add("compact-row");
+        const fitsSingleLine = list.scrollWidth <= list.clientWidth + 4;
+
+        if (!fitsSingleLine) {
+          list.classList.remove("compact-row");
+        }
+      });
     }
 
     function formatDegree(value) {
@@ -2875,7 +2902,7 @@
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
-              <div class="definitions-list">
+              <div class="definitions-list" data-item-count="${(block.items || []).length}">
                 ${(block.items || []).map((item, index) => `
                   <div class="def-item">
                     <span class="dot">${toArabicDigits(index + 1)}-</span>
@@ -3485,13 +3512,23 @@ ${buildPrintScopeCss()}
     .definitions-list {
       margin-top: 0.7mm;
       display: flex;
+      flex: 1 1 auto;
+      min-width: 0;
       flex-wrap: wrap;
-      gap: 0.8mm 6mm;
+      gap: 0.8mm 4mm;
       padding-inline: 0;
       align-items: flex-start;
       justify-content: center;
-      width: 100%;
+      width: auto;
       text-align: center;
+    }
+    .definitions-list.compact-row {
+      flex-wrap: nowrap;
+      gap: 0.8mm 2mm;
+      justify-content: space-between;
+    }
+    .definitions-list.compact-row .def-item {
+      font-size: 0.96em;
     }
     .ordering-list,
     .tf-list,
@@ -3626,7 +3663,25 @@ ${buildPrintScopeCss()}
 <body>
   <div class="print-shell">${previewHtml}</div>
 
-  <script>    window.addEventListener('load', function(){
+  <script>
+    function applyAdaptiveDefinitions(root = document) {
+      const lists = root.querySelectorAll(".definitions-list");
+      lists.forEach((list) => {
+        list.classList.remove("compact-row");
+        const items = list.querySelectorAll(".def-item");
+        if (!items.length || items.length > 8) return;
+
+        list.classList.add("compact-row");
+        const fitsSingleLine = list.scrollWidth <= list.clientWidth + 4;
+
+        if (!fitsSingleLine) {
+          list.classList.remove("compact-row");
+        }
+      });
+    }
+
+    window.addEventListener('load', function(){
+      applyAdaptiveDefinitions(document);
       setTimeout(function(){
         window.focus();
         window.print();
