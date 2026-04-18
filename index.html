@@ -1378,6 +1378,92 @@
 
               <fieldset id="advancedSettingsFields">
                 <div class="advanced-group">
+                  <div class="advanced-group-title">الهيدر</div>
+                  <div class="advanced-group-note">يضبط مواضع وخطوط الهيدر كاملًا: العمود الأيمن، العنوان الأوسط، والعمود الأيسر.</div>
+                  <div class="grid-4">
+                    <div class="field">
+                      <label>الإزاحة العلوية للهيدر (mm)</label>
+                      <input data-print-setting="headerMarginTop" data-print-type="number" type="number" step="0.1" />
+                    </div>
+                    <div class="field">
+                      <label>المسافة أسفل الهيدر (mm)</label>
+                      <input data-print-setting="headerMarginBottom" data-print-type="number" type="number" step="0.1" />
+                    </div>
+                    <div class="field">
+                      <label>عرض العمود الجانبي (mm)</label>
+                      <input data-print-setting="headerSideWidth" data-print-type="number" type="number" step="0.1" min="24" />
+                    </div>
+                    <div class="field">
+                      <label>المسافة بين أعمدة الهيدر (mm)</label>
+                      <input data-print-setting="headerGap" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>حجم خط الجانبين (pt)</label>
+                      <input data-print-setting="headerSideFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>وزن خط الجانبين</label>
+                      <select data-print-setting="headerSideFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>محاذاة العمود الأيمن</label>
+                      <select data-print-setting="headerRightAlign">
+                        <option value="right">يمين</option>
+                        <option value="center">توسيط</option>
+                        <option value="left">يسار</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>محاذاة العمود الأيسر</label>
+                      <select data-print-setting="headerLeftAlign">
+                        <option value="left">يسار</option>
+                        <option value="center">توسيط</option>
+                        <option value="right">يمين</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>إزاحة العمود الأيمن يمينًا (mm)</label>
+                      <input data-print-setting="headerRightPadding" data-print-type="number" type="number" step="0.1" />
+                    </div>
+                    <div class="field">
+                      <label>إزاحة العمود الأيسر يسارًا (mm)</label>
+                      <input data-print-setting="headerLeftPadding" data-print-type="number" type="number" step="0.1" />
+                    </div>
+                    <div class="field">
+                      <label>حجم خط عنوان الوسط (pt)</label>
+                      <input data-print-setting="headerTitleFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>وزن خط عنوان الوسط</label>
+                      <select data-print-setting="headerTitleFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>حجم خط السطور الثانوية بالوسط (pt)</label>
+                      <input data-print-setting="headerMetaFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>وزن خط السطور الثانوية بالوسط</label>
+                      <select data-print-setting="headerMetaFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="advanced-group">
                   <div class="advanced-group-title">السؤال الرئيسي</div>
                   <div class="advanced-group-note">هذا القسم يضبط منطوق السؤال ورقم الدرجة المقابل له.</div>
                   <div class="grid-4">
@@ -1517,6 +1603,14 @@
                     <div class="field">
                       <label>المسافة بين بنود القوائم (mm)</label>
                       <input data-print-setting="listGap" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تباعد عمودي بين التعاريف (mm)</label>
+                      <input data-print-setting="definitionsRowGap" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تباعد أفقي بين التعاريف (mm)</label>
+                      <input data-print-setting="definitionsColumnGap" data-print-type="number" type="number" step="0.1" min="0" />
                     </div>
                     <div class="field">
                       <label>فراغ عمودي بين عمودي المطابقة (mm)</label>
@@ -1772,16 +1866,7 @@
     let state = null;
 
     function moveHeaderCardIntoAdvancedSettings() {
-      const headerCard = document.getElementById("headerInfoCard");
-      const advancedBody = document.querySelector("#advancedSettingsCard .advanced-body");
-      const advancedActions = advancedBody?.querySelector(".advanced-actions");
-      if (!headerCard || !advancedBody || headerCard.dataset.moved === "1") return;
-
-      const title = headerCard.querySelector("h2");
-      if (title) title.textContent = "إعدادات الهيدر";
-
-      advancedBody.insertBefore(headerCard, advancedActions || advancedBody.firstChild);
-      headerCard.dataset.moved = "1";
+      return;
     }
 
     moveHeaderCardIntoAdvancedSettings();
@@ -1850,6 +1935,20 @@
     function defaultPrintSettings() {
       return {
         enabled: false,
+        headerMarginTop: 0,
+        headerMarginBottom: 2,
+        headerSideWidth: 48,
+        headerGap: 1,
+        headerRightPadding: 2,
+        headerLeftPadding: 0,
+        headerSideFontSize: 12.1,
+        headerSideFontWeight: "800",
+        headerRightAlign: "right",
+        headerLeftAlign: "left",
+        headerTitleFontSize: 14.7,
+        headerTitleFontWeight: "800",
+        headerMetaFontSize: 11.8,
+        headerMetaFontWeight: "800",
         questionFontSize: 13.1,
         questionFontWeight: "900",
         questionLineHeight: 1.35,
@@ -1873,6 +1972,8 @@
         elementsPaddingLeft: 0,
         listMarginTop: 0.7,
         listGap: 0.7,
+        definitionsRowGap: 1.1,
+        definitionsColumnGap: 6.2,
         matchingGap: 4,
         noteFontSize: 12,
         noteFontWeight: "800",
@@ -1909,6 +2010,20 @@
 
       return {
         enabled: Boolean(source.enabled),
+        headerMarginTop: sanitizeNumber(source.headerMarginTop, defaults.headerMarginTop),
+        headerMarginBottom: sanitizeNumber(source.headerMarginBottom, defaults.headerMarginBottom),
+        headerSideWidth: sanitizeNumber(source.headerSideWidth, defaults.headerSideWidth),
+        headerGap: sanitizeNumber(source.headerGap, defaults.headerGap),
+        headerRightPadding: sanitizeNumber(source.headerRightPadding, defaults.headerRightPadding),
+        headerLeftPadding: sanitizeNumber(source.headerLeftPadding, defaults.headerLeftPadding),
+        headerSideFontSize: sanitizeNumber(source.headerSideFontSize, defaults.headerSideFontSize),
+        headerSideFontWeight: sanitizeChoice(String(source.headerSideFontWeight || defaults.headerSideFontWeight), ["400","700","800","900"], defaults.headerSideFontWeight),
+        headerRightAlign: sanitizeChoice(source.headerRightAlign, ["right","center","left"], defaults.headerRightAlign),
+        headerLeftAlign: sanitizeChoice(source.headerLeftAlign, ["right","center","left"], defaults.headerLeftAlign),
+        headerTitleFontSize: sanitizeNumber(source.headerTitleFontSize, defaults.headerTitleFontSize),
+        headerTitleFontWeight: sanitizeChoice(String(source.headerTitleFontWeight || defaults.headerTitleFontWeight), ["400","700","800","900"], defaults.headerTitleFontWeight),
+        headerMetaFontSize: sanitizeNumber(source.headerMetaFontSize, defaults.headerMetaFontSize),
+        headerMetaFontWeight: sanitizeChoice(String(source.headerMetaFontWeight || defaults.headerMetaFontWeight), ["400","700","800","900"], defaults.headerMetaFontWeight),
         questionFontSize: sanitizeNumber(source.questionFontSize, defaults.questionFontSize),
         questionFontWeight: sanitizeChoice(String(source.questionFontWeight || defaults.questionFontWeight), ["400","700","800","900"], defaults.questionFontWeight),
         questionLineHeight: sanitizeNumber(source.questionLineHeight, defaults.questionLineHeight),
@@ -1932,6 +2047,8 @@
         elementsPaddingLeft: sanitizeNumber(source.elementsPaddingLeft, defaults.elementsPaddingLeft),
         listMarginTop: sanitizeNumber(source.listMarginTop, defaults.listMarginTop),
         listGap: sanitizeNumber(source.listGap, defaults.listGap),
+        definitionsRowGap: sanitizeNumber(source.definitionsRowGap, defaults.definitionsRowGap),
+        definitionsColumnGap: sanitizeNumber(source.definitionsColumnGap, defaults.definitionsColumnGap),
         matchingGap: sanitizeNumber(source.matchingGap, defaults.matchingGap),
         noteFontSize: sanitizeNumber(source.noteFontSize, defaults.noteFontSize),
         noteFontWeight: sanitizeChoice(String(source.noteFontWeight || defaults.noteFontWeight), ["400","700","800","900"], defaults.noteFontWeight),
@@ -1994,6 +2111,21 @@
     function buildPrintScopeVars() {
       const settings = getEffectivePrintSettings();
       const vars = [
+        `--header-margin-top:${settings.headerMarginTop}mm`,
+        `--header-margin-bottom:${settings.headerMarginBottom}mm`,
+        `--header-side-width:${settings.headerSideWidth}mm`,
+        `--header-gap:${settings.headerGap}mm`,
+        `--header-right-padding:${settings.headerRightPadding}mm`,
+        `--header-left-padding:${settings.headerLeftPadding}mm`,
+        `--header-side-font-size:${settings.headerSideFontSize}pt`,
+        `--header-side-font-weight:${settings.headerSideFontWeight}`,
+        `--header-right-align:${settings.headerRightAlign}`,
+        `--header-left-align:${settings.headerLeftAlign}`,
+        `--header-title-font-size:${settings.headerTitleFontSize}pt`,
+        `--header-title-font-weight:${settings.headerTitleFontWeight}`,
+        `--header-meta-font-size:${settings.headerMetaFontSize}pt`,
+        `--header-meta-font-weight:${settings.headerMetaFontWeight}`,
+        `--header-line-height:1.25`,
         `--question-font-size:${settings.questionFontSize}pt`,
         `--question-font-weight:${settings.questionFontWeight}`,
         `--question-line-height:${settings.questionLineHeight}`,
@@ -2017,8 +2149,10 @@
         `--elements-padding-left:${settings.elementsPaddingLeft}mm`,
         `--list-margin-top:${settings.listMarginTop}mm`,
         `--list-gap:${settings.listGap}mm`,
+        `--definitions-row-gap:${settings.definitionsRowGap}mm`,
+        `--definitions-column-gap:${settings.definitionsColumnGap}mm`,
         `--matching-gap:${settings.matchingGap}mm`,
-        `--definitions-justify:${mapRtlJustify(settings.elementsTextAlign)}`,
+        `--definitions-justify:flex-start`,
         `--note-font-size:${settings.noteFontSize}pt`,
         `--note-font-weight:${settings.noteFontWeight}`,
         `--note-line-height:${settings.noteLineHeight}`,
@@ -2042,6 +2176,21 @@
     function buildPrintScopeCss() {
       return `
 .print-scope {
+  --header-margin-top: 0mm;
+  --header-margin-bottom: 2mm;
+  --header-side-width: 48mm;
+  --header-gap: 1mm;
+  --header-right-padding: 2mm;
+  --header-left-padding: 0mm;
+  --header-side-font-size: 12.1pt;
+  --header-side-font-weight: 800;
+  --header-right-align: right;
+  --header-left-align: left;
+  --header-title-font-size: 14.7pt;
+  --header-title-font-weight: 800;
+  --header-meta-font-size: 11.8pt;
+  --header-meta-font-weight: 800;
+  --header-line-height: 1.25;
   --question-font-size: 13.1pt;
   --question-font-weight: 900;
   --question-line-height: 1.35;
@@ -2065,6 +2214,8 @@
   --elements-padding-left: 0mm;
   --list-margin-top: 0.7mm;
   --list-gap: 0.7mm;
+  --definitions-row-gap: 1.1mm;
+  --definitions-column-gap: 6.2mm;
   --matching-gap: 4mm;
   --definitions-justify: flex-start;
   --note-font-size: 12pt;
@@ -2083,6 +2234,44 @@
   --signature-name-size: 12pt;
   --signature-name-weight: 900;
   --signature-text-align: center;
+}
+.print-scope .sheet-header {
+  grid-template-columns: var(--header-side-width) minmax(0, 1fr) var(--header-side-width) !important;
+  gap: var(--header-gap) !important;
+  margin-top: var(--header-margin-top) !important;
+  margin-bottom: var(--header-margin-bottom) !important;
+}
+.print-scope .head-col {
+  line-height: var(--header-line-height) !important;
+}
+.print-scope .head-col.right {
+  text-align: var(--header-right-align) !important;
+  padding-right: var(--header-right-padding) !important;
+}
+.print-scope .head-col.left {
+  text-align: var(--header-left-align) !important;
+  padding-left: var(--header-left-padding) !important;
+}
+.print-scope .school-stack,
+.print-scope .meta-stack {
+  width: 100% !important;
+  margin: 0 !important;
+}
+.print-scope .head-line {
+  font-size: var(--header-side-font-size) !important;
+  font-weight: var(--header-side-font-weight) !important;
+  line-height: var(--header-line-height) !important;
+}
+.print-scope .title-main {
+  font-size: var(--header-title-font-size) !important;
+  font-weight: var(--header-title-font-weight) !important;
+  line-height: 1.2 !important;
+}
+.print-scope .title-sub,
+.print-scope .title-year {
+  font-size: var(--header-meta-font-size) !important;
+  font-weight: var(--header-meta-font-weight) !important;
+  line-height: 1.15 !important;
 }
 .print-scope .sheet-note {
   margin: var(--note-margin-top) auto var(--note-margin-bottom);
@@ -2171,8 +2360,11 @@
 }
 .print-scope .definitions-list {
   margin-top: var(--list-margin-top);
-  justify-content: center;
-  text-align: center;
+  gap: var(--definitions-row-gap) var(--definitions-column-gap) !important;
+  width: 100% !important;
+  flex: 0 0 100% !important;
+  justify-content: flex-start !important;
+  text-align: right !important;
 }
 .print-scope .ordering-list,
 .print-scope .tf-list,
@@ -3677,10 +3869,11 @@ ${buildPrintScopeCss()}
       }
       .print-shell {
         width: auto;
-        min-height: auto;
+        min-height: calc(297mm - 10mm);
         margin: 0;
         border-radius: 0;
         box-shadow: none;
+        padding: 7mm 8mm 8mm;
       }
     }
     @media screen and (max-width: 900px) {
