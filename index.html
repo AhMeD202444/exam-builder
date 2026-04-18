@@ -2775,7 +2775,7 @@
       const questionsHtml = state.questions.map((question, qIndex) => {
         const degreeText = question.degree ? `(${escapeHtml(formatDegree(question.degree))})` : "";
         const questionNumberLabel = `س${toArabicDigits(qIndex + 1)}/`;
-        const mergeFirstBranch = !String(question.title || "").trim() && Array.isArray(question.blocks) && question.blocks.length && question.blocks[0].type === "normal";
+        const mergeFirstBranch = !String(question.title || "").trim() && Array.isArray(question.blocks) && question.blocks.length && ["normal", "definitions", "blanks"].includes(question.blocks[0].type);
 
         return `
           <div class="question-block">
