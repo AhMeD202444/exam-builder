@@ -746,12 +746,7 @@
       white-space: nowrap;
       font-weight: 900;
       margin-inline-start: 6px;
-    }
-
-    .element-degree {
-      white-space: nowrap;
-      font-weight: 900;
-      margin-inline-start: 6px;
+      flex-shrink: 0;
     }
 
     .blank-line {
@@ -769,8 +764,11 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.8mm 6mm;
-      padding-right: 2mm;
+      padding-inline: 0;
       align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      text-align: center;
     }
 
     .ordering-list,
@@ -794,13 +792,9 @@
     .def-item {
       display: inline-flex;
       align-items: baseline;
+      justify-content: center;
       white-space: nowrap;
-    }
-
-    .def-item {
-      display: inline-flex;
-      align-items: baseline;
-      white-space: nowrap;
+      text-align: center;
     }
 
     .dot {
@@ -1978,6 +1972,7 @@
                 `).join("")}
               </div>
             </div>
+            ${degreeBadge}
           </div>
         `;
       }
@@ -2095,6 +2090,7 @@
           <div class="element-line">
             ${labelPrefix}
             <div class="element-body">${block.prompt ? renderBlanks(block.prompt) : '<span class="empty-hint">اكتب النص واستعمل ___ بمكان الفراغ</span>'}</div>
+            ${degreeBadge}
           </div>
         `;
       }
@@ -2530,6 +2526,12 @@
       white-space: nowrap;
     }
     .element-body { flex: 1; }
+    .element-degree {
+      white-space: nowrap;
+      font-weight: 900;
+      margin-inline-start: 6px;
+      flex-shrink: 0;
+    }
     .blank-line {
       display: inline-block;
       min-width: 22mm;
@@ -2544,8 +2546,11 @@
       display: flex;
       flex-wrap: wrap;
       gap: 0.8mm 6mm;
-      padding-right: 2mm;
+      padding-inline: 0;
       align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      text-align: center;
     }
     .ordering-list,
     .tf-list,
@@ -2563,6 +2568,13 @@
       gap: 4px;
       align-items: flex-start;
       line-height: 1.3;
+    }
+    .def-item {
+      display: inline-flex;
+      align-items: baseline;
+      justify-content: center;
+      white-space: nowrap;
+      text-align: center;
     }
     .dot {
       min-width: 12px;
