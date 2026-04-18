@@ -773,11 +773,15 @@
     .question-elements {
       margin-top: 0.8mm;
       display: grid;
-      gap: 1.7mm;
+      gap: 0;
       padding-right: 2mm;
       font-size: 12.2pt;
       font-weight: 700;
       line-height: 1.35;
+    }
+
+    .question-elements .element-line.letter-branch + .element-line.letter-branch {
+      margin-top: var(--elements-gap);
     }
 
     .question-elements.question-elements-merged {
@@ -1585,7 +1589,7 @@
                       <input data-print-setting="elementsMarginTop" data-print-type="number" type="number" step="0.1" min="0" />
                     </div>
                     <div class="field">
-                      <label>المسافة بين الأفرع (أ / ب / ج) (mm)</label>
+                      <label>المسافة بين الأفرع الحرفية (أ / ب / ج) (mm)</label>
                       <input data-print-setting="elementsGap" data-print-type="number" type="number" step="0.1" min="0" />
                     </div>
                     <div class="field">
@@ -2322,13 +2326,16 @@
 }
 .print-scope .question-elements {
   margin-top: var(--elements-margin-top);
-  gap: var(--elements-gap);
+  gap: 0 !important;
   padding-right: var(--elements-padding-right);
   padding-left: var(--elements-padding-left);
   font-size: var(--elements-font-size);
   font-weight: var(--elements-font-weight);
   line-height: var(--elements-line-height);
   text-align: var(--elements-text-align);
+}
+.print-scope .question-elements .element-line.letter-branch + .element-line.letter-branch {
+  margin-top: var(--elements-gap) !important;
 }
 .print-scope .question-elements.question-elements-merged {
   margin-top: 0;
@@ -2477,6 +2484,14 @@
 
     function nextLabel(index) {
       return AR_LETTERS[index] || toArabicDigits(index + 1);
+    }
+
+    function isLetterBranchLabel(value) {
+      const raw = String(value || "").trim();
+      if (!raw) return false;
+      const normalized = raw.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+      if (/^\d+$/.test(normalized)) return false;
+      return AR_LETTERS.includes(raw) || /^[A-Za-zأ-ي]+$/.test(raw);
     }
 
     function makeBlock(type = "normal", label = "") {
@@ -3116,9 +3131,11 @@
     }
 
     function renderBlockPreview(block, options = {}) {
-      const label = escapeHtml(block.label || "");
+      const rawLabel = String(block.label || "").trim();
+      const label = escapeHtml(rawLabel);
       const mergedQuestionLabel = options.mergedQuestionLabel || "";
       const mergedQuestionDegree = options.mergedQuestionDegree || "";
+      const branchClass = isLetterBranchLabel(rawLabel) ? " letter-branch" : "";
       const labelPrefix = mergedQuestionLabel
         ? `<span class="element-label"><strong>${mergedQuestionLabel}</strong> ${escapeHtml(toArabicDigits(label))}-</span>`
         : (label ? `<span class="element-label">${escapeHtml(toArabicDigits(label))}-</span>` : "");
@@ -3128,7 +3145,7 @@
 
       if (block.type === "definitions") {
         return `
-          <div class="element-line">
+          <div class="element-line${branchClass}">
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3151,7 +3168,7 @@
 
       if (block.type === "mcq") {
         return `
-          <div class="element-line">
+          <div class="element-line${branchClass}">
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3172,7 +3189,7 @@
       if (block.type === "trueFalse") {
         const tfPrompt = block.prompt ? nlToBr(block.prompt) : 'ضع علامة (✓) أو (✗) أمام النقاط التالية:';
         return `
-          <div class="element-line">
+          <div class="element-line${branchClass}">
             ${labelPrefix}
             <div class="element-body">
               ${tfPrompt}
@@ -3195,7 +3212,7 @@
 
       if (block.type === "matching") {
         return `
-          <div class="element-line">
+          <div class="element-line${branchClass}">
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3225,7 +3242,7 @@
 
       if (block.type === "ordering") {
         return `
-          <div class="element-line">
+          <div class="element-line${branchClass}">
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3246,7 +3263,7 @@
       if (block.type === "numeric") {
         const width = Math.min(Math.max(Number(block.answerWidth || 40), 20), 90);
         return `
-          <div class="element-line">
+          <div class="element-line${branchClass}">
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3259,7 +3276,7 @@
 
       if (block.type === "blanks") {
         return `
-          <div class="element-line">
+          <div class="element-line${branchClass}">
             ${labelPrefix}
             <div class="element-body">${block.prompt ? renderBlanks(block.prompt) : '<span class="empty-hint">اكتب النص واستعمل ___ بمكان الفراغ</span>'}</div>
             ${trailingBadge}
@@ -3705,11 +3722,14 @@ ${buildPrintScopeCss()}
     .question-elements {
       margin-top: 0.8mm;
       display: grid;
-      gap: 1.7mm;
+      gap: 0;
       padding-right: 2mm;
       font-size: 12.2pt;
       font-weight: 700;
       line-height: 1.35;
+    }
+    .question-elements .element-line.letter-branch + .element-line.letter-branch {
+      margin-top: var(--elements-gap);
     }
     .element-line {
       display: flex;
