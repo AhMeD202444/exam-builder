@@ -1907,7 +1907,7 @@
           <div class="head-col center">
             <div class="title-main">${escapeHtml(meta.examType || "أسئلة امتحان")}</div>
             ${meta.round ? `<div class="title-sub">${escapeHtml(meta.round)}</div>` : ""}
-            <div class="title-year">${meta.academicYear ? `للعام الدراسي ${escapeHtml(meta.academicYear)}` : ""}</div>
+            <div class="title-year">${meta.academicYear ? `للعام الدراسي ${escapeHtml(toArabicDigits(meta.academicYear))}` : ""}</div>
           </div>
 
           <div class="head-col left">
@@ -1943,7 +1943,8 @@
       const trimmed = String(value).trim();
       if (!trimmed) return "";
       if (/^\d+$/.test(trimmed)) {
-        return `${toArabicDigits(trimmed)} ${trimmed === "1" ? "درجة" : "درجات"}`;
+        const numeric = Number(trimmed);
+        return `${toArabicDigits(trimmed)} ${numeric >= 1 && numeric <= 10 ? "درجات" : "درجة"}`;
       }
       return trimmed;
     }
