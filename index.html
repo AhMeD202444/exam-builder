@@ -2812,12 +2812,18 @@
         `;
       }).join("");
 
+      const administrationText = escapeHtml(meta.administration || "إدارة");
+      const schoolNameLine = meta.schoolName ? `<div class="head-line">${escapeHtml(meta.schoolName)}</div>` : "";
+      const showTeacherSignature = Boolean(String(sig.rightName || "").trim());
+      const teacherSignatureTitle = showTeacherSignature ? escapeHtml(sig.rightTitle || "مدرس المادة") : "";
+      const teacherSignatureName = showTeacherSignature ? escapeHtml(sig.rightName || "") : "";
+
       sheet.innerHTML = `
         <div class="sheet-header">
           <div class="head-col right">
             <div class="school-stack">
-              <div class="head-line">${escapeHtml(meta.administration || "إدارة")}</div>
-              <div class="head-line">${escapeHtml(meta.schoolName || "اسم المدرسة")}</div>
+              <div class="head-line">${administrationText}</div>
+              ${schoolNameLine}
             </div>
           </div>
 
@@ -2847,12 +2853,14 @@
             ${questionsHtml}
           </div>
 
-          <div class="sheet-footer">
-            <div class="signature-box">
-              <div class="signature-title">${escapeHtml(sig.rightTitle || "مدرس المادة")}</div>
-              <div class="signature-name">${escapeHtml(sig.rightName || "")}</div>
+          ${showTeacherSignature ? `
+            <div class="sheet-footer">
+              <div class="signature-box">
+                <div class="signature-title">${teacherSignatureTitle}</div>
+                <div class="signature-name">${teacherSignatureName}</div>
+              </div>
             </div>
-          </div>
+          ` : ""}
         </div>
       `;
       balanceHeaderColumns();
