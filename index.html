@@ -713,10 +713,13 @@
     }
 
     .sheet-note {
-      margin-bottom: 1.4mm;
+      margin: 4.2mm auto 2.8mm;
+      padding-top: 1mm;
       font-weight: 800;
       font-size: 12pt;
-      line-height: 1.4;
+      line-height: 1.45;
+      text-align: center;
+      max-width: calc(100% - 18mm);
     }
 
     .sheet-note span { font-weight: 700; }
@@ -899,7 +902,7 @@
     }
 
     .sheet-footer {
-      margin-top: 4mm;
+      margin-top: 7.4mm;
       display: flex;
       justify-content: flex-start;
       direction: ltr;
@@ -2553,9 +2556,13 @@
       margin: 1.3mm auto 1.9mm;
     }
     .sheet-note {
-      margin-bottom: 1.4mm;
+      margin: 4.2mm auto 2.8mm;
+      padding-top: 1mm;
       font-size: 12pt;
-      line-height: 1.4;
+      font-weight: 800;
+      line-height: 1.45;
+      text-align: center;
+      max-width: calc(100% - 18mm);
     }
     .sheet-note span { font-weight: 700; }
     .questions-area {
@@ -2703,7 +2710,7 @@
       font-weight: 600;
     }
     .sheet-footer {
-      margin-top: 4mm;
+      margin-top: 7.4mm;
       display: flex;
       justify-content: flex-start;
       direction: ltr;
@@ -2865,6 +2872,74 @@
     }
 
 
+    function getEditorEnterFields() {
+      const scope = document.querySelector(".panel-stack");
+      if (!scope) return [];
+      return [...scope.querySelectorAll("input, select")].filter((field) => {
+        if (field.type === "hidden") return false;
+        if (field.disabled || field.readOnly) return false;
+        const style = window.getComputedStyle(field);
+        if (style.display === "none" || style.visibility === "hidden") return false;
+        if (field.offsetParent === null && style.position !== "fixed") return false;
+        return true;
+      });
+    }
+
+    function openNativeSelect(selectElement) {
+      if (!selectElement || selectElement.tagName !== "SELECT") return;
+      try {
+        if (typeof selectElement.showPicker === "function") {
+          selectElement.showPicker();
+          return;
+        }
+      } catch (error) {}
+      try {
+        selectElement.dispatchEvent(new MouseEvent("mousedown", { bubbles: true }));
+      } catch (error) {}
+    }
+
+    function focusEditorField(field) {
+      if (!field) return;
+      field.focus({ preventScroll: true });
+      field.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+      if (field.tagName === "INPUT") {
+        try {
+          field.select();
+        } catch (error) {}
+      }
+      if (field.tagName === "SELECT") {
+        setTimeout(() => openNativeSelect(field), 70);
+      }
+    }
+
+    function bindEnterFieldNavigation() {
+      const scope = document.querySelector(".panel-stack");
+      if (!scope) return;
+      scope.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter" || event.shiftKey || event.ctrlKey || event.altKey || event.metaKey) return;
+        const target = event.target;
+        if (!(target instanceof HTMLElement)) return;
+        if (!target.matches("input, select, textarea")) return;
+        if (target.tagName === "TEXTAREA") return;
+
+        if (target.tagName === "SELECT") {
+          event.preventDefault();
+          openNativeSelect(target);
+          return;
+        }
+
+        const fields = getEditorEnterFields();
+        const currentIndex = fields.indexOf(target);
+        if (currentIndex === -1) return;
+
+        event.preventDefault();
+        const nextField = fields[currentIndex + 1];
+        if (nextField) {
+          focusEditorField(nextField);
+        }
+      });
+    }
+
     let lastFocusedTextInput = null;
 
     function insertAtCursor(el, textToInsert) {
@@ -2948,6 +3023,7 @@
     bindStaticInputs();
     bindMainButtons();
     bindDelegation();
+    bindEnterFieldNavigation();
     window.addEventListener("resize", balanceHeaderColumns);
     window.addEventListener("scroll", toggleScrollTopButton, { passive: true });
     document.querySelector(".panel-stack")?.addEventListener("scroll", toggleScrollTopButton, { passive: true });
