@@ -2106,7 +2106,6 @@
 }
 .print-scope .element-body,
 .print-scope .matching-col,
-.print-scope .definitions-list,
 .print-scope .ordering-list,
 .print-scope .tf-list,
 .print-scope .mcq-list {
@@ -2114,15 +2113,18 @@
 }
 .print-scope .element-label,
 .print-scope .dot,
-.print-scope .mini-degree,
-.print-scope .element-degree,
 .print-scope .match-token,
 .print-scope .tf-answer-hint {
   font-weight: var(--elements-font-weight);
 }
+.print-scope .mini-degree,
+.print-scope .element-degree {
+  font-weight: var(--question-degree-weight);
+}
 .print-scope .definitions-list {
   margin-top: var(--list-margin-top);
-  justify-content: var(--definitions-justify);
+  justify-content: center;
+  text-align: center;
 }
 .print-scope .ordering-list,
 .print-scope .tf-list,
@@ -2770,7 +2772,7 @@
             <div class="question-row">
               <div class="question-text">
                 <strong>س${toArabicDigits(qIndex + 1)}/</strong>
-                ${question.title ? nlToBr(question.title) : '<span class="empty-hint">اكتب منطوق السؤال من جهة الإدخال</span>'}
+                ${question.title ? nlToBr(question.title) : ''}
               </div>
               ${degreeText ? `<div class="degree-badge">${degreeText}</div>` : ``}
             </div>
