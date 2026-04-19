@@ -475,24 +475,36 @@
       flex-wrap: wrap;
     }
 
+    .question-side-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .collapse-toggle {
-      width: 38px;
-      height: 38px;
+      width: 42px;
+      height: 42px;
       border-radius: 999px;
-      border: 1px solid #d6e2f0;
-      background: linear-gradient(180deg, #ffffff, #eef5fd);
-      color: var(--primary);
+      border: 1px solid rgba(49, 101, 179, 0.18);
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.95), rgba(255,255,255,0.68) 42%, transparent 43%),
+        linear-gradient(180deg, #f7fbff 0%, #edf5ff 55%, #e5effd 100%);
+      color: #255aa8;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 8px 18px rgba(21, 52, 95, 0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease;
+      box-shadow: 0 10px 22px rgba(37, 90, 168, 0.14), inset 0 1px 0 rgba(255,255,255,0.75);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
     }
 
     .collapse-toggle:hover {
       transform: translateY(-1px);
-      box-shadow: 0 10px 22px rgba(21, 52, 95, 0.12);
+      box-shadow: 0 14px 28px rgba(37, 90, 168, 0.18), inset 0 1px 0 rgba(255,255,255,0.82);
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,1), rgba(255,255,255,0.74) 42%, transparent 43%),
+        linear-gradient(180deg, #fafdff 0%, #eef6ff 58%, #dfeafb 100%);
     }
 
     .collapse-arrow {
@@ -502,13 +514,11 @@
       transition: transform 0.22s ease;
     }
 
-    .question-card.is-collapsed .collapse-arrow,
-    .block-item.is-collapsed .collapse-arrow {
+    .question-card.is-collapsed .collapse-arrow {
       transform: rotate(-90deg);
     }
 
-    .question-card.is-collapsed > :not(.question-top),
-    .block-item.is-collapsed > :not(.question-top) {
+    .question-card.is-collapsed > :not(.question-top) {
       display: none !important;
     }
 
@@ -2784,13 +2794,13 @@
           <div class="question-card ${questionCollapsed ? "is-collapsed" : ""}">
             <div class="question-top">
               <div class="head-main">
+                <div class="chip">س${toArabicDigits(qIndex + 1)}</div>
+              </div>
+              <div class="question-side-actions">
+                <button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>
                 <button type="button" class="collapse-toggle" data-action="toggle-question" data-question-id="${question.id}" aria-expanded="${questionCollapsed ? "false" : "true"}" title="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}">
                   <span class="collapse-arrow">⌄</span>
                 </button>
-                <div class="chip">س${toArabicDigits(qIndex + 1)}</div>
-              </div>
-              <div class="inline-actions">
-                <button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>
               </div>
             </div>
 
@@ -2833,13 +2843,9 @@
     }
 
     function renderBlockEditor(block, qIndex, bIndex) {
-      const blockCollapsed = isBlockCollapsed(block.id);
       const commonHeader = `
         <div class="question-top">
           <div class="head-main">
-            <button type="button" class="collapse-toggle" data-action="toggle-block" data-block-id="${block.id}" aria-expanded="${blockCollapsed ? "false" : "true"}" title="${blockCollapsed ? "فتح الفرع" : "طي الفرع"}">
-              <span class="collapse-arrow">⌄</span>
-            </button>
             <div class="chip">${escapeHtml(toArabicDigits(block.label || nextLabel(bIndex)))}</div>
           </div>
           <div class="inline-actions">
@@ -2871,7 +2877,7 @@
 
       if (block.type === "definitions") {
         return `
-          <div class="block-item ${blockCollapsed ? "is-collapsed" : ""}">
+          <div class="block-item">
             ${commonHeader}
             <div class="field">
               <label>عنوان هذا العنصر</label>
@@ -2903,7 +2909,7 @@
 
       if (block.type === "mcq") {
         return `
-          <div class="block-item ${blockCollapsed ? "is-collapsed" : ""}">
+          <div class="block-item">
             ${commonHeader}
             <div class="field">
               <label>سؤال الاختيار من متعدد</label>
@@ -2929,7 +2935,7 @@
 
       if (block.type === "trueFalse") {
         return `
-          <div class="block-item ${blockCollapsed ? "is-collapsed" : ""}">
+          <div class="block-item">
             ${commonHeader}
             <div class="field">
               <label>تعليمة العنصر</label>
@@ -2955,7 +2961,7 @@
 
       if (block.type === "matching") {
         return `
-          <div class="block-item ${blockCollapsed ? "is-collapsed" : ""}">
+          <div class="block-item">
             ${commonHeader}
             <div class="field">
               <label>تعليمة عنصر التوصيل</label>
@@ -3004,7 +3010,7 @@
 
       if (block.type === "ordering") {
         return `
-          <div class="block-item ${blockCollapsed ? "is-collapsed" : ""}">
+          <div class="block-item">
             ${commonHeader}
             <div class="field">
               <label>تعليمة الترتيب</label>
@@ -3030,7 +3036,7 @@
 
       if (block.type === "numeric") {
         return `
-          <div class="block-item ${blockCollapsed ? "is-collapsed" : ""}">
+          <div class="block-item">
             ${commonHeader}
             <div class="grid-2">
               <div class="field">
@@ -3048,7 +3054,7 @@
 
       if (block.type === "blanks") {
         return `
-          <div class="block-item ${blockCollapsed ? "is-collapsed" : ""}">
+          <div class="block-item">
             ${commonHeader}
             <div class="field">
               <label>نص الفراغات</label>
@@ -3060,7 +3066,7 @@
       }
 
       return `
-        <div class="block-item ${blockCollapsed ? "is-collapsed" : ""}">
+        <div class="block-item">
           ${commonHeader}
           <div class="field">
             <label>نص العنصر</label>
@@ -4146,7 +4152,6 @@ ${buildPrintScopeCss()}
 
         if (action === "reset-advanced-settings") resetPrintSettings();
         if (action === "toggle-question") toggleQuestionCollapse(button.dataset.questionId);
-        if (action === "toggle-block") toggleBlockCollapse(button.dataset.blockId);
         if (action === "remove-question") removeQuestion(q);
         if (action === "add-block") {
           const select = document.getElementById(`blockType-${button.dataset.questionId}`);
