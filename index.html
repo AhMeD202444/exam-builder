@@ -3034,6 +3034,9 @@
       const rawLine = String(line || "");
       if (!rawLine.trim()) return null;
 
+      const cleanedLine = rawLine.replace(/^[\s\u00A0\u200E\u200F\u061C\u200B\uFEFF]+/, "");
+      if (!cleanedLine) return null;
+
       const arabicLabelPattern = AR_LETTERS
         .slice()
         .sort((a, b) => b.length - a.length)
@@ -3041,7 +3044,7 @@
         .join("|");
       const labelPattern = `(?:${arabicLabelPattern}|[A-Za-z])`;
 
-      const wrappedMatch = rawLine.match(new RegExp(String.raw`^\s*[\(\[\{﴿（]\s*(${labelPattern})\s*[\)\]\}﴾）]\s*(.*)$`));
+      const wrappedMatch = cleanedLine.match(new RegExp(String.raw`^[\(\[\{﴿（]\s*(${labelPattern})\s*[\)\]\}﴾）]\s*(.*)$`));
       if (wrappedMatch) {
         return {
           label: wrappedMatch[1],
@@ -3049,7 +3052,7 @@
         };
       }
 
-      const plainMatch = rawLine.match(new RegExp(String.raw`^\s*(${labelPattern})\s*[\)\-–—\.:،/\\]\s*(.*)$`));
+      const plainMatch = cleanedLine.match(new RegExp(String.raw`^(${labelPattern})\s*[\)\-–—\.:،/\\ـ]\s*(.*)$`));
       if (plainMatch) {
         return {
           label: plainMatch[1],
@@ -3059,35 +3062,36 @@
 
       return null;
     }
+
     function expandInlineLetterBranchesForRender(block) {
       if (!block || !["normal", "blanks"].includes(block.type)) return [block];
-      if (!isLetterBranchLabel(block.label || "")) return [block];
 
       const prompt = String(block.prompt || "").replace(/\r\n?/g, "\n");
-      if (!prompt.includes("\n")) {
-        const firstLineMatch = getInlineLetterBranchMatch(prompt);
-        if (!firstLineMatch || normalizeBranchLabel(firstLineMatch.label) !== normalizeBranchLabel(block.label || "")) {
-          return [block];
-        }
-      }
+      const promptLines = prompt.split("\n");
+      const explicitBaseLabel = String(block.label || "");
+      const explicitBaseIsLetter = isLetterBranchLabel(explicitBaseLabel);
+      const firstMarker = getInlineLetterBranchMatch(promptLines[0] || "");
+      const initialLabel = explicitBaseIsLetter ? explicitBaseLabel : (firstMarker ? firstMarker.label : "");
 
-      const lines = prompt.split("\n");
-      const baseLabel = String(block.label || "");
-      const baseNormalized = normalizeBranchLabel(baseLabel);
-      const segments = [{ label: baseLabel, lines: [] }];
+      if (!isLetterBranchLabel(initialLabel)) return [block];
+
+      const segments = [{ label: initialLabel, lines: [] }];
       let foundExtraBranch = false;
 
-      lines.forEach((line, index) => {
+      promptLines.forEach((line, index) => {
         const marker = getInlineLetterBranchMatch(line);
+        const currentLabel = segments[segments.length - 1].label;
+        const currentNormalized = normalizeBranchLabel(currentLabel);
+
         if (marker) {
           const markerNormalized = normalizeBranchLabel(marker.label);
 
-          if (index === 0 && markerNormalized === baseNormalized) {
+          if (index === 0 && markerNormalized === currentNormalized) {
             if (marker.content) segments[segments.length - 1].lines.push(marker.content);
             return;
           }
 
-          if (markerNormalized && markerNormalized !== baseNormalized) {
+          if (markerNormalized && markerNormalized !== currentNormalized) {
             foundExtraBranch = true;
             segments.push({
               label: marker.label,
@@ -3104,13 +3108,14 @@
 
       return segments.map((segment, index) => ({
         ...block,
-        label: index === 0 ? baseLabel : segment.label,
+        label: index === 0 ? (explicitBaseIsLetter ? explicitBaseLabel : segment.label) : segment.label,
         prompt: trimEmptyLines(segment.lines.join("\n")),
         degree: index === 0 ? block.degree : ""
       }));
     }
 
-    function makeBlock(type = "normal", label = "") {      const base = {
+    function makeBlock(type = "normal", label = "") {
+      const base = {
         id: uid(),
         type,
         label,
