@@ -2998,12 +2998,25 @@
       return AR_LETTERS[index] || toArabicDigits(index + 1);
     }
 
-    function isLetterBranchLabel(value) {
+    function normalizeBranchLabel(value) {
       const raw = String(value || "").trim();
-      if (!raw) return false;
-      const normalized = raw.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+      if (!raw) return "";
+
+      const normalizedDigits = raw
+        .replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+        .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+
+      return normalizedDigits
+        .replace(/^[^A-Za-zأ-ي0-9]+/, "")
+        .replace(/[^A-Za-zأ-ي0-9]+$/, "")
+        .trim();
+    }
+
+    function isLetterBranchLabel(value) {
+      const normalized = normalizeBranchLabel(value);
+      if (!normalized) return false;
       if (/^\d+$/.test(normalized)) return false;
-      return AR_LETTERS.includes(raw) || /^[A-Za-zأ-ي]+$/.test(raw);
+      return AR_LETTERS.includes(normalized) || /^[A-Za-zأ-ي]+$/.test(normalized);
     }
 
     function makeBlock(type = "normal", label = "") {
@@ -3960,7 +3973,7 @@
       }
 
       return `
-        <div class="element-line"${rootStyleAttr}>
+        <div class="element-line${branchClass}"${rootStyleAttr}>
           ${labelPrefix}
           <div class="element-body">${prompt}</div>
           ${trailingBadge}
