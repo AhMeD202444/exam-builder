@@ -1359,7 +1359,7 @@
       line-height: 1.35;
     }
 
-    .question-text { flex: 1; min-width: 0; }
+    .question-text { flex: 1; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
 
     .degree-badge {
       white-space: nowrap;
@@ -1400,7 +1400,7 @@
       white-space: nowrap;
     }
 
-    .element-body { flex: 1; min-width: 0; }
+    .element-body { flex: 1; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
     .element-degree {
       white-space: nowrap;
       font-weight: 900;
@@ -1440,6 +1440,22 @@
 
     .definitions-list.compact-row .def-item {
       font-size: 0.96em;
+    }
+    .def-pill {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 10px;
+      flex: 0 1 auto;
+      min-width: 0;
+      max-width: 100%;
+      white-space: normal;
+      vertical-align: baseline;
+    }
+
+    .def-pill > span:last-child {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      word-break: break-word;
     }
 
     .ordering-list,
@@ -3420,12 +3436,15 @@
   font-weight: var(--question-degree-weight);
 }
 .print-scope .definitions-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
   margin-top: var(--list-margin-top);
   gap: var(--definitions-row-gap) var(--definitions-column-gap) !important;
   width: 100% !important;
   flex: 0 0 100% !important;
-  justify-content: var(--definitions-justify) !important;
-  text-align: center !important;
+  align-items: baseline !important;
+  justify-content: flex-start !important;
+  text-align: right !important;
 }
 .print-scope .ordering-list,
 .print-scope .tf-list,
@@ -4992,7 +5011,7 @@ ${buildPrintScopeCss()}
       font-weight: 900;
       line-height: 1.35;
     }
-    .question-text { flex: 1; min-width: 0; }
+    .question-text { flex: 1; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
     .degree-badge {
       white-space: nowrap;
       font-size: 12pt;
@@ -5023,7 +5042,7 @@ ${buildPrintScopeCss()}
       min-width: 18px;
       white-space: nowrap;
     }
-    .element-body { flex: 1; min-width: 0; }
+    .element-body { flex: 1; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
     .element-degree {
       white-space: nowrap;
       font-weight: 900;
