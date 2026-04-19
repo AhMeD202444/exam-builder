@@ -2644,6 +2644,9 @@
 
       const normalizeQuestion = (question) => {
         const sourceQuestion = question && typeof question === "object" ? question : {};
+        const supportedQuestionTypes = new Set(["normal", "blanks", "definitions", "points"]);
+        const rawQuestionType = typeof sourceQuestion.type === "string" ? sourceQuestion.type : "normal";
+        const finalQuestionType = supportedQuestionTypes.has(rawQuestionType) ? rawQuestionType : "normal";
         const rawBlocks = Array.isArray(sourceQuestion.blocks) && sourceQuestion.blocks.length
           ? sourceQuestion.blocks
           : [makeBlock("normal", "أ")];
@@ -2652,6 +2655,8 @@
           id: sourceQuestion.id || uid(),
           title: typeof sourceQuestion.title === "string" ? sourceQuestion.title : "",
           degree: typeof sourceQuestion.degree === "string" ? sourceQuestion.degree : "",
+          type: finalQuestionType,
+          items: normalizePointsItems(sourceQuestion.items),
           blocks: rawBlocks.map((block, index) => normalizeBlock(block, index))
         };
       };
@@ -3156,6 +3161,8 @@
         id: uid(),
         title: "",
         degree: "",
+        type: "normal",
+        items: [makePoint()],
         blocks: [makeBlock("normal", "أ")]
       };
     }
@@ -3381,22 +3388,7 @@
               </div>
             </div>
 
-            <div class="field">
-              <label>أضف عنصر داخل السؤال</label>
-              <div class="toolbar">
-                <select id="blockType-${question.id}">
-                  <option value="normal">نص / فرع عادي</option>
-                  <option value="blanks">فراغات</option>
-                  <option value="definitions">تعاريف</option>
-                  <option value="points">نقاط</option>
-                </select>
-                <button class="btn btn-success" data-action="add-block" data-q="${qIndex}" data-question-id="${question.id}">إضافة عنصر</button>
-              </div>
-            </div>
-
-            <div class="block-list">
-              ${question.blocks.map((block, bIndex) => renderBlockEditor(block, qIndex, bIndex)).join("")}
-            </div>
+            ${renderQuestionEditorBody(question, qIndex)}
           </div>
         `;
       }).join("");
@@ -3406,6 +3398,91 @@
 
     function renderSymbolButton() {
       return `<button class="btn btn-soft" type="button" data-action="open-symbols-context">الرموز</button>`;
+    }
+
+    function renderQuestionTypeOptions(selectedType) {
+      const types = [
+        ["normal", "عادي مع فروع"],
+        ["blanks", "فراغات مباشرة"],
+        ["definitions", "تعاريف مباشرة"],
+        ["points", "نقاط مباشرة"]
+      ];
+
+      return types.map(([value, label]) => `
+        <option value="${value}" ${selectedType === value ? "selected" : ""}>${label}</option>
+      `).join("");
+    }
+
+    function renderQuestionEditorBody(question, qIndex) {
+      const questionType = question.type || "normal";
+
+      const typeField = `
+        <div class="field">
+          <label>نوع السؤال الرئيسي</label>
+          <select data-scope="question-type" data-q="${qIndex}">
+            ${renderQuestionTypeOptions(questionType)}
+          </select>
+        </div>
+      `;
+
+      if (questionType === "normal") {
+        return `
+          ${typeField}
+          <div class="field">
+            <label>أضف عنصر داخل السؤال</label>
+            <div class="toolbar">
+              <select id="blockType-${question.id}">
+                <option value="normal">نص / فرع عادي</option>
+                <option value="blanks">فراغات</option>
+                <option value="definitions">تعاريف</option>
+                <option value="points">نقاط</option>
+              </select>
+              <button class="btn btn-success" data-action="add-block" data-q="${qIndex}" data-question-id="${question.id}">إضافة عنصر</button>
+            </div>
+          </div>
+
+          <div class="block-list">
+            ${question.blocks.map((block, bIndex) => renderBlockEditor(block, qIndex, bIndex)).join("")}
+          </div>
+        `;
+      }
+
+      const itemLabelMap = {
+        points: ["إضافة نقطة", "نص النقطة", "درجة النقطة (اختياري)", "حذف النقطة"],
+        definitions: ["إضافة تعريف", "نص التعريف", "درجة التعريف (اختياري)", "حذف التعريف"],
+        blanks: ["إضافة فراغ", "نص الفراغ", "درجة الفراغ (اختياري)", "حذف الفراغ"]
+      };
+
+      const [addLabel, textLabel, degreeLabel, removeLabel] = itemLabelMap[questionType] || itemLabelMap.points;
+
+      return `
+        ${typeField}
+        <div class="inline-actions">
+          <button class="btn btn-success" data-action="add-question-item" data-q="${qIndex}">${addLabel}</button>
+          ${renderSymbolButton()}
+        </div>
+        ${(question.items || []).map((item, i) => `
+          <div class="subitem">
+            <div class="grid-2">
+              <div class="field">
+                <label>${textLabel}</label>
+                ${questionType === "blanks"
+                  ? `<textarea data-scope="question-item" data-field="text" data-q="${qIndex}" data-i="${i}" data-symbol-preferred="true" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(item.text || "")}</textarea>`
+                  : `<input data-scope="question-item" data-field="text" data-q="${qIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text || "")}" placeholder="اكتب المطلوب هنا" />`
+                }
+              </div>
+              <div class="field">
+                <label>${degreeLabel}</label>
+                <input data-scope="question-item" data-field="degree" data-q="${qIndex}" data-i="${i}" type="text" value="${escapeHtml(item.degree || "")}" placeholder="مثال: 2" />
+              </div>
+            </div>
+            ${questionType === "blanks" ? `<div class="small-note">لإظهار الفراغ في الطباعة اكتب (فراغ) أو ثلاث شرطات سفلية أو أكثر مثل: ___</div>` : ``}
+            <div class="inline-actions">
+              <button class="btn btn-danger" data-action="remove-question-item" data-q="${qIndex}" data-i="${i}">${removeLabel}</button>
+            </div>
+          </div>
+        `).reverse().join("")}
+      `;
     }
 
     function renderBlockEditor(block, qIndex, bIndex) {
@@ -3670,7 +3747,8 @@
       const questionsHtml = state.questions.map((question, qIndex) => {
         const degreeText = question.degree ? `(${escapeHtml(formatDegree(question.degree))})` : "";
         const questionNumberLabel = `س${toArabicDigits(qIndex + 1)}/`;
-        const mergeFirstBranch = !String(question.title || "").trim() && Array.isArray(question.blocks) && question.blocks.length && ["normal", "definitions", "points", "blanks"].includes(question.blocks[0].type);
+        const isMainTypedQuestion = ["blanks", "definitions", "points"].includes(question.type);
+        const mergeFirstBranch = !isMainTypedQuestion && !String(question.title || "").trim() && Array.isArray(question.blocks) && question.blocks.length && ["normal", "definitions", "points", "blanks"].includes(question.blocks[0].type);
 
         return `
           <div class="question-block">
@@ -3683,7 +3761,9 @@
                 ${degreeText ? `<div class="degree-badge">${degreeText}</div>` : ``}
               </div>
             `}
-            ${question.blocks && question.blocks.length ? `
+            ${isMainTypedQuestion
+              ? renderQuestionMainTypePreview(question)
+              : (question.blocks && question.blocks.length ? `
               <div class="question-elements ${mergeFirstBranch ? "question-elements-merged" : ""}">
                 ${(() => {
                   let previousBranchWasLetter = false;
@@ -3699,7 +3779,7 @@
                   }).join("");
                 })()}
               </div>
-            ` : ``}
+            ` : ``)}
           </div>
         `;
       }).join("");
@@ -3915,6 +3995,64 @@
       `;
     }
 
+    function renderQuestionMainTypePreview(question) {
+      const items = Array.isArray(question.items) ? question.items : [];
+
+      if (question.type === "definitions") {
+        return `
+          <div class="question-elements">
+            <div class="definitions-list">
+              ${items.map((item, index) => `
+                <span class="def-pill">
+                  <span class="dot">${toArabicDigits(index + 1)}-</span>
+                  <span>${renderExamText(item.text || "تعريف فارغ")}</span>
+                  ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
+                </span>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if (question.type === "points") {
+        return `
+          <div class="question-elements">
+            <div class="ordering-list tight-under-prompt">
+              ${items.map((item, index) => `
+                <div class="ordering-item">
+                  <span class="dot">${toArabicDigits(index + 1)}-</span>
+                  <div>
+                    ${renderExamText(item.text || "نقطة فارغة")}
+                    ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      if (question.type === "blanks") {
+        return `
+          <div class="question-elements">
+            <div class="ordering-list tight-under-prompt">
+              ${items.map((item, index) => `
+                <div class="ordering-item">
+                  <span class="dot">${toArabicDigits(index + 1)}-</span>
+                  <div>
+                    ${item.text ? renderBlanks(item.text) : '<span class="empty-hint">اكتب النص واستعمل ___ بمكان الفراغ</span>'}
+                    ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      }
+
+      return "";
+    }
+
     function addQuestion() {
       state.questions.push(makeQuestion());
       saveDraft();
@@ -3925,6 +4063,41 @@
       const question = state.questions[qIndex];
       const label = nextLabel(question.blocks.length);
       question.blocks.push(makeBlock(type, label));
+      saveDraft();
+      renderAll();
+    }
+
+    function changeQuestionType(qIndex, newType) {
+      const question = state.questions[qIndex];
+      question.type = ["normal", "blanks", "definitions", "points"].includes(newType) ? newType : "normal";
+
+      if (!Array.isArray(question.items) || !question.items.length) {
+        question.items = [makePoint()];
+      }
+
+      if (question.type === "normal" && (!Array.isArray(question.blocks) || !question.blocks.length)) {
+        question.blocks = [makeBlock("normal", "أ")];
+      }
+
+      saveDraft();
+      renderAll();
+    }
+
+    function addQuestionItem(qIndex) {
+      const question = state.questions[qIndex];
+      if (!Array.isArray(question.items)) question.items = [];
+      question.items.push(makePoint());
+      saveDraft();
+      renderAll();
+    }
+
+    function removeQuestionItem(qIndex, itemIndex) {
+      const question = state.questions[qIndex];
+      if (!Array.isArray(question.items) || question.items.length <= 1) {
+        showToast("لا يمكن حذف كل العناصر هنا. خليه يبقى عنصر واحد على الأقل.", "warning");
+        return;
+      }
+      question.items.splice(itemIndex, 1);
       saveDraft();
       renderAll();
     }
@@ -4672,6 +4845,13 @@ ${buildPrintScopeCss()}
           renderPreview();
         }
 
+        if (t.dataset.scope === "question-item") {
+          const question = state.questions[Number(t.dataset.q)];
+          question.items[Number(t.dataset.i)][t.dataset.field] = t.value;
+          saveDraft();
+          renderPreview();
+        }
+
         if (t.dataset.scope === "block") {
           const block = state.questions[Number(t.dataset.q)].blocks[Number(t.dataset.b)];
           const value = t.dataset.field === "label" ? toArabicDigits(t.value) : t.value;
@@ -4704,6 +4884,10 @@ ${buildPrintScopeCss()}
         if (t.dataset.scope === "block-type") {
           changeBlockType(Number(t.dataset.q), Number(t.dataset.b), t.value);
         }
+
+        if (t.dataset.scope === "question-type") {
+          changeQuestionType(Number(t.dataset.q), t.value);
+        }
       });
 
       document.addEventListener("click", (event) => {
@@ -4723,6 +4907,8 @@ ${buildPrintScopeCss()}
           openSymbolDrawer();
         }
         if (action === "remove-question") removeQuestion(q);
+        if (action === "add-question-item") addQuestionItem(q);
+        if (action === "remove-question-item") removeQuestionItem(q, i);
         if (action === "add-block") {
           const select = document.getElementById(`blockType-${button.dataset.questionId}`);
           addBlock(q, select ? select.value : "normal");
