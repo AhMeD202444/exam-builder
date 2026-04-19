@@ -2789,6 +2789,8 @@
     const AR_LETTERS = ["أ","ب","ج","د","هـ","و","ز","ح","ط","ي","ك","ل","م","ن","س","ع","ف","ص","ق","ر","ش","ت","ث","خ","ذ","ض","ظ","غ"];
 
     let state = null;
+    let autoSaveTimer = null;
+    let autoSaveReady = false;
 
     function moveHeaderCardIntoAdvancedSettings() {
       return;
@@ -3106,6 +3108,7 @@
         ...source,
         meta: { ...base.meta, ...meta },
         signatures: { ...base.signatures, ...signatures },
+        modelId: typeof source.modelId === "string" ? source.modelId : "",
         saveName: typeof source.saveName === "string" ? source.saveName : "",
         ui: {
           collapsedQuestions: {},
@@ -3627,6 +3630,7 @@
           leftName: ""
         },
         printSettings: defaultPrintSettings(),
+        modelId: "",
         saveName: "",
         ui: {
           collapsedQuestions: {},
@@ -3652,8 +3656,67 @@
       return String(value || "").replace(/\s+/g, " ").trim();
     }
 
-    function saveDraft() {
+    function saveDraft(options = {}) {
+      const skipAutoSave = Boolean(options.skipAutoSave);
       localStorage.setItem(DRAFT_KEY, JSON.stringify(state));
+      if (!skipAutoSave) scheduleAutoSave();
+    }
+
+    function persistCurrentModel(options = {}) {
+      const silent = options.silent !== false;
+      const showSuccessToast = Boolean(options.showSuccessToast);
+      const successMessage = options.successMessage || "تم حفظ النموذج داخل المتصفح.";
+      const models = getSavedModels();
+      const payload = clone(state);
+      const nowLabel = new Date().toLocaleString("ar-IQ");
+
+      if (!state.modelId) state.modelId = uid();
+      payload.modelId = state.modelId;
+      payload.saveName = normalizeModelTitle(state.saveName || autoSaveName()) || "نموذج امتحاني";
+      state.saveName = payload.saveName;
+
+      const modelIndex = models.findIndex(model =>
+        model.id === state.modelId ||
+        (model.payload && model.payload.modelId === state.modelId)
+      );
+
+      if (modelIndex !== -1) {
+        const existing = models[modelIndex];
+        models.splice(modelIndex, 1);
+        models.unshift({
+          ...existing,
+          id: state.modelId,
+          title: payload.saveName,
+          updatedAt: nowLabel,
+          payload
+        });
+      } else {
+        models.unshift({
+          id: state.modelId,
+          title: payload.saveName,
+          createdAt: nowLabel,
+          updatedAt: nowLabel,
+          payload
+        });
+      }
+
+      setSavedModels(models);
+      const saveNameEl = document.getElementById("saveName");
+      if (saveNameEl) saveNameEl.value = state.saveName;
+      saveDraft({ skipAutoSave: true });
+      renderSavedList();
+
+      if (!silent && showSuccessToast) {
+        showToast(successMessage, "success");
+      }
+    }
+
+    function scheduleAutoSave(delay = 650) {
+      if (!autoSaveReady) return;
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        persistCurrentModel({ silent: true });
+      }, delay);
     }
 
     function loadState() {
@@ -4722,44 +4785,11 @@
     }
 
     function saveModel() {
-      const models = getSavedModels();
-      const payload = clone(state);
-      payload.saveName = normalizeModelTitle(state.saveName || autoSaveName());
-      const nowLabel = new Date().toLocaleString("ar-IQ");
-      const existingIndex = models.findIndex(model => normalizeModelTitle(model.title) === payload.saveName);
-
-      if (existingIndex !== -1) {
-        const existing = models[existingIndex];
-        models.splice(existingIndex, 1);
-        models.unshift({
-          ...existing,
-          title: payload.saveName,
-          updatedAt: nowLabel,
-          payload
-        });
-
-        setSavedModels(models);
-        state.saveName = payload.saveName;
-        document.getElementById("saveName").value = state.saveName;
-        saveDraft();
-        renderSavedList();
-        showToast("هذا النموذج موجود مسبقًا، لذلك تم تحديثه بدل إنشاء نسخة جديدة.", "warning", { duration: 4600 });
-        return;
-      }
-
-      models.unshift({
-        id: uid(),
-        title: payload.saveName,
-        createdAt: nowLabel,
-        payload
+      persistCurrentModel({
+        silent: false,
+        showSuccessToast: true,
+        successMessage: "تم حفظ النموذج داخل المتصفح."
       });
-
-      setSavedModels(models);
-      state.saveName = payload.saveName;
-      document.getElementById("saveName").value = state.saveName;
-      saveDraft();
-      renderSavedList();
-      showToast("تم حفظ النموذج داخل المتصفح.", "success");
     }
 
     function loadModel(id) {
@@ -4767,7 +4797,7 @@
       if (!model) return;
       state = normalizeState(clone(model.payload));
       fillStaticFields();
-      saveDraft();
+      saveDraft({ skipAutoSave: true });
       renderAll();
       showToast("تم فتح النموذج المحفوظ.", "success");
     }
@@ -4804,8 +4834,9 @@
       showConfirmToast("هل تريد تصفير الحقول والبدء بنموذج جديد؟", () => {
         state = defaultState();
         fillStaticFields();
-        saveDraft();
+        saveDraft({ skipAutoSave: true });
         renderAll();
+        persistCurrentModel({ silent: true });
         showToast("تم فتح نموذج جديد وتصفير الحقول.", "success");
       });
       return;
