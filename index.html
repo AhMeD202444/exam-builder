@@ -556,6 +556,58 @@
 
     .question-card + .question-card { margin-top: 18px; }
 
+    .question-card::before {
+      display: none;
+    }
+
+    .question-card > .question-top {
+      background: rgba(255, 255, 255, 0.82) !important;
+      border-color: rgba(83, 119, 175, 0.16) !important;
+    }
+
+    .question-card > .question-top .chip {
+      background: linear-gradient(135deg, rgba(228, 236, 248, 0.96), rgba(214, 225, 243, 0.92)) !important;
+      border-color: rgba(83, 119, 175, 0.16) !important;
+      color: #284064 !important;
+      box-shadow: 0 12px 20px rgba(33, 53, 85, 0.06) !important;
+    }
+
+    .question-card {
+      border-radius: 20px;
+      padding: 14px;
+      gap: 12px;
+      box-shadow: 0 10px 22px rgba(33, 53, 85, 0.045);
+    }
+
+    .question-card:not(.is-collapsed) > .question-top {
+      top: 8px;
+      padding: 8px 10px;
+      margin: 0;
+      border-radius: 16px;
+      box-shadow: 0 8px 18px rgba(33, 53, 85, 0.06);
+      backdrop-filter: blur(6px);
+    }
+
+    .question-card > .question-top .chip {
+      min-width: 56px;
+      height: 56px;
+      border-radius: 18px;
+      font-size: 24px;
+      box-shadow: 0 8px 16px rgba(33, 53, 85, 0.05) !important;
+    }
+
+    .question-card > .question-top .inline-actions {
+      padding: 4px 5px;
+      border-radius: 14px;
+      box-shadow: none;
+    }
+
+    .collapse-toggle {
+      width: 44px;
+      height: 44px;
+      border-radius: 16px;
+    }
+
     .question-meta-grid {
       display: grid;
       grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -4249,6 +4301,9 @@
     function renderPreview() {
       syncAdvancedStyleElement();
       const sheet = document.getElementById("sheetPreview");
+      const sheetStage = sheet ? sheet.closest(".sheet-stage") : null;
+      const preservedScrollTop = sheetStage ? sheetStage.scrollTop : 0;
+      const preservedScrollLeft = sheetStage ? sheetStage.scrollLeft : 0;
       const meta = state.meta;
       const sig = state.signatures;
       const scopeStyle = buildPrintScopeVars();
