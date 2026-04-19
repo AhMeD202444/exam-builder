@@ -455,15 +455,106 @@
     }
 
     .question-card {
+      position: relative;
       border: 1px solid #dce6f2;
-      border-radius: 20px;
-      padding: 14px;
+      border-radius: 24px;
+      padding: 16px;
       background: linear-gradient(180deg, #ffffff, #fbfdff);
       display: grid;
-      gap: 12px;
+      gap: 14px;
+      overflow: hidden;
+      box-shadow: 0 18px 36px rgba(33, 53, 85, 0.06);
     }
 
-    .question-card + .question-card { margin-top: 12px; }
+    .question-card::before {
+      content: "";
+      position: absolute;
+      inset-inline-start: -26px;
+      top: -32px;
+      width: 150px;
+      height: 150px;
+      border-radius: 50%;
+      filter: blur(14px);
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .question-card > .question-top {
+      position: relative;
+      padding: 12px 14px;
+      border-radius: 20px;
+      border: 1px solid rgba(83, 119, 175, 0.16);
+      background: rgba(255, 255, 255, 0.82);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    }
+
+    .question-card > .question-top .chip {
+      min-width: 62px;
+      height: 62px;
+      border-radius: 22px;
+      font-size: 28px;
+      box-shadow: 0 12px 20px rgba(33, 53, 85, 0.08);
+    }
+
+    .question-card > .question-top .inline-actions {
+      padding: 6px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.74);
+      border: 1px solid rgba(83, 119, 175, 0.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+    }
+
+    .question-card:nth-of-type(3n + 1)::before {
+      background: radial-gradient(circle, rgba(91, 141, 239, 0.95), rgba(91, 141, 239, 0));
+    }
+
+    .question-card:nth-of-type(3n + 1) > .question-top {
+      background: linear-gradient(180deg, rgba(91, 141, 239, 0.10), rgba(91, 141, 239, 0.03));
+      border-color: rgba(91, 141, 239, 0.18);
+    }
+
+    .question-card:nth-of-type(3n + 1) > .question-top .chip {
+      background: linear-gradient(135deg, rgba(91, 141, 239, 0.24), rgba(50, 104, 211, 0.12));
+      border-color: rgba(50, 104, 211, 0.20);
+      color: #264f9d;
+    }
+
+    .question-card:nth-of-type(3n + 2)::before {
+      background: radial-gradient(circle, rgba(62, 180, 137, 0.95), rgba(62, 180, 137, 0));
+    }
+
+    .question-card:nth-of-type(3n + 2) > .question-top {
+      background: linear-gradient(180deg, rgba(62, 180, 137, 0.10), rgba(62, 180, 137, 0.03));
+      border-color: rgba(62, 180, 137, 0.18);
+    }
+
+    .question-card:nth-of-type(3n + 2) > .question-top .chip {
+      background: linear-gradient(135deg, rgba(62, 180, 137, 0.24), rgba(31, 138, 102, 0.12));
+      border-color: rgba(31, 138, 102, 0.20);
+      color: #176e52;
+    }
+
+    .question-card:nth-of-type(3n + 3)::before {
+      background: radial-gradient(circle, rgba(155, 109, 255, 0.95), rgba(155, 109, 255, 0));
+    }
+
+    .question-card:nth-of-type(3n + 3) > .question-top {
+      background: linear-gradient(180deg, rgba(155, 109, 255, 0.10), rgba(155, 109, 255, 0.03));
+      border-color: rgba(155, 109, 255, 0.18);
+    }
+
+    .question-card:nth-of-type(3n + 3) > .question-top .chip {
+      background: linear-gradient(135deg, rgba(155, 109, 255, 0.24), rgba(112, 72, 214, 0.12));
+      border-color: rgba(112, 72, 214, 0.20);
+      color: #5a35b3;
+    }
+
+    .question-body {
+      display: grid;
+      gap: 16px;
+    }
+
+    .question-card + .question-card { margin-top: 18px; }
 
     .question-meta-grid {
       display: grid;
@@ -1268,7 +1359,7 @@
       line-height: 1.35;
     }
 
-    .question-text { flex: 1; }
+    .question-text { flex: 1; min-width: 0; }
 
     .degree-badge {
       white-space: nowrap;
@@ -1309,7 +1400,7 @@
       white-space: nowrap;
     }
 
-    .element-body { flex: 1; }
+    .element-body { flex: 1; min-width: 0; }
     .element-degree {
       white-space: nowrap;
       font-weight: 900;
@@ -4901,7 +4992,7 @@ ${buildPrintScopeCss()}
       font-weight: 900;
       line-height: 1.35;
     }
-    .question-text { flex: 1; }
+    .question-text { flex: 1; min-width: 0; }
     .degree-badge {
       white-space: nowrap;
       font-size: 12pt;
@@ -4932,7 +5023,7 @@ ${buildPrintScopeCss()}
       min-width: 18px;
       white-space: nowrap;
     }
-    .element-body { flex: 1; }
+    .element-body { flex: 1; min-width: 0; }
     .element-degree {
       white-space: nowrap;
       font-weight: 900;
