@@ -519,6 +519,19 @@
       flex-wrap: wrap;
     }
 
+    .question-card:not(.is-collapsed) > .question-top {
+      position: sticky;
+      top: 10px;
+      z-index: 30;
+      padding: 10px 12px;
+      margin: -4px -4px 0;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(83, 119, 175, 0.16);
+      box-shadow: 0 12px 24px rgba(33, 53, 85, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
     .head-main {
       display: flex;
       align-items: center;
@@ -675,10 +688,179 @@
       gap: 8px;
     }
 
+    .block-item > .grid-4 > .field,
+    .subitem > .grid-2 > .field {
+      border: 1px solid #dce6f2;
+      border-radius: 18px;
+      padding: 10px;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      box-shadow: 0 10px 24px rgba(33, 53, 85, 0.05);
+      min-height: 128px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
+    .block-item > .grid-4 > .field label,
+    .subitem > .grid-2 > .field label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(33, 53, 85, 0.12), rgba(83, 119, 175, 0.22));
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(83, 119, 175, 0.18);
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .block-item > .grid-4 > .field input,
+    .block-item > .grid-4 > .field textarea,
+    .block-item > .grid-4 > .field select,
+    .subitem > .grid-2 > .field input,
+    .subitem > .grid-2 > .field textarea,
+    .subitem > .grid-2 > .field select {
+      min-height: 74px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(83, 119, 175, 0.18);
+    }
+
+    .subitem > .grid-2 > .field input:not([type="checkbox"]):not([type="radio"]) {
+      text-align: center;
+    }
+
+    .subitem .inline-actions {
+      justify-content: center;
+    }
+
+    .subitem .inline-actions .btn-danger {
+      min-width: 170px;
+      justify-content: center;
+      padding-inline: 22px;
+    }
+
     .inline-actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
+    }
+
+    .action-badge-group {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      border: 1px solid #dce6f2;
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      box-shadow: 0 10px 24px rgba(33, 53, 85, 0.05);
+      text-align: center;
+    }
+
+    .action-badge-group .btn {
+      min-width: 160px;
+      justify-content: center;
+    }
+
+    .question-main-controls-shell {
+      border: 1px solid #dce6f2;
+      border-radius: 18px;
+      padding: 12px;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      box-shadow: 0 10px 24px rgba(33, 53, 85, 0.05);
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(220px, 0.9fr);
+      gap: 14px;
+      align-items: end;
+    }
+
+    .question-main-controls-cell {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .question-main-controls-cell label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(33, 53, 85, 0.12), rgba(83, 119, 175, 0.22));
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(83, 119, 175, 0.18);
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .question-main-controls-shell select,
+    .question-main-controls-shell .btn {
+      min-height: 56px;
+      border-radius: 14px;
+    }
+
+    .question-main-controls-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(240px, 0.85fr);
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .question-main-control-card {
+      border: 1px solid #dce6f2;
+      border-radius: 18px;
+      padding: 12px;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      box-shadow: 0 10px 24px rgba(33, 53, 85, 0.05);
+      display: grid;
+      gap: 10px;
+      align-content: start;
+      min-height: 132px;
+    }
+
+    .question-main-control-card label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 32px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(33, 53, 85, 0.12), rgba(83, 119, 175, 0.22));
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 800;
+      border: 1px solid rgba(83, 119, 175, 0.18);
+      margin-inline: auto;
+      text-align: center;
+    }
+
+    .question-main-control-card select,
+    .question-main-control-card .btn {
+      min-height: 72px;
+      border-radius: 16px;
+    }
+
+    .question-add-block-field {
+      display: grid;
+      gap: 10px;
+      place-items: center;
+      text-align: center;
+    }
+
+    .question-add-block-field .btn {
+      width: 100%;
+      justify-content: center;
     }
 
     .saved-list {
@@ -1461,7 +1643,7 @@
         width: calc(100vw - 14px);
       }
       .hero h1 { font-size: 24px; }
-      .grid-2, .grid-3, .grid-4, .question-meta-grid { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .grid-4, .question-meta-grid, .question-main-controls-grid, .question-main-controls-shell { grid-template-columns: 1fr; }
       .advanced-card .field {
         padding: 10px;
         border-radius: 18px;
@@ -3274,6 +3456,21 @@
       renderQuestionEditors();
       renderPreview();
       renderSavedList();
+
+      if (pendingFocusSelector) {
+        const selector = pendingFocusSelector;
+        pendingFocusSelector = "";
+        requestAnimationFrame(() => {
+          const target = document.querySelector(selector);
+          if (!target) return;
+          target.focus();
+          if (typeof target.value === "string" && typeof target.setSelectionRange === "function") {
+            const cursor = target.value.length;
+            target.setSelectionRange(cursor, cursor);
+          }
+          target.scrollIntoView({ block: "center", behavior: "smooth" });
+        });
+      }
     }
 
     function updateQuestionLabels(question) {
@@ -3417,7 +3614,7 @@
       const questionType = question.type || "normal";
 
       const typeField = `
-        <div class="field">
+        <div class="field question-main-control-card">
           <label>نوع السؤال الرئيسي</label>
           <select data-scope="question-type" data-q="${qIndex}">
             ${renderQuestionTypeOptions(questionType)}
@@ -3427,20 +3624,18 @@
 
       if (questionType === "normal") {
         return `
-          ${typeField}
-          <div class="field">
-            <label>أضف عنصر داخل السؤال</label>
-            <div class="toolbar">
-              <select id="blockType-${question.id}">
-                <option value="normal">نص / فرع عادي</option>
-                <option value="blanks">فراغات</option>
-                <option value="definitions">تعاريف</option>
-                <option value="points">نقاط</option>
+          <div class="field question-main-controls-shell">
+            <div class="question-main-controls-cell">
+              <label>نوع السؤال الرئيسي</label>
+              <select data-scope="question-type" data-q="${qIndex}">
+                ${renderQuestionTypeOptions(questionType)}
               </select>
-              <button class="btn btn-success" data-action="add-block" data-q="${qIndex}" data-question-id="${question.id}">إضافة عنصر</button>
+            </div>
+            <div class="question-main-controls-cell question-add-block-field">
+              <label>أضف عنصر داخل السؤال</label>
+              <button class="btn btn-success" data-action="add-block" data-q="${qIndex}">إضافة عنصر</button>
             </div>
           </div>
-
           <div class="block-list">
             ${question.blocks.map((block, bIndex) => renderBlockEditor(block, qIndex, bIndex)).join("")}
           </div>
@@ -3457,7 +3652,7 @@
 
       return `
         ${typeField}
-        <div class="inline-actions">
+        <div class="inline-actions action-badge-group">
           <button class="btn btn-success" data-action="add-question-item" data-q="${qIndex}">${addLabel}</button>
           ${renderSymbolButton()}
         </div>
@@ -3527,7 +3722,7 @@
               <label>عنوان هذا العنصر</label>
               <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="مثال: عرّف ما يأتي:">${escapeHtml(block.prompt)}</textarea>
             </div>
-            <div class="inline-actions">
+            <div class="inline-actions action-badge-group">
               <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة تعريف</button>
               ${renderSymbolButton()}
             </div>
@@ -3560,7 +3755,7 @@
               <label>عنوان هذا العنصر</label>
               <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="مثال: اكتب النقاط الآتية:">${escapeHtml(block.prompt)}</textarea>
             </div>
-            <div class="inline-actions">
+            <div class="inline-actions action-badge-group">
               <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة نقطة</button>
               ${renderSymbolButton()}
             </div>
@@ -3593,7 +3788,7 @@
               <label>عنوان هذا العنصر</label>
               <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="مثال: أكمل ما يأتي:">${escapeHtml(block.prompt)}</textarea>
             </div>
-            <div class="inline-actions">
+            <div class="inline-actions action-badge-group">
               <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة فراغ</button>
               ${renderSymbolButton()}
             </div>
@@ -4087,6 +4282,8 @@
       const question = state.questions[qIndex];
       if (!Array.isArray(question.items)) question.items = [];
       question.items.push(makePoint());
+      const itemIndex = question.items.length - 1;
+      pendingFocusSelector = `[data-scope="question-item"][data-field="text"][data-q="${qIndex}"][data-i="${itemIndex}"]`;
       saveDraft();
       renderAll();
     }
@@ -4397,6 +4594,8 @@
       const block = state.questions[qIndex].blocks[bIndex];
       if (block.type === "definitions" || block.type === "points" || block.type === "blanks") {
         block.items.push(makePoint());
+        const itemIndex = block.items.length - 1;
+        pendingFocusSelector = `[data-scope="point"][data-group="items"][data-field="text"][data-q="${qIndex}"][data-b="${bIndex}"][data-i="${itemIndex}"]`;
       } else {
         block.items.push(makeTextItem());
       }
@@ -4995,6 +5194,7 @@ ${buildPrintScopeCss()}
     }
 
     let lastFocusedTextInput = null;
+    let pendingFocusSelector = "";
 
     function openSymbolDrawer() {
       const drawer = document.getElementById("symbolDrawer");
