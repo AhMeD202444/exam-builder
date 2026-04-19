@@ -90,16 +90,21 @@
     }
 
     .toast-region {
+      position: fixed;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(560px, calc(100vw - 24px));
       display: flex;
       justify-content: center;
-      margin-top: -4px;
-      margin-bottom: 2px;
+      margin: 0;
       min-height: 0;
       pointer-events: none;
+      z-index: 95;
     }
 
     .toast-stack {
-      width: min(880px, 100%);
+      width: 100%;
       display: grid;
       gap: 10px;
       pointer-events: none;
@@ -1222,6 +1227,10 @@
 
     @media (max-width: 820px) {
       body { padding: 14px; }
+      .toast-region {
+        top: 10px;
+        width: calc(100vw - 14px);
+      }
       .hero h1 { font-size: 24px; }
       .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
       .sheet-stage { padding: 0; }
@@ -1339,7 +1348,8 @@
 
     @media print {
       .symbol-fab,
-      .symbol-drawer {
+      .symbol-drawer,
+      .toast-region {
         display: none !important;
       }
       html, body {
@@ -1403,11 +1413,7 @@
     <section class="hero">
       <div>
         <h1>منشئ الأسئلة الامتحانية الاحترافي</h1>
-        <p>
-          واجهة مرنة جدًا لبناء ورقة أسئلة رسمية وأنيقة. تكتب البيانات والأسئلة فقط، والتطبيق يرتبها تلقائيًا،
-          يحفظها داخل المتصفح، ويجهزها للطباعة بشكل احترافي على ورقة A4.
-        </p>
-      </div>
+             </div>
       <div class="hero-actions">
         <button class="btn btn-accent" id="printTopBtn">طباعة الورقة</button>
         <button class="btn btn-soft" id="saveTopBtn">حفظ النموذج</button>
@@ -3729,8 +3735,32 @@
       return "i";
     }
 
+    const activeToasts = new Map();
+
+    function getToastKey(message, type = "info", options = {}) {
+      const rawKey = options.toastKey ?? `${type}::${String(message || "").trim()}`;
+      return String(rawKey || "").trim();
+    }
+
+    function clearToastTimer(toast) {
+      if (toast?._closeTimer) {
+        clearTimeout(toast._closeTimer);
+        toast._closeTimer = null;
+      }
+    }
+
+    function scheduleToastClose(toast, duration) {
+      clearToastTimer(toast);
+      toast._closeTimer = setTimeout(() => removeToast(toast), duration);
+    }
+
     function removeToast(toast) {
       if (!toast || toast.dataset.closing === "1") return;
+      clearToastTimer(toast);
+      const toastKey = toast.dataset.toastKey;
+      if (toastKey && activeToasts.get(toastKey) === toast) {
+        activeToasts.delete(toastKey);
+      }
       toast.dataset.closing = "1";
       toast.classList.add("is-leaving");
       setTimeout(() => toast.remove(), 220);
@@ -3740,8 +3770,33 @@
       const stack = document.getElementById("toastStack");
       if (!stack) return;
 
+      const toastKey = getToastKey(message, type, options);
+      const existingToast = toastKey ? activeToasts.get(toastKey) : null;
+      const duration = typeof options.duration === "number"
+        ? options.duration
+        : type === "success"
+          ? 3200
+          : type === "warning"
+            ? 4200
+            : type === "error"
+              ? 4800
+              : 3600;
+
+      if (existingToast && existingToast.isConnected) {
+        existingToast.dataset.closing = "0";
+        existingToast.classList.remove("is-leaving");
+        stack.prepend(existingToast);
+        if (options.autoClose !== false) {
+          scheduleToastClose(existingToast, duration);
+        } else {
+          clearToastTimer(existingToast);
+        }
+        return existingToast;
+      }
+
       const toast = document.createElement("div");
       toast.className = `toast toast-${type}`;
+      toast.dataset.toastKey = toastKey;
       toast.innerHTML = `
         <div class="toast-icon">${getToastIcon(type)}</div>
         <div class="toast-body">
@@ -3773,23 +3828,18 @@
       }
 
       stack.prepend(toast);
-
-      const duration = typeof options.duration === "number"
-        ? options.duration
-        : type === "success"
-          ? 3200
-          : type === "warning"
-            ? 4200
-            : type === "error"
-              ? 4800
-              : 3600;
+      if (toastKey) {
+        activeToasts.set(toastKey, toast);
+      }
 
       if (options.autoClose !== false) {
-        setTimeout(() => removeToast(toast), duration);
+        scheduleToastClose(toast, duration);
       }
 
       while (stack.children.length > 4) {
-        stack.lastElementChild?.remove();
+        const lastToast = stack.lastElementChild;
+        if (!lastToast) break;
+        removeToast(lastToast);
       }
 
       return toast;
