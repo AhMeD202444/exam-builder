@@ -1176,26 +1176,195 @@
     }
 
     .advanced-group {
-      border: 1px solid rgba(148, 163, 184, 0.18);
-      border-radius: 16px;
-      padding: 14px;
-      background: rgba(255, 255, 255, 0.68);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 24px;
+      padding: 18px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(244, 248, 253, 0.9));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.72), 0 16px 30px rgba(15, 23, 42, 0.055);
       display: grid;
-      gap: 12px;
+      gap: 16px;
+      text-align: center;
     }
 
     .advanced-group-title {
-      margin: 0;
-      font-size: 14px;
+      margin: 0 auto;
+      width: fit-content;
+      max-width: 100%;
+      font-size: 13px;
       font-weight: 900;
       color: var(--primary-strong);
+      background: linear-gradient(135deg, rgba(229, 237, 249, 0.98), rgba(247, 250, 255, 0.96));
+      border: 1px solid rgba(125, 152, 191, 0.34);
+      border-radius: 999px;
+      padding: 8px 14px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.82), 0 8px 16px rgba(15, 23, 42, 0.04);
     }
 
     .advanced-group-note {
-      margin: -6px 0 0;
+      margin: -3px auto 0;
       color: var(--muted);
       font-size: 12px;
-      line-height: 1.75;
+      line-height: 1.8;
+      max-width: 680px;
+      text-align: center;
+    }
+
+    .advanced-card .grid-2,
+    .advanced-card .grid-3,
+    .advanced-card .grid-4 {
+      grid-template-columns: repeat(auto-fit, minmax(176px, 1fr));
+      gap: 13px;
+    }
+
+    .advanced-card .field {
+      position: relative;
+      display: grid;
+      justify-items: center;
+      align-content: start;
+      gap: 10px;
+      padding: 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(206, 217, 232, 0.94);
+      background: linear-gradient(180deg, rgba(251, 253, 255, 0.99), rgba(241, 246, 252, 0.96));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.92), 0 10px 22px rgba(15, 23, 42, 0.045);
+      min-width: 0;
+      overflow: hidden;
+      text-align: center;
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+
+    .advanced-card .field::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, rgba(83, 119, 175, 0), rgba(83, 119, 175, 0.46), rgba(184, 132, 23, 0.38), rgba(83, 119, 175, 0));
+      opacity: 0.95;
+    }
+
+    .advanced-card .field:hover {
+      transform: translateY(-2px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.92), 0 14px 28px rgba(15, 23, 42, 0.07);
+      border-color: rgba(125, 152, 191, 0.42);
+    }
+
+    .advanced-card .field label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      width: fit-content;
+      max-width: 100%;
+      margin-inline: auto;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(229, 238, 248, 0.98);
+      border: 1px solid rgba(125, 152, 191, 0.28);
+      color: #163559;
+      font-size: 11.5px;
+      font-weight: 900;
+      line-height: 1.55;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.84);
+      text-align: center;
+    }
+
+    .advanced-card .field input,
+    .advanced-card .field select,
+    .advanced-card .field textarea,
+    .advanced-card .stepper-shell {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .advanced-card .field input,
+    .advanced-card .field select,
+    .advanced-card .field textarea {
+      min-height: 48px;
+      padding: 12px 14px;
+      border-radius: 15px;
+      border: 1px solid #d7e0ec;
+      background: rgba(255, 255, 255, 0.99);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.045);
+      text-align: center;
+    }
+
+    .advanced-card .field input[data-print-type="number"] {
+      text-align: center;
+      font-weight: 900;
+      letter-spacing: 0.2px;
+      color: #143457;
+      appearance: textfield;
+      -moz-appearance: textfield;
+    }
+
+    .advanced-card .field input[data-print-type="number"]::-webkit-outer-spin-button,
+    .advanced-card .field input[data-print-type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
+    .advanced-card .field select {
+      font-weight: 800;
+      color: #17385f;
+      cursor: pointer;
+      text-align: center;
+      text-align-last: center;
+    }
+
+    .advanced-card .stepper-shell {
+      display: grid;
+      grid-template-columns: 42px minmax(0, 1fr) 42px;
+      align-items: center;
+      gap: 8px;
+      min-height: 52px;
+      padding: 5px;
+      border-radius: 16px;
+      border: 1px solid #d7e0ec;
+      background: rgba(255, 255, 255, 0.99);
+      box-shadow: 0 10px 20px rgba(15, 23, 42, 0.05);
+    }
+
+    .advanced-card .stepper-shell input {
+      min-height: 40px;
+      padding: 8px 4px;
+      border: none;
+      background: transparent;
+      box-shadow: none;
+      border-radius: 12px;
+    }
+
+    .advanced-card .stepper-shell input:focus {
+      box-shadow: none;
+      outline: none;
+    }
+
+    .advanced-card .stepper-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(232, 239, 248, 0.98), rgba(217, 228, 242, 0.95));
+      color: #15375c;
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.88), 0 6px 14px rgba(15, 23, 42, 0.08);
+      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+    }
+
+    .advanced-card .stepper-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.9), 0 9px 16px rgba(15, 23, 42, 0.11);
+      background: linear-gradient(180deg, rgba(237, 243, 251, 0.99), rgba(223, 232, 245, 0.96));
+    }
+
+    .advanced-card .stepper-btn:active {
+      transform: translateY(0) scale(0.96);
     }
 
     #advancedSettingsFields {
@@ -1233,6 +1402,23 @@
       }
       .hero h1 { font-size: 24px; }
       .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .advanced-card .field {
+        padding: 10px;
+        border-radius: 18px;
+      }
+      .advanced-card .field label {
+        font-size: 11px;
+      }
+      .advanced-card .stepper-shell {
+        grid-template-columns: 40px minmax(0, 1fr) 40px;
+        min-height: 50px;
+        gap: 6px;
+      }
+      .advanced-card .stepper-btn {
+        width: 34px;
+        height: 34px;
+        border-radius: 11px;
+      }
       .sheet-stage { padding: 0; }
       .exam-sheet {
         width: 100%;
@@ -3419,6 +3605,74 @@
       header.style.setProperty("--header-side-width", `${sideWidth}px`);
     }
 
+    function countStepperDecimals(stepValue) {
+      const raw = String(stepValue || "");
+      if (!raw.includes(".")) return 0;
+      return raw.split(".")[1].length;
+    }
+
+    function enhanceAdvancedSteppers() {
+      const scope = document.querySelector(".advanced-card");
+      if (!scope) return;
+
+      scope.querySelectorAll('input[data-print-type="number"]').forEach((input) => {
+        if (input.closest('.stepper-shell')) return;
+        const parent = input.parentElement;
+        if (!parent) return;
+
+        const shell = document.createElement('div');
+        shell.className = 'stepper-shell';
+
+        const decreaseBtn = document.createElement('button');
+        decreaseBtn.type = 'button';
+        decreaseBtn.className = 'stepper-btn';
+        decreaseBtn.setAttribute('aria-label', 'تنقيص القيمة');
+        decreaseBtn.innerHTML = '&#8722;';
+
+        const increaseBtn = document.createElement('button');
+        increaseBtn.type = 'button';
+        increaseBtn.className = 'stepper-btn';
+        increaseBtn.setAttribute('aria-label', 'زيادة القيمة');
+        increaseBtn.innerHTML = '&#43;';
+
+        parent.insertBefore(shell, input);
+        shell.appendChild(decreaseBtn);
+        shell.appendChild(input);
+        shell.appendChild(increaseBtn);
+
+        const stepInputValue = (direction) => {
+          if (input.disabled || input.readOnly) return;
+          const step = Number.parseFloat(input.step);
+          const amount = Number.isFinite(step) && step > 0 ? step : 1;
+          const decimals = countStepperDecimals(amount);
+          const min = Number.parseFloat(input.min);
+          const max = Number.parseFloat(input.max);
+          const current = Number.parseFloat(input.value);
+          const fallback = Number.isFinite(min) ? min : 0;
+          let next = (Number.isFinite(current) ? current : fallback) + (amount * direction);
+
+          if (Number.isFinite(min)) next = Math.max(min, next);
+          if (Number.isFinite(max)) next = Math.min(max, next);
+
+          const normalized = decimals > 0
+            ? String(next.toFixed(decimals)).replace(/\.?0+$/, '')
+            : String(Math.round(next));
+
+          input.value = normalized;
+          input.dispatchEvent(new Event('input', { bubbles: true }));
+          input.dispatchEvent(new Event('change', { bubbles: true }));
+          try {
+            input.focus({ preventScroll: true });
+          } catch (error) {
+            input.focus();
+          }
+        };
+
+        decreaseBtn.addEventListener('click', () => stepInputValue(-1));
+        increaseBtn.addEventListener('click', () => stepInputValue(1));
+      });
+    }
+
     function renderPreview() {
       syncAdvancedStyleElement();
       const sheet = document.getElementById("sheetPreview");
@@ -4676,6 +4930,7 @@ ${buildPrintScopeCss()}
       });
     }
 
+    enhanceAdvancedSteppers();
     syncAdvancedStyleElement();
     loadState();
     bindStaticInputs();
