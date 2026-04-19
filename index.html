@@ -667,16 +667,141 @@
     .block-list {
       display: flex;
       flex-direction: column-reverse;
-      gap: 10px;
+      gap: 14px;
     }
 
     .block-item {
-      padding: 12px;
-      border-radius: 18px;
-      background: #f9fbfe;
-      border: 1px dashed #cfdae9;
+      position: relative;
+      padding: 14px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      border: 1px solid #d9e4f2;
+      box-shadow: 0 12px 28px rgba(33, 53, 85, 0.06);
       display: grid;
-      gap: 10px;
+      gap: 12px;
+      overflow: hidden;
+    }
+
+    .block-list > .block-item::before {
+      display: none;
+    }
+
+    .block-list > .block-item > .question-top {
+      padding: 10px 12px;
+      border-radius: 18px;
+      border: 1px solid rgba(83, 119, 175, 0.14);
+      background: rgba(255, 255, 255, 0.78);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+    }
+
+    .block-list > .block-item:nth-child(4n + 1) {
+      background: linear-gradient(180deg, #ffffff, #f5f9ff);
+    }
+
+
+    .block-list > .block-item:nth-child(4n + 1) > .question-top {
+      background: linear-gradient(180deg, rgba(91, 141, 239, 0.10), rgba(91, 141, 239, 0.03));
+      border-color: rgba(91, 141, 239, 0.18);
+    }
+
+    .block-list > .block-item:nth-child(4n + 2) {
+      background: linear-gradient(180deg, #ffffff, #f4fcf8);
+    }
+
+
+    .block-list > .block-item:nth-child(4n + 2) > .question-top {
+      background: linear-gradient(180deg, rgba(62, 180, 137, 0.10), rgba(62, 180, 137, 0.03));
+      border-color: rgba(62, 180, 137, 0.18);
+    }
+
+    .block-list > .block-item:nth-child(4n + 3) {
+      background: linear-gradient(180deg, #ffffff, #faf6ff);
+    }
+
+
+    .block-list > .block-item:nth-child(4n + 3) > .question-top {
+      background: linear-gradient(180deg, rgba(155, 109, 255, 0.10), rgba(155, 109, 255, 0.03));
+      border-color: rgba(155, 109, 255, 0.18);
+    }
+
+    .block-list > .block-item:nth-child(4n + 4) {
+      background: linear-gradient(180deg, #ffffff, #fff9f1);
+    }
+
+
+    .block-list > .block-item:nth-child(4n + 4) > .question-top {
+      background: linear-gradient(180deg, rgba(245, 185, 71, 0.12), rgba(245, 185, 71, 0.03));
+      border-color: rgba(245, 185, 71, 0.22);
+    }
+
+    .block-list > .block-item::after {
+      content: "";
+      position: absolute;
+      inset-inline-start: -16px;
+      top: -22px;
+      width: 118px;
+      height: 118px;
+      border-radius: 50%;
+      filter: blur(10px);
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .block-list > .block-item > .question-top .chip {
+      min-width: 58px;
+      height: 58px;
+      border-radius: 20px;
+      font-size: 26px;
+      box-shadow: 0 10px 18px rgba(33, 53, 85, 0.08);
+    }
+
+    .block-list > .block-item > .question-top .inline-actions {
+      padding: 6px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 1px solid rgba(83, 119, 175, 0.12);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.85);
+      justify-content: flex-end;
+    }
+
+    .block-list > .block-item:nth-child(4n + 1)::after {
+      background: radial-gradient(circle, rgba(91, 141, 239, 0.95), rgba(91, 141, 239, 0));
+    }
+
+    .block-list > .block-item:nth-child(4n + 1) > .question-top .chip {
+      background: linear-gradient(135deg, rgba(91, 141, 239, 0.22), rgba(50, 104, 211, 0.10));
+      border-color: rgba(50, 104, 211, 0.20);
+      color: #264f9d;
+    }
+
+    .block-list > .block-item:nth-child(4n + 2)::after {
+      background: radial-gradient(circle, rgba(62, 180, 137, 0.95), rgba(62, 180, 137, 0));
+    }
+
+    .block-list > .block-item:nth-child(4n + 2) > .question-top .chip {
+      background: linear-gradient(135deg, rgba(62, 180, 137, 0.22), rgba(31, 138, 102, 0.10));
+      border-color: rgba(31, 138, 102, 0.20);
+      color: #176e52;
+    }
+
+    .block-list > .block-item:nth-child(4n + 3)::after {
+      background: radial-gradient(circle, rgba(155, 109, 255, 0.95), rgba(155, 109, 255, 0));
+    }
+
+    .block-list > .block-item:nth-child(4n + 3) > .question-top .chip {
+      background: linear-gradient(135deg, rgba(155, 109, 255, 0.22), rgba(112, 72, 214, 0.10));
+      border-color: rgba(112, 72, 214, 0.20);
+      color: #5a35b3;
+    }
+
+    .block-list > .block-item:nth-child(4n + 4)::after {
+      background: radial-gradient(circle, rgba(245, 185, 71, 0.95), rgba(245, 185, 71, 0));
+    }
+
+    .block-list > .block-item:nth-child(4n + 4) > .question-top .chip {
+      background: linear-gradient(135deg, rgba(245, 185, 71, 0.24), rgba(218, 139, 21, 0.10));
+      border-color: rgba(218, 139, 21, 0.20);
+      color: #9b6412;
     }
 
     .subitem {
@@ -689,6 +814,18 @@
     }
 
     .block-item > .grid-4 > .field,
+    .block-item > .grid-3 > .field {
+      border: 1px solid #dce6f2;
+      border-radius: 18px;
+      padding: 10px;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      box-shadow: 0 10px 24px rgba(33, 53, 85, 0.05);
+      min-height: 100px;
+      display: grid;
+      gap: 8px;
+      align-content: start;
+    }
+
     .subitem > .grid-2 > .field {
       border: 1px solid #dce6f2;
       border-radius: 18px;
@@ -702,6 +839,7 @@
     }
 
     .block-item > .grid-4 > .field label,
+    .block-item > .grid-3 > .field label,
     .subitem > .grid-2 > .field label {
       display: inline-flex;
       align-items: center;
@@ -722,6 +860,15 @@
     .block-item > .grid-4 > .field input,
     .block-item > .grid-4 > .field textarea,
     .block-item > .grid-4 > .field select,
+    .block-item > .grid-3 > .field input,
+    .block-item > .grid-3 > .field textarea,
+    .block-item > .grid-3 > .field select {
+      min-height: 56px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(83, 119, 175, 0.18);
+    }
+
     .subitem > .grid-2 > .field input,
     .subitem > .grid-2 > .field textarea,
     .subitem > .grid-2 > .field select {
@@ -3692,7 +3839,7 @@
             ${renderSymbolButton()}
           </div>
         </div>
-        <div class="grid-4">
+        <div class="grid-3">
           <div class="field">
             <label>رمز العنصر</label>
             <input data-scope="block" data-field="label" data-q="${qIndex}" data-b="${bIndex}" type="text" value="${escapeHtml(toArabicDigits(block.label || ""))}" />
@@ -3706,10 +3853,6 @@
           <div class="field">
             <label>درجة الفرع</label>
             <input data-scope="block" data-field="degree" data-q="${qIndex}" data-b="${bIndex}" type="text" value="${escapeHtml(block.degree || "")}" placeholder="مثال: 2" />
-          </div>
-          <div class="field">
-            <label>ملاحظة صغيرة</label>
-            <input disabled type="text" value="${typeDescription(block.type)}" />
           </div>
         </div>
       `;
