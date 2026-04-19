@@ -545,7 +545,8 @@
       filter: drop-shadow(0 1px 1px rgba(255,255,255,0.35));
     }
 
-    .question-card.is-collapsed .collapse-toggle {
+    .question-card.is-collapsed .collapse-toggle,
+    .fold-card.is-collapsed .collapse-toggle {
       border-color: rgba(67, 146, 214, 0.22);
       background:
         radial-gradient(circle at 30% 25%, rgba(255,255,255,0.96), rgba(255,255,255,0) 55%),
@@ -553,15 +554,43 @@
       color: #2570b5;
     }
 
-    .question-card.is-collapsed .collapse-toggle .icon-collapsed {
+    .question-card.is-collapsed .collapse-toggle .icon-collapsed,
+    .fold-card.is-collapsed .collapse-toggle .icon-collapsed {
       display: inline-flex;
     }
 
-    .question-card:not(.is-collapsed) .collapse-toggle .icon-expanded {
+    .question-card:not(.is-collapsed) .collapse-toggle .icon-expanded,
+    .fold-card:not(.is-collapsed) .collapse-toggle .icon-expanded {
       display: inline-flex;
     }
 
     .question-card.is-collapsed > :not(.question-top) {
+      display: none !important;
+    }
+
+    .fold-card {
+      display: grid;
+      gap: 12px;
+    }
+
+    .fold-card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .fold-card-header h2 {
+      margin: 0;
+    }
+
+    .fold-card-body {
+      display: grid;
+      gap: 12px;
+    }
+
+    .fold-card.is-collapsed .fold-card-body {
       display: none !important;
     }
 
@@ -1391,15 +1420,26 @@
 
     <section class="workspace">
       <aside class="panel-stack">
-        <details class="card fold-card editor-fold" id="headerInfoCard">
-          <summary>
-            <span class="fold-summary-text">
-              <h2>معلومات الهيدر</h2>
-              <small>افتحها فقط إذا تريد تعدّل بيانات أعلى الورقة أو الملاحظة.</small>
-            </span>
-            <span class="fold-summary-icon" aria-hidden="true">›</span>
-          </summary>
-          <div class="fold-body">
+        <div class="card fold-card is-collapsed" id="headerInfoCard">
+          <div class="fold-card-header">
+            <h2>معلومات الهيدر</h2>
+            <button type="button" class="collapse-toggle" data-action="toggle-static-card" data-card-id="headerInfoCard" aria-expanded="false" aria-label="فتح معلومات الهيدر" title="فتح معلومات الهيدر">
+              <span class="collapse-icon icon-collapsed" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
+                  <path d="M12 8.4v7.2"></path>
+                  <path d="M8.4 12h7.2"></path>
+                </svg>
+              </span>
+              <span class="collapse-icon icon-expanded" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
+                  <path d="M8.4 12h7.2"></path>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div class="fold-card-body">
             <div class="grid-2">
               <div class="field">
                 <label>الإدارة</label>
@@ -1444,17 +1484,28 @@
               <textarea id="note" placeholder="مثال: أجب عن أربعة أسئلة فقط..."></textarea>
             </div>
           </div>
-        </details>
+        </div>
 
-        <details class="card fold-card editor-fold" id="signatureCard">
-          <summary>
-            <span class="fold-summary-text">
-              <h2>توقيع مدرس المادة</h2>
-              <small>افتحها إذا تريد تعدّل عنوان التوقيع أو اسم المدرس.</small>
-            </span>
-            <span class="fold-summary-icon" aria-hidden="true">›</span>
-          </summary>
-          <div class="fold-body">
+        <div class="card fold-card is-collapsed" id="teacherSignatureCard">
+          <div class="fold-card-header">
+            <h2>توقيع مدرس المادة</h2>
+            <button type="button" class="collapse-toggle" data-action="toggle-static-card" data-card-id="teacherSignatureCard" aria-expanded="false" aria-label="فتح توقيع مدرس المادة" title="فتح توقيع مدرس المادة">
+              <span class="collapse-icon icon-collapsed" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
+                  <path d="M12 8.4v7.2"></path>
+                  <path d="M8.4 12h7.2"></path>
+                </svg>
+              </span>
+              <span class="collapse-icon icon-expanded" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
+                  <path d="M8.4 12h7.2"></path>
+                </svg>
+              </span>
+            </button>
+          </div>
+          <div class="fold-card-body">
             <div class="grid-2">
               <div class="field">
                 <label>عنوان التوقيع</label>
@@ -1468,10 +1519,10 @@
             <input id="leftTitle" type="hidden" value="" />
             <input id="leftName" type="hidden" value="" />
           </div>
-        </details>
+        </div>
 
         <div class="card advanced-card">
-          <details id="advancedSettingsCard" class="editor-fold">
+          <details id="advancedSettingsCard">
             <summary>
               <div class="advanced-summary-text">
                 <h2>إعدادات متقدمة للطباعة</h2>
@@ -1497,10 +1548,10 @@
               <fieldset id="advancedSettingsFields">
                 <div class="advanced-group">
                   <div class="advanced-group-title">الهيدر</div>
-                  <div class="advanced-group-note">يضبط الهيدر العام ثم يعطيك تحكم مستقل لجزء الإدارة والمدرسة، وللعنوان الأوسط، ولجزء المادة والصف.</div>
+                  <div class="advanced-group-note">الهيدر صار مربوط فعليًا بالمعاينة والطباعة. من هنا تقدر تتحكم بمجموعة الإدارة واسم المدرسة، العنوان الأوسط والعام الدراسي، والمادة والصف.</div>
                   <div class="grid-4">
                     <div class="field">
-                      <label>الإزاحة العلوية للهيدر (mm)</label>
+                      <label>الإزاحة العلوية للهيدر كاملًا (mm)</label>
                       <input data-print-setting="headerMarginTop" data-print-type="number" type="number" step="0.1" />
                     </div>
                     <div class="field">
@@ -1517,137 +1568,139 @@
                     </div>
                   </div>
 
-                  <div class="advanced-subgroup">
-                    <div class="advanced-subgroup-title">قسم الإدارة واسم المدرسة</div>
-                    <div class="grid-4">
-                      <div class="field">
-                        <label>محاذاة القسم الأيمن</label>
-                        <select data-print-setting="headerRightAlign">
-                          <option value="right">يمين</option>
-                          <option value="center">توسيط</option>
-                          <option value="left">يسار</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label>حجم خط القسم الأيمن (pt)</label>
-                        <input data-print-setting="headerRightFontSize" data-print-type="number" type="number" step="0.1" min="8" />
-                      </div>
-                      <div class="field">
-                        <label>وزن خط القسم الأيمن</label>
-                        <select data-print-setting="headerRightFontWeight">
-                          <option value="400">عادي</option>
-                          <option value="500">متوسط</option>
-                          <option value="600">شبه بولد</option>
-                          <option value="700">بولد</option>
-                          <option value="800">ثقيل</option>
-                          <option value="900">ثقيل جدًا</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label>إزاحة يمين/يسار للقسم الأيمن (mm)</label>
-                        <input data-print-setting="headerRightOffsetX" data-print-type="number" type="number" step="0.1" />
-                      </div>
-                      <div class="field">
-                        <label>إزاحة فوق/تحت للقسم الأيمن (mm)</label>
-                        <input data-print-setting="headerRightOffsetY" data-print-type="number" type="number" step="0.1" />
-                      </div>
-                      <div class="field">
-                        <label>إزاحة العمود الأيمن داخل الصفحة (mm)</label>
-                        <input data-print-setting="headerRightPadding" data-print-type="number" type="number" step="0.1" />
-                      </div>
+                  <div class="advanced-group-note" style="margin-top:10px;">الإدارة + اسم المدرسة</div>
+                  <div class="grid-4">
+                    <div class="field">
+                      <label>تحريك يمين (mm)</label>
+                      <input data-print-setting="headerRightMoveRight" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تحريك يسار (mm)</label>
+                      <input data-print-setting="headerRightMoveLeft" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تحريك فوق (mm)</label>
+                      <input data-print-setting="headerRightMoveUp" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تحريك تحت (mm)</label>
+                      <input data-print-setting="headerRightMoveDown" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>حجم الخط (pt)</label>
+                      <input data-print-setting="headerRightFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>ثقل الخط</label>
+                      <select data-print-setting="headerRightFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>محاذاة النص</label>
+                      <select data-print-setting="headerRightAlign">
+                        <option value="right">يمين</option>
+                        <option value="center">توسيط</option>
+                        <option value="left">يسار</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>إزاحة داخلية يمين (mm)</label>
+                      <input data-print-setting="headerRightPadding" data-print-type="number" type="number" step="0.1" />
                     </div>
                   </div>
 
-                  <div class="advanced-subgroup">
-                    <div class="advanced-subgroup-title">العنوان الأوسط والعام الدراسي</div>
-                    <div class="grid-4">
-                      <div class="field">
-                        <label>محاذاة عنوان الوسط</label>
-                        <select data-print-setting="headerCenterAlign">
-                          <option value="center">توسيط</option>
-                          <option value="right">يمين</option>
-                          <option value="left">يسار</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label>حجم خط العنوان الأوسط (pt)</label>
-                        <input data-print-setting="headerCenterTitleFontSize" data-print-type="number" type="number" step="0.1" min="8" />
-                      </div>
-                      <div class="field">
-                        <label>وزن خط العنوان الأوسط</label>
-                        <select data-print-setting="headerCenterTitleFontWeight">
-                          <option value="400">عادي</option>
-                          <option value="500">متوسط</option>
-                          <option value="600">شبه بولد</option>
-                          <option value="700">بولد</option>
-                          <option value="800">ثقيل</option>
-                          <option value="900">ثقيل جدًا</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label>حجم خط العام الدراسي/السطر الثاني (pt)</label>
-                        <input data-print-setting="headerCenterMetaFontSize" data-print-type="number" type="number" step="0.1" min="8" />
-                      </div>
-                      <div class="field">
-                        <label>وزن خط العام الدراسي/السطر الثاني</label>
-                        <select data-print-setting="headerCenterMetaFontWeight">
-                          <option value="400">عادي</option>
-                          <option value="500">متوسط</option>
-                          <option value="600">شبه بولد</option>
-                          <option value="700">بولد</option>
-                          <option value="800">ثقيل</option>
-                          <option value="900">ثقيل جدًا</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label>إزاحة يمين/يسار لعنوان الوسط (mm)</label>
-                        <input data-print-setting="headerCenterOffsetX" data-print-type="number" type="number" step="0.1" />
-                      </div>
-                      <div class="field">
-                        <label>إزاحة فوق/تحت لعنوان الوسط (mm)</label>
-                        <input data-print-setting="headerCenterOffsetY" data-print-type="number" type="number" step="0.1" />
-                      </div>
+                  <div class="advanced-group-note" style="margin-top:10px;">عنوان الوسط + العام الدراسي</div>
+                  <div class="grid-4">
+                    <div class="field">
+                      <label>تحريك يمين (mm)</label>
+                      <input data-print-setting="headerCenterMoveRight" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تحريك يسار (mm)</label>
+                      <input data-print-setting="headerCenterMoveLeft" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تحريك فوق (mm)</label>
+                      <input data-print-setting="headerCenterMoveUp" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تحريك تحت (mm)</label>
+                      <input data-print-setting="headerCenterMoveDown" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>حجم خط عنوان الوسط (pt)</label>
+                      <input data-print-setting="headerTitleFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>ثقل عنوان الوسط</label>
+                      <select data-print-setting="headerTitleFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>حجم خط العام الدراسي/الدور (pt)</label>
+                      <input data-print-setting="headerMetaFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>ثقل العام الدراسي/الدور</label>
+                      <select data-print-setting="headerMetaFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
                     </div>
                   </div>
 
-                  <div class="advanced-subgroup">
-                    <div class="advanced-subgroup-title">قسم المادة والصف</div>
-                    <div class="grid-4">
-                      <div class="field">
-                        <label>محاذاة القسم الأيسر</label>
-                        <select data-print-setting="headerLeftAlign">
-                          <option value="left">يسار</option>
-                          <option value="center">توسيط</option>
-                          <option value="right">يمين</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label>حجم خط القسم الأيسر (pt)</label>
-                        <input data-print-setting="headerLeftFontSize" data-print-type="number" type="number" step="0.1" min="8" />
-                      </div>
-                      <div class="field">
-                        <label>وزن خط القسم الأيسر</label>
-                        <select data-print-setting="headerLeftFontWeight">
-                          <option value="400">عادي</option>
-                          <option value="500">متوسط</option>
-                          <option value="600">شبه بولد</option>
-                          <option value="700">بولد</option>
-                          <option value="800">ثقيل</option>
-                          <option value="900">ثقيل جدًا</option>
-                        </select>
-                      </div>
-                      <div class="field">
-                        <label>إزاحة يمين/يسار للقسم الأيسر (mm)</label>
-                        <input data-print-setting="headerLeftOffsetX" data-print-type="number" type="number" step="0.1" />
-                      </div>
-                      <div class="field">
-                        <label>إزاحة فوق/تحت للقسم الأيسر (mm)</label>
-                        <input data-print-setting="headerLeftOffsetY" data-print-type="number" type="number" step="0.1" />
-                      </div>
-                      <div class="field">
-                        <label>إزاحة العمود الأيسر داخل الصفحة (mm)</label>
-                        <input data-print-setting="headerLeftPadding" data-print-type="number" type="number" step="0.1" />
-                      </div>
+                  <div class="advanced-group-note" style="margin-top:10px;">المادة + الصف</div>
+                  <div class="grid-4">
+                    <div class="field">
+                      <label>تحريك يمين (mm)</label>
+                      <input data-print-setting="headerLeftMoveRight" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تحريك يسار (mm)</label>
+                      <input data-print-setting="headerLeftMoveLeft" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تحريك فوق (mm)</label>
+                      <input data-print-setting="headerLeftMoveUp" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>تحريك تحت (mm)</label>
+                      <input data-print-setting="headerLeftMoveDown" data-print-type="number" type="number" step="0.1" min="0" />
+                    </div>
+                    <div class="field">
+                      <label>حجم الخط (pt)</label>
+                      <input data-print-setting="headerLeftFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                    </div>
+                    <div class="field">
+                      <label>ثقل الخط</label>
+                      <select data-print-setting="headerLeftFontWeight">
+                        <option value="400">عادي</option>
+                        <option value="700">بولد</option>
+                        <option value="800">بولد قوي</option>
+                        <option value="900">ثقيل جدًا</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>محاذاة النص</label>
+                      <select data-print-setting="headerLeftAlign">
+                        <option value="left">يسار</option>
+                        <option value="center">توسيط</option>
+                        <option value="right">يمين</option>
+                      </select>
+                    </div>
+                    <div class="field">
+                      <label>إزاحة داخلية يسار (mm)</label>
+                      <input data-print-setting="headerLeftPadding" data-print-type="number" type="number" step="0.1" />
                     </div>
                   </div>
                 </div>
@@ -2134,20 +2187,21 @@
         headerSideFontWeight: "800",
         headerRightAlign: "right",
         headerLeftAlign: "left",
-        headerCenterAlign: "center",
-        headerRightOffsetX: 0,
-        headerRightOffsetY: 0,
+        headerRightMoveRight: 0,
+        headerRightMoveLeft: 0,
+        headerRightMoveUp: 0,
+        headerRightMoveDown: 0,
         headerRightFontSize: 12.1,
         headerRightFontWeight: "800",
-        headerCenterOffsetX: 0,
-        headerCenterOffsetY: 0,
-        headerCenterTitleFontSize: 14.7,
-        headerCenterTitleFontWeight: "800",
-        headerCenterMetaFontSize: 11.8,
-        headerCenterMetaFontWeight: "800",
-        headerLeftOffsetX: 0,
-        headerLeftOffsetY: 0,
-        headerLeftFontSize: 12.1,
+        headerCenterMoveRight: 0,
+        headerCenterMoveLeft: 0,
+        headerCenterMoveUp: 0,
+        headerCenterMoveDown: 0,
+        headerLeftMoveRight: 0,
+        headerLeftMoveLeft: 0,
+        headerLeftMoveUp: 0,
+        headerLeftMoveDown: 0,
+        headerLeftFontSize: 11.8,
         headerLeftFontWeight: "800",
         headerTitleFontSize: 14.7,
         headerTitleFontWeight: "800",
@@ -2224,21 +2278,22 @@
         headerSideFontWeight: sanitizeChoice(String(source.headerSideFontWeight || defaults.headerSideFontWeight), ["400","700","800","900"], defaults.headerSideFontWeight),
         headerRightAlign: sanitizeChoice(source.headerRightAlign, ["right","center","left"], defaults.headerRightAlign),
         headerLeftAlign: sanitizeChoice(source.headerLeftAlign, ["right","center","left"], defaults.headerLeftAlign),
-        headerCenterAlign: sanitizeChoice(source.headerCenterAlign, ["right","center","left"], defaults.headerCenterAlign),
-        headerRightOffsetX: sanitizeNumber(source.headerRightOffsetX, defaults.headerRightOffsetX),
-        headerRightOffsetY: sanitizeNumber(source.headerRightOffsetY, defaults.headerRightOffsetY),
-        headerRightFontSize: sanitizeNumber(source.headerRightFontSize, defaults.headerRightFontSize),
-        headerRightFontWeight: sanitizeChoice(String(source.headerRightFontWeight || defaults.headerRightFontWeight), ["400","700","800","900"], defaults.headerRightFontWeight),
-        headerCenterOffsetX: sanitizeNumber(source.headerCenterOffsetX, defaults.headerCenterOffsetX),
-        headerCenterOffsetY: sanitizeNumber(source.headerCenterOffsetY, defaults.headerCenterOffsetY),
-        headerCenterTitleFontSize: sanitizeNumber(source.headerCenterTitleFontSize, defaults.headerCenterTitleFontSize),
-        headerCenterTitleFontWeight: sanitizeChoice(String(source.headerCenterTitleFontWeight || defaults.headerCenterTitleFontWeight), ["400","700","800","900"], defaults.headerCenterTitleFontWeight),
-        headerCenterMetaFontSize: sanitizeNumber(source.headerCenterMetaFontSize, defaults.headerCenterMetaFontSize),
-        headerCenterMetaFontWeight: sanitizeChoice(String(source.headerCenterMetaFontWeight || defaults.headerCenterMetaFontWeight), ["400","700","800","900"], defaults.headerCenterMetaFontWeight),
-        headerLeftOffsetX: sanitizeNumber(source.headerLeftOffsetX, defaults.headerLeftOffsetX),
-        headerLeftOffsetY: sanitizeNumber(source.headerLeftOffsetY, defaults.headerLeftOffsetY),
-        headerLeftFontSize: sanitizeNumber(source.headerLeftFontSize, defaults.headerLeftFontSize),
-        headerLeftFontWeight: sanitizeChoice(String(source.headerLeftFontWeight || defaults.headerLeftFontWeight), ["400","700","800","900"], defaults.headerLeftFontWeight),
+        headerRightMoveRight: sanitizeNumber(source.headerRightMoveRight, defaults.headerRightMoveRight),
+        headerRightMoveLeft: sanitizeNumber(source.headerRightMoveLeft, defaults.headerRightMoveLeft),
+        headerRightMoveUp: sanitizeNumber(source.headerRightMoveUp, defaults.headerRightMoveUp),
+        headerRightMoveDown: sanitizeNumber(source.headerRightMoveDown, defaults.headerRightMoveDown),
+        headerRightFontSize: sanitizeNumber(source.headerRightFontSize, source.headerSideFontSize ?? defaults.headerRightFontSize),
+        headerRightFontWeight: sanitizeChoice(String(source.headerRightFontWeight || source.headerSideFontWeight || defaults.headerRightFontWeight), ["400","700","800","900"], defaults.headerRightFontWeight),
+        headerCenterMoveRight: sanitizeNumber(source.headerCenterMoveRight, defaults.headerCenterMoveRight),
+        headerCenterMoveLeft: sanitizeNumber(source.headerCenterMoveLeft, defaults.headerCenterMoveLeft),
+        headerCenterMoveUp: sanitizeNumber(source.headerCenterMoveUp, defaults.headerCenterMoveUp),
+        headerCenterMoveDown: sanitizeNumber(source.headerCenterMoveDown, defaults.headerCenterMoveDown),
+        headerLeftMoveRight: sanitizeNumber(source.headerLeftMoveRight, defaults.headerLeftMoveRight),
+        headerLeftMoveLeft: sanitizeNumber(source.headerLeftMoveLeft, defaults.headerLeftMoveLeft),
+        headerLeftMoveUp: sanitizeNumber(source.headerLeftMoveUp, defaults.headerLeftMoveUp),
+        headerLeftMoveDown: sanitizeNumber(source.headerLeftMoveDown, defaults.headerLeftMoveDown),
+        headerLeftFontSize: sanitizeNumber(source.headerLeftFontSize, source.headerSideFontSize ?? defaults.headerLeftFontSize),
+        headerLeftFontWeight: sanitizeChoice(String(source.headerLeftFontWeight || source.headerSideFontWeight || defaults.headerLeftFontWeight), ["400","700","800","900"], defaults.headerLeftFontWeight),
         headerTitleFontSize: sanitizeNumber(source.headerTitleFontSize, defaults.headerTitleFontSize),
         headerTitleFontWeight: sanitizeChoice(String(source.headerTitleFontWeight || defaults.headerTitleFontWeight), ["400","700","800","900"], defaults.headerTitleFontWeight),
         headerMetaFontSize: sanitizeNumber(source.headerMetaFontSize, defaults.headerMetaFontSize),
@@ -2303,7 +2358,7 @@
         signatures: { ...base.signatures, ...signatures },
         saveName: typeof source.saveName === "string" ? source.saveName : "",
         ui: {
-          collapsedQuestions: ui.collapsedQuestions && typeof ui.collapsedQuestions === "object" ? ui.collapsedQuestions : {},
+          collapsedQuestions: {},
           collapsedBlocks: ui.collapsedBlocks && typeof ui.collapsedBlocks === "object" ? ui.collapsedBlocks : {}
         },
         questions,
@@ -2345,24 +2400,16 @@
         `--header-side-font-weight:${settings.headerSideFontWeight}`,
         `--header-right-align:${settings.headerRightAlign}`,
         `--header-left-align:${settings.headerLeftAlign}`,
-        `--header-center-align:${settings.headerCenterAlign}`,
-        `--header-right-offset-x:${settings.headerRightOffsetX}mm`,
-        `--header-right-offset-y:${settings.headerRightOffsetY}mm`,
+        `--header-right-shift-x:${settings.headerRightMoveRight - settings.headerRightMoveLeft}mm`,
+        `--header-right-shift-y:${settings.headerRightMoveDown - settings.headerRightMoveUp}mm`,
         `--header-right-font-size:${settings.headerRightFontSize}pt`,
         `--header-right-font-weight:${settings.headerRightFontWeight}`,
-        `--header-right-items-align:${mapRtlJustify(settings.headerRightAlign)}`,
-        `--header-center-offset-x:${settings.headerCenterOffsetX}mm`,
-        `--header-center-offset-y:${settings.headerCenterOffsetY}mm`,
-        `--header-center-title-font-size:${settings.headerCenterTitleFontSize}pt`,
-        `--header-center-title-font-weight:${settings.headerCenterTitleFontWeight}`,
-        `--header-center-meta-font-size:${settings.headerCenterMetaFontSize}pt`,
-        `--header-center-meta-font-weight:${settings.headerCenterMetaFontWeight}`,
-        `--header-center-items-align:${mapRtlJustify(settings.headerCenterAlign)}`,
-        `--header-left-offset-x:${settings.headerLeftOffsetX}mm`,
-        `--header-left-offset-y:${settings.headerLeftOffsetY}mm`,
+        `--header-center-shift-x:${settings.headerCenterMoveRight - settings.headerCenterMoveLeft}mm`,
+        `--header-center-shift-y:${settings.headerCenterMoveDown - settings.headerCenterMoveUp}mm`,
+        `--header-left-shift-x:${settings.headerLeftMoveRight - settings.headerLeftMoveLeft}mm`,
+        `--header-left-shift-y:${settings.headerLeftMoveDown - settings.headerLeftMoveUp}mm`,
         `--header-left-font-size:${settings.headerLeftFontSize}pt`,
         `--header-left-font-weight:${settings.headerLeftFontWeight}`,
-        `--header-left-items-align:${mapRtlJustify(settings.headerLeftAlign)}`,
         `--header-title-font-size:${settings.headerTitleFontSize}pt`,
         `--header-title-font-weight:${settings.headerTitleFontWeight}`,
         `--header-meta-font-size:${settings.headerMetaFontSize}pt`,
@@ -2428,6 +2475,16 @@
   --header-side-font-weight: 800;
   --header-right-align: right;
   --header-left-align: left;
+  --header-right-shift-x: 0mm;
+  --header-right-shift-y: 0mm;
+  --header-right-font-size: 12.1pt;
+  --header-right-font-weight: 800;
+  --header-center-shift-x: 0mm;
+  --header-center-shift-y: 0mm;
+  --header-left-shift-x: 0mm;
+  --header-left-shift-y: 0mm;
+  --header-left-font-size: 11.8pt;
+  --header-left-font-weight: 800;
   --header-title-font-size: 14.7pt;
   --header-title-font-weight: 800;
   --header-meta-font-size: 11.8pt;
@@ -2495,38 +2552,47 @@
   padding-left: var(--header-left-padding) !important;
 }
 .print-scope .school-stack,
-.print-scope .meta-stack {
+.print-scope .meta-stack,
+.print-scope .center-stack {
+  width: 100% !important;
   margin: 0 !important;
 }
-.print-scope .sheet-header .head-col.right .school-stack {
-  width: max-content !important;
-  max-width: 100% !important;
-  align-items: var(--header-right-items-align) !important;
+.print-scope .school-stack,
+.print-scope .meta-stack,
+.print-scope .center-stack {
+  position: relative !important;
 }
-.print-scope .sheet-header .head-col.left .meta-stack {
-  width: max-content !important;
-  max-width: 100% !important;
-  align-items: var(--header-left-items-align) !important;
+.print-scope .school-stack {
+  transform: translate(var(--header-right-shift-x), var(--header-right-shift-y)) !important;
 }
-.print-scope .sheet-header .head-col.right .head-line {
+.print-scope .meta-stack {
+  transform: translate(var(--header-left-shift-x), var(--header-left-shift-y)) !important;
+}
+.print-scope .center-stack {
+  transform: translate(var(--header-center-shift-x), var(--header-center-shift-y)) !important;
+}
+.print-scope .head-line {
+  font-size: var(--header-side-font-size) !important;
+  font-weight: var(--header-side-font-weight) !important;
+  line-height: var(--header-line-height) !important;
+}
+.print-scope .head-col.right .head-line {
   font-size: var(--header-right-font-size) !important;
   font-weight: var(--header-right-font-weight) !important;
-  line-height: var(--header-line-height) !important;
 }
-.print-scope .sheet-header .head-col.left .head-line {
+.print-scope .head-col.left .head-line {
   font-size: var(--header-left-font-size) !important;
   font-weight: var(--header-left-font-weight) !important;
-  line-height: var(--header-line-height) !important;
 }
-.print-scope .sheet-header .title-main {
-  font-size: var(--header-center-title-font-size) !important;
-  font-weight: var(--header-center-title-font-weight) !important;
+.print-scope .title-main {
+  font-size: var(--header-title-font-size) !important;
+  font-weight: var(--header-title-font-weight) !important;
   line-height: 1.2 !important;
 }
-.print-scope .sheet-header .title-sub,
-.print-scope .sheet-header .title-year {
-  font-size: var(--header-center-meta-font-size) !important;
-  font-weight: var(--header-center-meta-font-weight) !important;
+.print-scope .title-sub,
+.print-scope .title-year {
+  font-size: var(--header-meta-font-size) !important;
+  font-weight: var(--header-meta-font-weight) !important;
   line-height: 1.15 !important;
 }
 .print-scope .sheet-note {
@@ -2879,19 +2945,8 @@
         state = defaultState();
       }
 
-      state.ui = {
-        collapsedQuestions: {},
-        collapsedBlocks: {}
-      };
-
       fillStaticFields();
       renderAll();
-    }
-
-    function resetEditorFoldState() {
-      document.querySelectorAll("details.editor-fold").forEach((detailsEl) => {
-        detailsEl.open = false;
-      });
     }
 
     function fillStaticFields() {
@@ -2986,6 +3041,24 @@
       ui.collapsedBlocks[blockId] = !ui.collapsedBlocks[blockId];
       saveDraft();
       renderQuestionEditors();
+    }
+
+    function setStaticCardCollapsed(card, collapsed) {
+      if (!card) return;
+      card.classList.toggle("is-collapsed", collapsed);
+      const button = card.querySelector('[data-action="toggle-static-card"]');
+      if (button) {
+        const label = card.id === "teacherSignatureCard" ? "توقيع مدرس المادة" : "معلومات الهيدر";
+        button.setAttribute("aria-expanded", collapsed ? "false" : "true");
+        button.setAttribute("aria-label", collapsed ? `فتح ${label}` : `طي ${label}`);
+        button.setAttribute("title", collapsed ? `فتح ${label}` : `طي ${label}`);
+      }
+    }
+
+    function toggleStaticCard(cardId) {
+      const card = document.getElementById(cardId);
+      if (!card) return;
+      setStaticCardCollapsed(card, !card.classList.contains("is-collapsed"));
     }
 
     function renderQuestionEditors() {
@@ -3393,31 +3466,33 @@
       const teacherSignatureName = showTeacherSignature ? escapeHtml(sig.rightName || "") : "";
 
       sheet.innerHTML = `
-        <div class="sheet-header">
-          <div class="head-col right">
-            <div class="school-stack">
-              <div class="head-line">${administrationText}</div>
-              ${schoolNameLine}
-            </div>
-          </div>
-
-          <div class="head-col center">
-            <div class="title-main">${escapeHtml(meta.examType || "أسئلة امتحان")}</div>
-            ${meta.round ? `<div class="title-sub">${escapeHtml(meta.round)}</div>` : ""}
-            <div class="title-year">${meta.academicYear ? `للعام الدراسي ${escapeHtml(toArabicDigits(meta.academicYear))}` : ""}</div>
-          </div>
-
-          <div class="head-col left">
-            <div class="meta-stack">
-              <div class="head-line meta-row"><span class="meta-label">المادة/</span><span class="meta-value">${escapeHtml(meta.subject || "................")}</span></div>
-              <div class="head-line meta-row"><span class="meta-label">الصف/</span><span class="meta-value">${escapeHtml(meta.grade || "................")}</span></div>
-            </div>
-          </div>
-        </div>
-
-        <hr class="sheet-rule" />
-
         <div class="print-scope" style="${scopeStyle}">
+          <div class="sheet-header">
+            <div class="head-col right">
+              <div class="school-stack">
+                <div class="head-line">${administrationText}</div>
+                ${schoolNameLine}
+              </div>
+            </div>
+
+            <div class="head-col center">
+              <div class="center-stack">
+                <div class="title-main">${escapeHtml(meta.examType || "أسئلة امتحان")}</div>
+                ${meta.round ? `<div class="title-sub">${escapeHtml(meta.round)}</div>` : ""}
+                <div class="title-year">${meta.academicYear ? `للعام الدراسي ${escapeHtml(toArabicDigits(meta.academicYear))}` : ""}</div>
+              </div>
+            </div>
+
+            <div class="head-col left">
+              <div class="meta-stack">
+                <div class="head-line meta-row"><span class="meta-label">المادة/</span><span class="meta-value">${escapeHtml(meta.subject || "................")}</span></div>
+                <div class="head-line meta-row"><span class="meta-label">الصف/</span><span class="meta-value">${escapeHtml(meta.grade || "................")}</span></div>
+              </div>
+            </div>
+          </div>
+
+          <hr class="sheet-rule" />
+
           <div class="sheet-note">
             ملاحظة:
             <span>${meta.note ? nlToBr(meta.note) : "........................................................"}</span>
@@ -4384,6 +4459,7 @@ ${buildPrintScopeCss()}
         const id = button.dataset.id;
 
         if (action === "reset-advanced-settings") resetPrintSettings();
+        if (action === "toggle-static-card") toggleStaticCard(button.dataset.cardId);
         if (action === "toggle-question") toggleQuestionCollapse(button.dataset.questionId);
         if (action === "remove-question") removeQuestion(q);
         if (action === "add-block") {
@@ -4552,7 +4628,6 @@ ${buildPrintScopeCss()}
 
     syncAdvancedStyleElement();
     loadState();
-    resetEditorFoldState();
     bindStaticInputs();
     bindMainButtons();
     bindDelegation();
