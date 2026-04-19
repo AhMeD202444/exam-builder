@@ -1391,71 +1391,87 @@
 
     <section class="workspace">
       <aside class="panel-stack">
-        <div class="card" id="headerInfoCard">
-          <h2>معلومات الهيدر</h2>
-          <div class="grid-2">
-            <div class="field">
-              <label>الإدارة</label>
-              <input id="administration" type="text" placeholder="مثال: إدارة المدرسة" />
+        <details class="card fold-card editor-fold" id="headerInfoCard">
+          <summary>
+            <span class="fold-summary-text">
+              <h2>معلومات الهيدر</h2>
+              <small>افتحها فقط إذا تريد تعدّل بيانات أعلى الورقة أو الملاحظة.</small>
+            </span>
+            <span class="fold-summary-icon" aria-hidden="true">›</span>
+          </summary>
+          <div class="fold-body">
+            <div class="grid-2">
+              <div class="field">
+                <label>الإدارة</label>
+                <input id="administration" type="text" placeholder="مثال: إدارة المدرسة" />
+              </div>
+              <div class="field">
+                <label>اسم المدرسة</label>
+                <input id="schoolName" type="text" placeholder="اكتب اسم المدرسة" />
+              </div>
+              <div class="field">
+                <label>النص العلوي الأوسط</label>
+                <input id="basmala" type="text" placeholder="مثال: باسمه تعالى" />
+              </div>
+              <div class="field">
+                <label>اسم المادة</label>
+                <input id="subject" type="text" placeholder="مثال: الرياضيات" />
+              </div>
+              <div class="field">
+                <label>نوع الامتحان</label>
+                <input id="examType" type="text" placeholder="مثال: امتحان نهاية السنة" />
+              </div>
+              <div class="field">
+                <label>الصف</label>
+                <input id="grade" type="text" placeholder="مثال: الرابع الابتدائي" />
+              </div>
+              <div class="field">
+                <label>الدور</label>
+                <input id="round" type="text" placeholder="مثال: الدور الأول" />
+              </div>
+              <div class="field">
+                <label>العام الدراسي</label>
+                <input id="academicYear" type="text" placeholder="مثال: 2025 - 2026" />
+              </div>
+              <div class="field">
+                <label>التاريخ (غير ظاهر بالطباعة)</label>
+                <input id="examDate" type="text" placeholder="مثال: 2026/05/18" />
+              </div>
             </div>
-            <div class="field">
-              <label>اسم المدرسة</label>
-              <input id="schoolName" type="text" placeholder="اكتب اسم المدرسة" />
-            </div>
-            <div class="field">
-              <label>النص العلوي الأوسط</label>
-              <input id="basmala" type="text" placeholder="مثال: باسمه تعالى" />
-            </div>
-            <div class="field">
-              <label>اسم المادة</label>
-              <input id="subject" type="text" placeholder="مثال: الرياضيات" />
-            </div>
-            <div class="field">
-              <label>نوع الامتحان</label>
-              <input id="examType" type="text" placeholder="مثال: امتحان نهاية السنة" />
-            </div>
-            <div class="field">
-              <label>الصف</label>
-              <input id="grade" type="text" placeholder="مثال: الرابع الابتدائي" />
-            </div>
-            <div class="field">
-              <label>الدور</label>
-              <input id="round" type="text" placeholder="مثال: الدور الأول" />
-            </div>
-            <div class="field">
-              <label>العام الدراسي</label>
-              <input id="academicYear" type="text" placeholder="مثال: 2025 - 2026" />
-            </div>
-            <div class="field">
-              <label>التاريخ (غير ظاهر بالطباعة)</label>
-              <input id="examDate" type="text" placeholder="مثال: 2026/05/18" />
-            </div>
-          </div>
 
-          <div class="field" style="margin-top:12px;">
-            <label>الملاحظة</label>
-            <textarea id="note" placeholder="مثال: أجب عن أربعة أسئلة فقط..."></textarea>
+            <div class="field" style="margin-top:12px;">
+              <label>الملاحظة</label>
+              <textarea id="note" placeholder="مثال: أجب عن أربعة أسئلة فقط..."></textarea>
+            </div>
           </div>
-        </div>
+        </details>
 
-        <div class="card">
-          <h2>توقيع مدرس المادة</h2>
-          <div class="grid-2">
-            <div class="field">
-              <label>عنوان التوقيع</label>
-              <input id="rightTitle" type="text" placeholder="مثال: مدرس المادة" />
+        <details class="card fold-card editor-fold" id="signatureCard">
+          <summary>
+            <span class="fold-summary-text">
+              <h2>توقيع مدرس المادة</h2>
+              <small>افتحها إذا تريد تعدّل عنوان التوقيع أو اسم المدرس.</small>
+            </span>
+            <span class="fold-summary-icon" aria-hidden="true">›</span>
+          </summary>
+          <div class="fold-body">
+            <div class="grid-2">
+              <div class="field">
+                <label>عنوان التوقيع</label>
+                <input id="rightTitle" type="text" placeholder="مثال: مدرس المادة" />
+              </div>
+              <div class="field">
+                <label>اسم المدرس</label>
+                <input id="rightName" type="text" placeholder="اكتب الاسم" />
+              </div>
             </div>
-            <div class="field">
-              <label>اسم المدرس</label>
-              <input id="rightName" type="text" placeholder="اكتب الاسم" />
-            </div>
+            <input id="leftTitle" type="hidden" value="" />
+            <input id="leftName" type="hidden" value="" />
           </div>
-          <input id="leftTitle" type="hidden" value="" />
-          <input id="leftName" type="hidden" value="" />
-        </div>
+        </details>
 
         <div class="card advanced-card">
-          <details id="advancedSettingsCard">
+          <details id="advancedSettingsCard" class="editor-fold">
             <summary>
               <div class="advanced-summary-text">
                 <h2>إعدادات متقدمة للطباعة</h2>
@@ -1481,7 +1497,7 @@
               <fieldset id="advancedSettingsFields">
                 <div class="advanced-group">
                   <div class="advanced-group-title">الهيدر</div>
-                  <div class="advanced-group-note">يضبط مواضع وخطوط الهيدر كاملًا: العمود الأيمن، العنوان الأوسط، والعمود الأيسر.</div>
+                  <div class="advanced-group-note">يضبط الهيدر العام ثم يعطيك تحكم مستقل لجزء الإدارة والمدرسة، وللعنوان الأوسط، ولجزء المادة والصف.</div>
                   <div class="grid-4">
                     <div class="field">
                       <label>الإزاحة العلوية للهيدر (mm)</label>
@@ -1499,68 +1515,139 @@
                       <label>المسافة بين أعمدة الهيدر (mm)</label>
                       <input data-print-setting="headerGap" data-print-type="number" type="number" step="0.1" min="0" />
                     </div>
-                    <div class="field">
-                      <label>حجم خط الجانبين (pt)</label>
-                      <input data-print-setting="headerSideFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                  </div>
+
+                  <div class="advanced-subgroup">
+                    <div class="advanced-subgroup-title">قسم الإدارة واسم المدرسة</div>
+                    <div class="grid-4">
+                      <div class="field">
+                        <label>محاذاة القسم الأيمن</label>
+                        <select data-print-setting="headerRightAlign">
+                          <option value="right">يمين</option>
+                          <option value="center">توسيط</option>
+                          <option value="left">يسار</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>حجم خط القسم الأيمن (pt)</label>
+                        <input data-print-setting="headerRightFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                      </div>
+                      <div class="field">
+                        <label>وزن خط القسم الأيمن</label>
+                        <select data-print-setting="headerRightFontWeight">
+                          <option value="400">عادي</option>
+                          <option value="500">متوسط</option>
+                          <option value="600">شبه بولد</option>
+                          <option value="700">بولد</option>
+                          <option value="800">ثقيل</option>
+                          <option value="900">ثقيل جدًا</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>إزاحة يمين/يسار للقسم الأيمن (mm)</label>
+                        <input data-print-setting="headerRightOffsetX" data-print-type="number" type="number" step="0.1" />
+                      </div>
+                      <div class="field">
+                        <label>إزاحة فوق/تحت للقسم الأيمن (mm)</label>
+                        <input data-print-setting="headerRightOffsetY" data-print-type="number" type="number" step="0.1" />
+                      </div>
+                      <div class="field">
+                        <label>إزاحة العمود الأيمن داخل الصفحة (mm)</label>
+                        <input data-print-setting="headerRightPadding" data-print-type="number" type="number" step="0.1" />
+                      </div>
                     </div>
-                    <div class="field">
-                      <label>وزن خط الجانبين</label>
-                      <select data-print-setting="headerSideFontWeight">
-                        <option value="400">عادي</option>
-                        <option value="700">بولد</option>
-                        <option value="800">بولد قوي</option>
-                        <option value="900">ثقيل جدًا</option>
-                      </select>
+                  </div>
+
+                  <div class="advanced-subgroup">
+                    <div class="advanced-subgroup-title">العنوان الأوسط والعام الدراسي</div>
+                    <div class="grid-4">
+                      <div class="field">
+                        <label>محاذاة عنوان الوسط</label>
+                        <select data-print-setting="headerCenterAlign">
+                          <option value="center">توسيط</option>
+                          <option value="right">يمين</option>
+                          <option value="left">يسار</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>حجم خط العنوان الأوسط (pt)</label>
+                        <input data-print-setting="headerCenterTitleFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                      </div>
+                      <div class="field">
+                        <label>وزن خط العنوان الأوسط</label>
+                        <select data-print-setting="headerCenterTitleFontWeight">
+                          <option value="400">عادي</option>
+                          <option value="500">متوسط</option>
+                          <option value="600">شبه بولد</option>
+                          <option value="700">بولد</option>
+                          <option value="800">ثقيل</option>
+                          <option value="900">ثقيل جدًا</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>حجم خط العام الدراسي/السطر الثاني (pt)</label>
+                        <input data-print-setting="headerCenterMetaFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                      </div>
+                      <div class="field">
+                        <label>وزن خط العام الدراسي/السطر الثاني</label>
+                        <select data-print-setting="headerCenterMetaFontWeight">
+                          <option value="400">عادي</option>
+                          <option value="500">متوسط</option>
+                          <option value="600">شبه بولد</option>
+                          <option value="700">بولد</option>
+                          <option value="800">ثقيل</option>
+                          <option value="900">ثقيل جدًا</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>إزاحة يمين/يسار لعنوان الوسط (mm)</label>
+                        <input data-print-setting="headerCenterOffsetX" data-print-type="number" type="number" step="0.1" />
+                      </div>
+                      <div class="field">
+                        <label>إزاحة فوق/تحت لعنوان الوسط (mm)</label>
+                        <input data-print-setting="headerCenterOffsetY" data-print-type="number" type="number" step="0.1" />
+                      </div>
                     </div>
-                    <div class="field">
-                      <label>محاذاة العمود الأيمن</label>
-                      <select data-print-setting="headerRightAlign">
-                        <option value="right">يمين</option>
-                        <option value="center">توسيط</option>
-                        <option value="left">يسار</option>
-                      </select>
-                    </div>
-                    <div class="field">
-                      <label>محاذاة العمود الأيسر</label>
-                      <select data-print-setting="headerLeftAlign">
-                        <option value="left">يسار</option>
-                        <option value="center">توسيط</option>
-                        <option value="right">يمين</option>
-                      </select>
-                    </div>
-                    <div class="field">
-                      <label>إزاحة العمود الأيمن يمينًا (mm)</label>
-                      <input data-print-setting="headerRightPadding" data-print-type="number" type="number" step="0.1" />
-                    </div>
-                    <div class="field">
-                      <label>إزاحة العمود الأيسر يسارًا (mm)</label>
-                      <input data-print-setting="headerLeftPadding" data-print-type="number" type="number" step="0.1" />
-                    </div>
-                    <div class="field">
-                      <label>حجم خط عنوان الوسط (pt)</label>
-                      <input data-print-setting="headerTitleFontSize" data-print-type="number" type="number" step="0.1" min="8" />
-                    </div>
-                    <div class="field">
-                      <label>وزن خط عنوان الوسط</label>
-                      <select data-print-setting="headerTitleFontWeight">
-                        <option value="400">عادي</option>
-                        <option value="700">بولد</option>
-                        <option value="800">بولد قوي</option>
-                        <option value="900">ثقيل جدًا</option>
-                      </select>
-                    </div>
-                    <div class="field">
-                      <label>حجم خط السطور الثانوية بالوسط (pt)</label>
-                      <input data-print-setting="headerMetaFontSize" data-print-type="number" type="number" step="0.1" min="8" />
-                    </div>
-                    <div class="field">
-                      <label>وزن خط السطور الثانوية بالوسط</label>
-                      <select data-print-setting="headerMetaFontWeight">
-                        <option value="400">عادي</option>
-                        <option value="700">بولد</option>
-                        <option value="800">بولد قوي</option>
-                        <option value="900">ثقيل جدًا</option>
-                      </select>
+                  </div>
+
+                  <div class="advanced-subgroup">
+                    <div class="advanced-subgroup-title">قسم المادة والصف</div>
+                    <div class="grid-4">
+                      <div class="field">
+                        <label>محاذاة القسم الأيسر</label>
+                        <select data-print-setting="headerLeftAlign">
+                          <option value="left">يسار</option>
+                          <option value="center">توسيط</option>
+                          <option value="right">يمين</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>حجم خط القسم الأيسر (pt)</label>
+                        <input data-print-setting="headerLeftFontSize" data-print-type="number" type="number" step="0.1" min="8" />
+                      </div>
+                      <div class="field">
+                        <label>وزن خط القسم الأيسر</label>
+                        <select data-print-setting="headerLeftFontWeight">
+                          <option value="400">عادي</option>
+                          <option value="500">متوسط</option>
+                          <option value="600">شبه بولد</option>
+                          <option value="700">بولد</option>
+                          <option value="800">ثقيل</option>
+                          <option value="900">ثقيل جدًا</option>
+                        </select>
+                      </div>
+                      <div class="field">
+                        <label>إزاحة يمين/يسار للقسم الأيسر (mm)</label>
+                        <input data-print-setting="headerLeftOffsetX" data-print-type="number" type="number" step="0.1" />
+                      </div>
+                      <div class="field">
+                        <label>إزاحة فوق/تحت للقسم الأيسر (mm)</label>
+                        <input data-print-setting="headerLeftOffsetY" data-print-type="number" type="number" step="0.1" />
+                      </div>
+                      <div class="field">
+                        <label>إزاحة العمود الأيسر داخل الصفحة (mm)</label>
+                        <input data-print-setting="headerLeftPadding" data-print-type="number" type="number" step="0.1" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2047,6 +2134,21 @@
         headerSideFontWeight: "800",
         headerRightAlign: "right",
         headerLeftAlign: "left",
+        headerCenterAlign: "center",
+        headerRightOffsetX: 0,
+        headerRightOffsetY: 0,
+        headerRightFontSize: 12.1,
+        headerRightFontWeight: "800",
+        headerCenterOffsetX: 0,
+        headerCenterOffsetY: 0,
+        headerCenterTitleFontSize: 14.7,
+        headerCenterTitleFontWeight: "800",
+        headerCenterMetaFontSize: 11.8,
+        headerCenterMetaFontWeight: "800",
+        headerLeftOffsetX: 0,
+        headerLeftOffsetY: 0,
+        headerLeftFontSize: 12.1,
+        headerLeftFontWeight: "800",
         headerTitleFontSize: 14.7,
         headerTitleFontWeight: "800",
         headerMetaFontSize: 11.8,
@@ -2122,6 +2224,21 @@
         headerSideFontWeight: sanitizeChoice(String(source.headerSideFontWeight || defaults.headerSideFontWeight), ["400","700","800","900"], defaults.headerSideFontWeight),
         headerRightAlign: sanitizeChoice(source.headerRightAlign, ["right","center","left"], defaults.headerRightAlign),
         headerLeftAlign: sanitizeChoice(source.headerLeftAlign, ["right","center","left"], defaults.headerLeftAlign),
+        headerCenterAlign: sanitizeChoice(source.headerCenterAlign, ["right","center","left"], defaults.headerCenterAlign),
+        headerRightOffsetX: sanitizeNumber(source.headerRightOffsetX, defaults.headerRightOffsetX),
+        headerRightOffsetY: sanitizeNumber(source.headerRightOffsetY, defaults.headerRightOffsetY),
+        headerRightFontSize: sanitizeNumber(source.headerRightFontSize, defaults.headerRightFontSize),
+        headerRightFontWeight: sanitizeChoice(String(source.headerRightFontWeight || defaults.headerRightFontWeight), ["400","700","800","900"], defaults.headerRightFontWeight),
+        headerCenterOffsetX: sanitizeNumber(source.headerCenterOffsetX, defaults.headerCenterOffsetX),
+        headerCenterOffsetY: sanitizeNumber(source.headerCenterOffsetY, defaults.headerCenterOffsetY),
+        headerCenterTitleFontSize: sanitizeNumber(source.headerCenterTitleFontSize, defaults.headerCenterTitleFontSize),
+        headerCenterTitleFontWeight: sanitizeChoice(String(source.headerCenterTitleFontWeight || defaults.headerCenterTitleFontWeight), ["400","700","800","900"], defaults.headerCenterTitleFontWeight),
+        headerCenterMetaFontSize: sanitizeNumber(source.headerCenterMetaFontSize, defaults.headerCenterMetaFontSize),
+        headerCenterMetaFontWeight: sanitizeChoice(String(source.headerCenterMetaFontWeight || defaults.headerCenterMetaFontWeight), ["400","700","800","900"], defaults.headerCenterMetaFontWeight),
+        headerLeftOffsetX: sanitizeNumber(source.headerLeftOffsetX, defaults.headerLeftOffsetX),
+        headerLeftOffsetY: sanitizeNumber(source.headerLeftOffsetY, defaults.headerLeftOffsetY),
+        headerLeftFontSize: sanitizeNumber(source.headerLeftFontSize, defaults.headerLeftFontSize),
+        headerLeftFontWeight: sanitizeChoice(String(source.headerLeftFontWeight || defaults.headerLeftFontWeight), ["400","700","800","900"], defaults.headerLeftFontWeight),
         headerTitleFontSize: sanitizeNumber(source.headerTitleFontSize, defaults.headerTitleFontSize),
         headerTitleFontWeight: sanitizeChoice(String(source.headerTitleFontWeight || defaults.headerTitleFontWeight), ["400","700","800","900"], defaults.headerTitleFontWeight),
         headerMetaFontSize: sanitizeNumber(source.headerMetaFontSize, defaults.headerMetaFontSize),
@@ -2228,6 +2345,24 @@
         `--header-side-font-weight:${settings.headerSideFontWeight}`,
         `--header-right-align:${settings.headerRightAlign}`,
         `--header-left-align:${settings.headerLeftAlign}`,
+        `--header-center-align:${settings.headerCenterAlign}`,
+        `--header-right-offset-x:${settings.headerRightOffsetX}mm`,
+        `--header-right-offset-y:${settings.headerRightOffsetY}mm`,
+        `--header-right-font-size:${settings.headerRightFontSize}pt`,
+        `--header-right-font-weight:${settings.headerRightFontWeight}`,
+        `--header-right-items-align:${mapRtlJustify(settings.headerRightAlign)}`,
+        `--header-center-offset-x:${settings.headerCenterOffsetX}mm`,
+        `--header-center-offset-y:${settings.headerCenterOffsetY}mm`,
+        `--header-center-title-font-size:${settings.headerCenterTitleFontSize}pt`,
+        `--header-center-title-font-weight:${settings.headerCenterTitleFontWeight}`,
+        `--header-center-meta-font-size:${settings.headerCenterMetaFontSize}pt`,
+        `--header-center-meta-font-weight:${settings.headerCenterMetaFontWeight}`,
+        `--header-center-items-align:${mapRtlJustify(settings.headerCenterAlign)}`,
+        `--header-left-offset-x:${settings.headerLeftOffsetX}mm`,
+        `--header-left-offset-y:${settings.headerLeftOffsetY}mm`,
+        `--header-left-font-size:${settings.headerLeftFontSize}pt`,
+        `--header-left-font-weight:${settings.headerLeftFontWeight}`,
+        `--header-left-items-align:${mapRtlJustify(settings.headerLeftAlign)}`,
         `--header-title-font-size:${settings.headerTitleFontSize}pt`,
         `--header-title-font-weight:${settings.headerTitleFontWeight}`,
         `--header-meta-font-size:${settings.headerMetaFontSize}pt`,
@@ -2361,23 +2496,37 @@
 }
 .print-scope .school-stack,
 .print-scope .meta-stack {
-  width: 100% !important;
   margin: 0 !important;
 }
-.print-scope .head-line {
-  font-size: var(--header-side-font-size) !important;
-  font-weight: var(--header-side-font-weight) !important;
+.print-scope .sheet-header .head-col.right .school-stack {
+  width: max-content !important;
+  max-width: 100% !important;
+  align-items: var(--header-right-items-align) !important;
+}
+.print-scope .sheet-header .head-col.left .meta-stack {
+  width: max-content !important;
+  max-width: 100% !important;
+  align-items: var(--header-left-items-align) !important;
+}
+.print-scope .sheet-header .head-col.right .head-line {
+  font-size: var(--header-right-font-size) !important;
+  font-weight: var(--header-right-font-weight) !important;
   line-height: var(--header-line-height) !important;
 }
-.print-scope .title-main {
-  font-size: var(--header-title-font-size) !important;
-  font-weight: var(--header-title-font-weight) !important;
+.print-scope .sheet-header .head-col.left .head-line {
+  font-size: var(--header-left-font-size) !important;
+  font-weight: var(--header-left-font-weight) !important;
+  line-height: var(--header-line-height) !important;
+}
+.print-scope .sheet-header .title-main {
+  font-size: var(--header-center-title-font-size) !important;
+  font-weight: var(--header-center-title-font-weight) !important;
   line-height: 1.2 !important;
 }
-.print-scope .title-sub,
-.print-scope .title-year {
-  font-size: var(--header-meta-font-size) !important;
-  font-weight: var(--header-meta-font-weight) !important;
+.print-scope .sheet-header .title-sub,
+.print-scope .sheet-header .title-year {
+  font-size: var(--header-center-meta-font-size) !important;
+  font-weight: var(--header-center-meta-font-weight) !important;
   line-height: 1.15 !important;
 }
 .print-scope .sheet-note {
@@ -2730,8 +2879,19 @@
         state = defaultState();
       }
 
+      state.ui = {
+        collapsedQuestions: {},
+        collapsedBlocks: {}
+      };
+
       fillStaticFields();
       renderAll();
+    }
+
+    function resetEditorFoldState() {
+      document.querySelectorAll("details.editor-fold").forEach((detailsEl) => {
+        detailsEl.open = false;
+      });
     }
 
     function fillStaticFields() {
@@ -4392,6 +4552,7 @@ ${buildPrintScopeCss()}
 
     syncAdvancedStyleElement();
     loadState();
+    resetEditorFoldState();
     bindStaticInputs();
     bindMainButtons();
     bindDelegation();
