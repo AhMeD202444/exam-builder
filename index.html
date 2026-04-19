@@ -3019,8 +3019,98 @@
       return AR_LETTERS.includes(normalized) || /^[A-Za-zأ-ي]+$/.test(normalized);
     }
 
-    function makeBlock(type = "normal", label = "") {
-      const base = {
+    function trimEmptyLines(value) {
+      return String(value || "")
+        .replace(/^[\s\u00A0]*(?:\r?\n)+/g, "")
+        .replace(/(?:\r?\n)[\s\u00A0]*$/g, "")
+        .trim();
+    }
+
+    function escapeRegex(value) {
+      return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function getInlineLetterBranchMatch(line) {
+      const rawLine = String(line || "");
+      if (!rawLine.trim()) return null;
+
+      const arabicLabelPattern = AR_LETTERS
+        .slice()
+        .sort((a, b) => b.length - a.length)
+        .map((item) => escapeRegex(item))
+        .join("|");
+      const labelPattern = `(?:${arabicLabelPattern}|[A-Za-z])`;
+
+      const wrappedMatch = rawLine.match(new RegExp(`^\s*[\(\[\{﴿（]\s*(${labelPattern})\s*[\)\]\}﴾）]\s*(.*)$`));
+      if (wrappedMatch) {
+        return {
+          label: wrappedMatch[1],
+          content: wrappedMatch[2] || ""
+        };
+      }
+
+      const plainMatch = rawLine.match(new RegExp(`^\s*(${labelPattern})\s*[\)\-–—\.:،/\\]\s*(.*)$`));
+      if (plainMatch) {
+        return {
+          label: plainMatch[1],
+          content: plainMatch[2] || ""
+        };
+      }
+
+      return null;
+    }
+    function expandInlineLetterBranchesForRender(block) {
+      if (!block || !["normal", "blanks"].includes(block.type)) return [block];
+      if (!isLetterBranchLabel(block.label || "")) return [block];
+
+      const prompt = String(block.prompt || "").replace(/\r\n?/g, "\n");
+      if (!prompt.includes("\n")) {
+        const firstLineMatch = getInlineLetterBranchMatch(prompt);
+        if (!firstLineMatch || normalizeBranchLabel(firstLineMatch.label) !== normalizeBranchLabel(block.label || "")) {
+          return [block];
+        }
+      }
+
+      const lines = prompt.split("\n");
+      const baseLabel = String(block.label || "");
+      const baseNormalized = normalizeBranchLabel(baseLabel);
+      const segments = [{ label: baseLabel, lines: [] }];
+      let foundExtraBranch = false;
+
+      lines.forEach((line, index) => {
+        const marker = getInlineLetterBranchMatch(line);
+        if (marker) {
+          const markerNormalized = normalizeBranchLabel(marker.label);
+
+          if (index === 0 && markerNormalized === baseNormalized) {
+            if (marker.content) segments[segments.length - 1].lines.push(marker.content);
+            return;
+          }
+
+          if (markerNormalized && markerNormalized !== baseNormalized) {
+            foundExtraBranch = true;
+            segments.push({
+              label: marker.label,
+              lines: marker.content ? [marker.content] : []
+            });
+            return;
+          }
+        }
+
+        segments[segments.length - 1].lines.push(line);
+      });
+
+      if (!foundExtraBranch) return [block];
+
+      return segments.map((segment, index) => ({
+        ...block,
+        label: index === 0 ? baseLabel : segment.label,
+        prompt: trimEmptyLines(segment.lines.join("\n")),
+        degree: index === 0 ? block.degree : ""
+      }));
+    }
+
+    function makeBlock(type = "normal", label = "") {      const base = {
         id: uid(),
         type,
         label,
@@ -3714,8 +3804,9 @@
             ${question.blocks && question.blocks.length ? `
               <div class="question-elements ${mergeFirstBranch ? "question-elements-merged" : ""}">
                 ${(() => {
+                  const renderBlocks = question.blocks.flatMap((block) => expandInlineLetterBranchesForRender(block));
                   let previousBranchWasLetter = false;
-                  return question.blocks.map((block, blockIndex) => {
+                  return renderBlocks.map((block, blockIndex) => {
                     const currentBranchIsLetter = isLetterBranchLabel(block.label || "");
                     const branchGapBefore = previousBranchWasLetter && currentBranchIsLetter ? letterBranchesGapMm : 0;
                     previousBranchWasLetter = currentBranchIsLetter;
