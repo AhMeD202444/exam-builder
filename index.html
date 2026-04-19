@@ -3041,7 +3041,7 @@
         .join("|");
       const labelPattern = `(?:${arabicLabelPattern}|[A-Za-z])`;
 
-      const wrappedMatch = rawLine.match(new RegExp(`^\s*[\(\[\{﴿（]\s*(${labelPattern})\s*[\)\]\}﴾）]\s*(.*)$`));
+      const wrappedMatch = rawLine.match(new RegExp(String.raw`^\s*[\(\[\{﴿（]\s*(${labelPattern})\s*[\)\]\}﴾）]\s*(.*)$`));
       if (wrappedMatch) {
         return {
           label: wrappedMatch[1],
@@ -3049,7 +3049,7 @@
         };
       }
 
-      const plainMatch = rawLine.match(new RegExp(`^\s*(${labelPattern})\s*[\)\-–—\.:،/\\]\s*(.*)$`));
+      const plainMatch = rawLine.match(new RegExp(String.raw`^\s*(${labelPattern})\s*[\)\-–—\.:،/\\]\s*(.*)$`));
       if (plainMatch) {
         return {
           label: plainMatch[1],
@@ -3804,7 +3804,7 @@
             ${question.blocks && question.blocks.length ? `
               <div class="question-elements ${mergeFirstBranch ? "question-elements-merged" : ""}">
                 ${(() => {
-                  const renderBlocks = question.blocks.flatMap((block) => expandInlineLetterBranchesForRender(block));
+                  const renderBlocks = question.blocks.reduce((acc, block) => acc.concat(expandInlineLetterBranchesForRender(block)), []);
                   let previousBranchWasLetter = false;
                   return renderBlocks.map((block, blockIndex) => {
                     const currentBranchIsLetter = isLetterBranchLabel(block.label || "");
