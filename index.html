@@ -1031,6 +1031,10 @@
       padding-right: 2mm;
     }
 
+    .ordering-list.tight-under-prompt {
+      margin-top: 0;
+    }
+
     .def-item,
     .ordering-item,
     .tf-item,
@@ -3824,7 +3828,7 @@
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
-              <div class="ordering-list">
+              <div class="ordering-list tight-under-prompt">
                 ${(block.items || []).map((item, index) => `
                   <div class="ordering-item">
                     <span class="dot">${toArabicDigits(index + 1)}-</span>
@@ -3847,7 +3851,7 @@
             ${labelPrefix}
             <div class="element-body">
               ${block.prompt ? nlToBr(block.prompt) : ""}
-              <div class="ordering-list">
+              <div class="ordering-list tight-under-prompt">
                 ${(block.items || []).map((item, index) => `
                   <div class="ordering-item">
                     <span class="dot">${toArabicDigits(index + 1)}-</span>
