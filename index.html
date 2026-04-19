@@ -483,57 +483,82 @@
     }
 
     .collapse-toggle {
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
-      border: 1px solid rgba(68, 120, 214, 0.22);
+      width: 48px;
+      height: 48px;
+      border-radius: 18px;
+      border: 1px solid rgba(54, 108, 162, 0.16);
       background:
-        linear-gradient(145deg, rgba(255,255,255,0.34), rgba(255,255,255,0.08)),
-        linear-gradient(135deg, #5d8cff 0%, #4579f2 45%, #6a5cf6 100%);
-      color: #ffffff;
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.95), rgba(255,255,255,0) 55%),
+        linear-gradient(180deg, #f8fbff 0%, #eaf2fb 100%);
+      color: #2f5f8a;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       box-shadow:
-        0 14px 28px rgba(70, 103, 210, 0.24),
-        inset 0 1px 0 rgba(255,255,255,0.30),
-        inset 0 -1px 0 rgba(0,0,0,0.08);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+        0 10px 24px rgba(41, 84, 129, 0.12),
+        inset 0 1px 0 rgba(255,255,255,0.92),
+        inset 0 -1px 0 rgba(137, 167, 201, 0.22);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease, border-color 0.18s ease, background 0.18s ease;
       position: relative;
       overflow: hidden;
+      flex: 0 0 auto;
     }
 
     .collapse-toggle::before {
       content: "";
       position: absolute;
       inset: 1px;
-      border-radius: 15px;
-      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.02));
+      border-radius: 17px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.42), rgba(255,255,255,0.08));
       pointer-events: none;
     }
 
     .collapse-toggle:hover {
-      transform: translateY(-1px) scale(1.02);
+      transform: translateY(-1px) scale(1.03);
       box-shadow:
-        0 18px 32px rgba(70, 103, 210, 0.28),
-        inset 0 1px 0 rgba(255,255,255,0.34),
-        inset 0 -1px 0 rgba(0,0,0,0.10);
-      filter: saturate(1.08);
+        0 14px 28px rgba(41, 84, 129, 0.16),
+        inset 0 1px 0 rgba(255,255,255,0.98),
+        inset 0 -1px 0 rgba(137, 167, 201, 0.28);
+      filter: saturate(1.06);
     }
 
-    .collapse-arrow {
+    .collapse-icon {
       position: relative;
       z-index: 1;
-      font-size: 20px;
-      font-weight: 900;
-      line-height: 1;
-      transition: transform 0.22s ease;
-      text-shadow: 0 1px 2px rgba(0,0,0,0.16);
+      width: 22px;
+      height: 22px;
+      display: none;
+      align-items: center;
+      justify-content: center;
     }
 
-    .question-card.is-collapsed .collapse-arrow {
-      transform: rotate(-90deg);
+    .collapse-icon svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.1;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      filter: drop-shadow(0 1px 1px rgba(255,255,255,0.35));
+    }
+
+    .question-card.is-collapsed .collapse-toggle {
+      border-color: rgba(67, 146, 214, 0.22);
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.96), rgba(255,255,255,0) 55%),
+        linear-gradient(180deg, #edf8ff 0%, #dceefe 100%);
+      color: #2570b5;
+    }
+
+    .question-card.is-collapsed .collapse-toggle .icon-collapsed {
+      display: inline-flex;
+    }
+
+    .question-card:not(.is-collapsed) .collapse-toggle .icon-expanded {
+      display: inline-flex;
     }
 
     .question-card.is-collapsed > :not(.question-top) {
@@ -1662,7 +1687,7 @@
                       <input data-print-setting="elementsMarginTop" data-print-type="number" type="number" step="0.1" min="0" />
                     </div>
                     <div class="field">
-                      <label>المسافة بين الأفرع الحرفية (أ / ب / ج) (mm)</label>
+                      <label>التباعد العمودي بين الأفرع الحرفية فقط (أ / ب / ج) (mm)</label>
                       <input data-print-setting="elementsGap" data-print-type="number" type="number" step="0.1" min="0" />
                     </div>
                     <div class="field">
@@ -2820,8 +2845,20 @@
               </div>
               <div class="question-side-actions">
                 <button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>
-                <button type="button" class="collapse-toggle" data-action="toggle-question" data-question-id="${question.id}" aria-expanded="${questionCollapsed ? "false" : "true"}" title="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}">
-                  <span class="collapse-arrow">⌄</span>
+                <button type="button" class="collapse-toggle" data-action="toggle-question" data-question-id="${question.id}" aria-expanded="${questionCollapsed ? "false" : "true"}" aria-label="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}" title="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}">
+                  <span class="collapse-icon icon-collapsed" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
+                      <path d="M12 8.4v7.2"></path>
+                      <path d="M8.4 12h7.2"></path>
+                    </svg>
+                  </span>
+                  <span class="collapse-icon icon-expanded" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
+                      <path d="M8.4 12h7.2"></path>
+                    </svg>
+                  </span>
                 </button>
               </div>
             </div>
@@ -3149,6 +3186,8 @@
       const meta = state.meta;
       const sig = state.signatures;
       const scopeStyle = buildPrintScopeVars();
+      const currentPrintSettings = getCurrentPrintSettings();
+      const letterBranchesGapMm = Math.max(0, sanitizeNumber(currentPrintSettings.elementsGap, defaultPrintSettings().elementsGap));
 
       const questionsHtml = state.questions.map((question, qIndex) => {
         const degreeText = question.degree ? `(${escapeHtml(formatDegree(question.degree))})` : "";
@@ -3168,10 +3207,19 @@
             `}
             ${question.blocks && question.blocks.length ? `
               <div class="question-elements ${mergeFirstBranch ? "question-elements-merged" : ""}">
-                ${question.blocks.map((block, blockIndex) => renderBlockPreview(block, {
-                  mergedQuestionLabel: mergeFirstBranch && blockIndex === 0 ? questionNumberLabel : "",
-                  mergedQuestionDegree: mergeFirstBranch && blockIndex === 0 && degreeText ? `<span class="degree-badge">${degreeText}</span>` : ""
-                })).join("")}
+                ${(() => {
+                  let previousBranchWasLetter = false;
+                  return question.blocks.map((block, blockIndex) => {
+                    const currentBranchIsLetter = isLetterBranchLabel(block.label || "");
+                    const branchGapBefore = previousBranchWasLetter && currentBranchIsLetter ? letterBranchesGapMm : 0;
+                    previousBranchWasLetter = currentBranchIsLetter;
+                    return renderBlockPreview(block, {
+                      mergedQuestionLabel: mergeFirstBranch && blockIndex === 0 ? questionNumberLabel : "",
+                      mergedQuestionDegree: mergeFirstBranch && blockIndex === 0 && degreeText ? `<span class="degree-badge">${degreeText}</span>` : "",
+                      branchGapBefore
+                    });
+                  }).join("");
+                })()}
               </div>
             ` : ``}
           </div>
@@ -3266,6 +3314,8 @@
       const mergedQuestionLabel = options.mergedQuestionLabel || "";
       const mergedQuestionDegree = options.mergedQuestionDegree || "";
       const branchClass = isLetterBranchLabel(rawLabel) ? " letter-branch" : "";
+      const branchGapBefore = Math.max(0, Number(options.branchGapBefore || 0));
+      const rootStyleAttr = branchGapBefore > 0 ? ` style="margin-top:${branchGapBefore}mm;"` : "";
       const labelPrefix = mergedQuestionLabel
         ? `<span class="element-label"><strong>${mergedQuestionLabel}</strong> ${escapeHtml(toArabicDigits(label))}-</span>`
         : (label ? `<span class="element-label">${escapeHtml(toArabicDigits(label))}-</span>` : "");
@@ -3275,7 +3325,7 @@
 
       if (block.type === "definitions") {
         return `
-          <div class="element-line${branchClass}">
+          <div class="element-line${branchClass}"${rootStyleAttr}>
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3298,7 +3348,7 @@
 
       if (block.type === "mcq") {
         return `
-          <div class="element-line${branchClass}">
+          <div class="element-line${branchClass}"${rootStyleAttr}>
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3319,7 +3369,7 @@
       if (block.type === "trueFalse") {
         const tfPrompt = block.prompt ? nlToBr(block.prompt) : 'ضع علامة (✓) أو (✗) أمام النقاط التالية:';
         return `
-          <div class="element-line${branchClass}">
+          <div class="element-line${branchClass}"${rootStyleAttr}>
             ${labelPrefix}
             <div class="element-body">
               ${tfPrompt}
@@ -3342,7 +3392,7 @@
 
       if (block.type === "matching") {
         return `
-          <div class="element-line${branchClass}">
+          <div class="element-line${branchClass}"${rootStyleAttr}>
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3372,7 +3422,7 @@
 
       if (block.type === "ordering") {
         return `
-          <div class="element-line${branchClass}">
+          <div class="element-line${branchClass}"${rootStyleAttr}>
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3393,7 +3443,7 @@
       if (block.type === "numeric") {
         const width = Math.min(Math.max(Number(block.answerWidth || 40), 20), 90);
         return `
-          <div class="element-line${branchClass}">
+          <div class="element-line${branchClass}"${rootStyleAttr}>
             ${labelPrefix}
             <div class="element-body">
               ${prompt}
@@ -3406,7 +3456,7 @@
 
       if (block.type === "blanks") {
         return `
-          <div class="element-line${branchClass}">
+          <div class="element-line${branchClass}"${rootStyleAttr}>
             ${labelPrefix}
             <div class="element-body">${block.prompt ? renderBlanks(block.prompt) : '<span class="empty-hint">اكتب النص واستعمل ___ بمكان الفراغ</span>'}</div>
             ${trailingBadge}
@@ -3415,7 +3465,7 @@
       }
 
       return `
-        <div class="element-line">
+        <div class="element-line"${rootStyleAttr}>
           ${labelPrefix}
           <div class="element-body">${prompt}</div>
           ${trailingBadge}
