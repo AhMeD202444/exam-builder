@@ -3880,9 +3880,19 @@
     function toggleQuestionCollapse(questionId) {
       const ui = ensureUiState();
       const currentlyCollapsed = ui.collapsedQuestions[questionId] !== false;
-      ui.collapsedQuestions[questionId] = !currentlyCollapsed;
+      const nextCollapsed = !currentlyCollapsed;
+      ui.collapsedQuestions[questionId] = nextCollapsed;
       saveDraft();
       renderQuestionEditors();
+
+      if (nextCollapsed) {
+        requestAnimationFrame(() => {
+          const questionsHeader = document.getElementById("addQuestionBtn");
+          if (questionsHeader) {
+            questionsHeader.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        });
+      }
     }
 
     function toggleBlockCollapse(blockId) {
