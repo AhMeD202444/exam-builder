@@ -483,35 +483,53 @@
     }
 
     .collapse-toggle {
-      width: 42px;
-      height: 42px;
-      border-radius: 999px;
-      border: 1px solid rgba(49, 101, 179, 0.18);
+      width: 46px;
+      height: 46px;
+      border-radius: 16px;
+      border: 1px solid rgba(68, 120, 214, 0.22);
       background:
-        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.95), rgba(255,255,255,0.68) 42%, transparent 43%),
-        linear-gradient(180deg, #f7fbff 0%, #edf5ff 55%, #e5effd 100%);
-      color: #255aa8;
+        linear-gradient(145deg, rgba(255,255,255,0.34), rgba(255,255,255,0.08)),
+        linear-gradient(135deg, #5d8cff 0%, #4579f2 45%, #6a5cf6 100%);
+      color: #ffffff;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      box-shadow: 0 10px 22px rgba(37, 90, 168, 0.14), inset 0 1px 0 rgba(255,255,255,0.75);
-      transition: transform 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+      box-shadow:
+        0 14px 28px rgba(70, 103, 210, 0.24),
+        inset 0 1px 0 rgba(255,255,255,0.30),
+        inset 0 -1px 0 rgba(0,0,0,0.08);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .collapse-toggle::before {
+      content: "";
+      position: absolute;
+      inset: 1px;
+      border-radius: 15px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.18), rgba(255,255,255,0.02));
+      pointer-events: none;
     }
 
     .collapse-toggle:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 14px 28px rgba(37, 90, 168, 0.18), inset 0 1px 0 rgba(255,255,255,0.82);
-      background:
-        radial-gradient(circle at 30% 25%, rgba(255,255,255,1), rgba(255,255,255,0.74) 42%, transparent 43%),
-        linear-gradient(180deg, #fafdff 0%, #eef6ff 58%, #dfeafb 100%);
+      transform: translateY(-1px) scale(1.02);
+      box-shadow:
+        0 18px 32px rgba(70, 103, 210, 0.28),
+        inset 0 1px 0 rgba(255,255,255,0.34),
+        inset 0 -1px 0 rgba(0,0,0,0.10);
+      filter: saturate(1.08);
     }
 
     .collapse-arrow {
-      font-size: 18px;
+      position: relative;
+      z-index: 1;
+      font-size: 20px;
       font-weight: 900;
       line-height: 1;
       transition: transform 0.22s ease;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.16);
     }
 
     .question-card.is-collapsed .collapse-arrow {
@@ -826,7 +844,8 @@
 
     .question-elements {
       margin-top: 0.8mm;
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 0;
       padding-right: 2mm;
       font-size: 12.2pt;
@@ -2025,7 +2044,7 @@
         elementsTextAlign: "right",
         elementsVerticalAlign: "flex-start",
         elementsMarginTop: 0.8,
-        elementsGap: 2.4,
+        elementsGap: 3.2,
         elementsPaddingRight: 2,
         elementsPaddingLeft: 0,
         listMarginTop: 0.7,
@@ -2272,7 +2291,7 @@
   --elements-text-align: right;
   --elements-vertical-align: flex-start;
   --elements-margin-top: 0.8mm;
-  --elements-gap: 2.4mm;
+  --elements-gap: 3.2mm;
   --elements-padding-right: 2mm;
   --elements-padding-left: 0mm;
   --list-margin-top: 0.7mm;
@@ -2385,6 +2404,8 @@
 }
 .print-scope .question-elements {
   margin-top: var(--elements-margin-top);
+  display: flex !important;
+  flex-direction: column !important;
   gap: 0 !important;
   padding-right: var(--elements-padding-right);
   padding-left: var(--elements-padding-left);
@@ -2759,7 +2780,7 @@
 
     function isQuestionCollapsed(questionId) {
       const ui = ensureUiState();
-      return Boolean(ui.collapsedQuestions[questionId]);
+      return ui.collapsedQuestions[questionId] !== false;
     }
 
     function isBlockCollapsed(blockId) {
@@ -2769,7 +2790,8 @@
 
     function toggleQuestionCollapse(questionId) {
       const ui = ensureUiState();
-      ui.collapsedQuestions[questionId] = !ui.collapsedQuestions[questionId];
+      const currentlyCollapsed = ui.collapsedQuestions[questionId] !== false;
+      ui.collapsedQuestions[questionId] = !currentlyCollapsed;
       saveDraft();
       renderQuestionEditors();
     }
@@ -3829,7 +3851,8 @@ ${buildPrintScopeCss()}
     }
     .question-elements {
       margin-top: 0.8mm;
-      display: grid;
+      display: flex;
+      flex-direction: column;
       gap: 0;
       padding-right: 2mm;
       font-size: 12.2pt;
