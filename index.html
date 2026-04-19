@@ -465,6 +465,52 @@
 
     .question-card + .question-card { margin-top: 12px; }
 
+    .question-meta-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      align-items: stretch;
+    }
+
+    .question-meta-field {
+      border: 1px solid #dce6f2;
+      border-radius: 20px;
+      padding: 12px;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      display: grid;
+      gap: 10px;
+      min-height: 148px;
+      box-shadow: 0 10px 24px rgba(33, 53, 85, 0.05);
+    }
+
+    .question-meta-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 34px;
+      padding: 0 14px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(33, 53, 85, 0.12), rgba(83, 119, 175, 0.22));
+      color: var(--primary);
+      font-size: 13px;
+      font-weight: 800;
+      border: 1px solid rgba(83, 119, 175, 0.18);
+    }
+
+    .question-meta-field input,
+    .question-meta-field textarea {
+      min-height: 88px;
+      height: 88px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.96);
+      border: 1px solid rgba(83, 119, 175, 0.18);
+    }
+
+    .question-meta-field input {
+      text-align: center;
+    }
+
     .question-top {
       display: flex;
       justify-content: space-between;
@@ -1099,6 +1145,12 @@
       color: var(--muted);
     }
 
+    .field-tools {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
     .advanced-card details {
       border: 1px solid rgba(148, 163, 184, 0.28);
       border-radius: 18px;
@@ -1401,7 +1453,7 @@
         width: calc(100vw - 14px);
       }
       .hero h1 { font-size: 24px; }
-      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .grid-2, .grid-3, .grid-4, .question-meta-grid { grid-template-columns: 1fr; }
       .advanced-card .field {
         padding: 10px;
         border-radius: 18px;
@@ -1979,7 +2031,7 @@
 
                 <div class="advanced-group">
                   <div class="advanced-group-title">الفروع والعناصر داخل السؤال</div>
-                  <div class="advanced-group-note">يشمل النصوص الفرعية، الخيارات، صح/خطأ، الترتيب، المطابقة والتعاريف.</div>
+                  <div class="advanced-group-note">يشمل النصوص الفرعية، الفراغات، التعاريف، والنقاط.</div>
                   <div class="grid-4">
                     <div class="field">
                       <label>حجم خط العناصر (pt)</label>
@@ -2045,10 +2097,6 @@
                     <div class="field">
                       <label>تباعد أفقي بين التعاريف (mm)</label>
                       <input data-print-setting="definitionsColumnGap" data-print-type="number" type="number" step="0.1" min="0" />
-                    </div>
-                    <div class="field">
-                      <label>فراغ عمودي بين عمودي المطابقة (mm)</label>
-                      <input data-print-setting="matchingGap" data-print-type="number" type="number" step="0.1" min="0" />
                     </div>
                   </div>
                 </div>
@@ -2172,7 +2220,6 @@
             <button class="btn btn-primary" id="saveBtn">حفظ</button>
             <button class="btn btn-soft" id="newBtn">جديد</button>
             <button class="btn btn-accent" id="printBtn">طباعة</button>
-            <button class="btn btn-soft" id="toggleSymbols" type="button">لوحة الرموز</button>
           </div>
           <div class="hint">
             الحفظ يكون داخل المتصفح. كل تغيير أيضًا ينحفظ كمسودة تلقائيًا حتى لا يضيع الشغل.
@@ -2186,7 +2233,7 @@
           </div>
           <div class="muted-box">
             هذا المحرر مرن: كل سؤال تقدر تضيف بداخله عناصر من أنواع مختلفة مثل
-            <strong>نص عادي، فراغات، تعاريف، اختيار من متعدد، صح وخطأ، توصيل، ترتيب، إجابة رقمية</strong>.
+            <strong>نص عادي، فراغات، تعاريف، نقاط</strong>.
           </div>
           <div id="questionsEditor" style="margin-top:12px;"></div>
         </div>
@@ -2342,7 +2389,11 @@
 
     function renderExamText(value) {
       let safe = escapeHtml(value).replace(/\n/g, "<br>");
-      safe = safe.replace(/[\(﴾（]\s*فراغ\s*[\)﴿）]/g, '<span class="blank-line" style="width:96px"></span>');
+      safe = safe.replace(/(?:[\(﴾（]\s*فراغ\s*[\)﴿）]\s*)+/g, (match) => {
+        const count = (match.match(/[\(﴾（]\s*فراغ\s*[\)﴿）]/g) || []).length || 1;
+        const width = Math.min(Math.max(count * 96, 96), 320);
+        return `<span class="blank-line" style="width:${width}px"></span>`;
+      });
       return safe.replace(/_{3,}/g, (match) => {
         const width = Math.min(Math.max(match.length * 8, 58), 230);
         return `<span class="blank-line" style="width:${width}px"></span>`;
@@ -2540,8 +2591,66 @@
       const source = value && typeof value === "object" ? value : {};
       const meta = source.meta && typeof source.meta === "object" ? source.meta : {};
       const signatures = source.signatures && typeof source.signatures === "object" ? source.signatures : {};
-      const questions = Array.isArray(source.questions) && source.questions.length ? source.questions : base.questions;
       const ui = source.ui && typeof source.ui === "object" ? source.ui : {};
+      const supportedBlockTypes = new Set(["normal", "blanks", "definitions", "points"]);
+
+      const normalizePointsItems = (items) => {
+        if (!Array.isArray(items) || !items.length) return [makePoint()];
+        return items.map((item) => ({
+          id: item && item.id ? item.id : uid(),
+          text: item && typeof item.text === "string" ? item.text : "",
+          degree: item && typeof item.degree === "string" ? item.degree : ""
+        }));
+      };
+
+      const normalizeBlock = (block, index) => {
+        const sourceBlock = block && typeof block === "object" ? block : {};
+        const rawType = typeof sourceBlock.type === "string" ? sourceBlock.type : "normal";
+        const finalType = supportedBlockTypes.has(rawType) ? rawType : "normal";
+        const normalized = makeBlock(finalType, sourceBlock.label || nextLabel(index));
+
+        normalized.id = sourceBlock.id || normalized.id;
+        normalized.label = typeof sourceBlock.label === "string" ? sourceBlock.label : normalized.label;
+        normalized.prompt = typeof sourceBlock.prompt === "string" ? sourceBlock.prompt : normalized.prompt;
+        normalized.degree = typeof sourceBlock.degree === "string" ? sourceBlock.degree : "";
+
+        if (finalType === "definitions" || finalType === "points") {
+          normalized.items = normalizePointsItems(sourceBlock.items);
+        }
+
+        if (finalType === "blanks") {
+          const hasItems = Array.isArray(sourceBlock.items) && sourceBlock.items.length;
+          normalized.items = hasItems
+            ? normalizePointsItems(sourceBlock.items)
+            : normalizePointsItems(typeof sourceBlock.prompt === "string" && sourceBlock.prompt.trim()
+              ? [{ text: sourceBlock.prompt, degree: sourceBlock.degree || "" }]
+              : []);
+          normalized.prompt = hasItems
+            ? (typeof sourceBlock.prompt === "string" ? sourceBlock.prompt : normalized.prompt)
+            : "";
+          normalized.hint = typeof sourceBlock.hint === "string" ? sourceBlock.hint : normalized.hint;
+        }
+
+        return normalized;
+      };
+
+      const normalizeQuestion = (question) => {
+        const sourceQuestion = question && typeof question === "object" ? question : {};
+        const rawBlocks = Array.isArray(sourceQuestion.blocks) && sourceQuestion.blocks.length
+          ? sourceQuestion.blocks
+          : [makeBlock("normal", "أ")];
+
+        return {
+          id: sourceQuestion.id || uid(),
+          title: typeof sourceQuestion.title === "string" ? sourceQuestion.title : "",
+          degree: typeof sourceQuestion.degree === "string" ? sourceQuestion.degree : "",
+          blocks: rawBlocks.map((block, index) => normalizeBlock(block, index))
+        };
+      };
+
+      const questions = Array.isArray(source.questions) && source.questions.length
+        ? source.questions.map((question) => normalizeQuestion(question))
+        : base.questions.map((question) => normalizeQuestion(question));
 
       return {
         ...base,
@@ -2998,120 +3107,12 @@
       return AR_LETTERS[index] || toArabicDigits(index + 1);
     }
 
-    function normalizeBranchLabel(value) {
-      const raw = String(value || "").trim();
-      if (!raw) return "";
-
-      const normalizedDigits = raw
-        .replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
-        .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
-
-      return normalizedDigits
-        .replace(/^[^A-Za-zأ-ي0-9]+/, "")
-        .replace(/[^A-Za-zأ-ي0-9]+$/, "")
-        .trim();
-    }
-
     function isLetterBranchLabel(value) {
-      const normalized = normalizeBranchLabel(value);
-      if (!normalized) return false;
+      const raw = String(value || "").trim();
+      if (!raw) return false;
+      const normalized = raw.replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d)).replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
       if (/^\d+$/.test(normalized)) return false;
-      return AR_LETTERS.includes(normalized) || /^[A-Za-zأ-ي]+$/.test(normalized);
-    }
-
-    function trimEmptyLines(value) {
-      return String(value || "")
-        .replace(/^[\s\u00A0]*(?:\r?\n)+/g, "")
-        .replace(/(?:\r?\n)[\s\u00A0]*$/g, "")
-        .trim();
-    }
-
-    function escapeRegex(value) {
-      return String(value || "").replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    }
-
-    function getInlineLetterBranchMatch(line) {
-      const rawLine = String(line || "");
-      if (!rawLine.trim()) return null;
-
-      const cleanedLine = rawLine.replace(/^[\s\u00A0\u200E\u200F\u061C\u200B\uFEFF]+/, "");
-      if (!cleanedLine) return null;
-
-      const arabicLabelPattern = AR_LETTERS
-        .slice()
-        .sort((a, b) => b.length - a.length)
-        .map((item) => escapeRegex(item))
-        .join("|");
-      const labelPattern = `(?:${arabicLabelPattern}|[A-Za-z])`;
-
-      const wrappedMatch = cleanedLine.match(new RegExp(String.raw`^[\(\[\{﴿（]\s*(${labelPattern})\s*[\)\]\}﴾）]\s*(.*)$`));
-      if (wrappedMatch) {
-        return {
-          label: wrappedMatch[1],
-          content: wrappedMatch[2] || ""
-        };
-      }
-
-      const plainMatch = cleanedLine.match(new RegExp(String.raw`^(${labelPattern})\s*[\)\-–—\.:،/\\ـ]\s*(.*)$`));
-      if (plainMatch) {
-        return {
-          label: plainMatch[1],
-          content: plainMatch[2] || ""
-        };
-      }
-
-      return null;
-    }
-
-    function expandInlineLetterBranchesForRender(block) {
-      if (!block || !["normal", "blanks"].includes(block.type)) return [block];
-
-      const prompt = String(block.prompt || "").replace(/\r\n?/g, "\n");
-      const promptLines = prompt.split("\n");
-      const explicitBaseLabel = String(block.label || "");
-      const explicitBaseIsLetter = isLetterBranchLabel(explicitBaseLabel);
-      const firstMarker = getInlineLetterBranchMatch(promptLines[0] || "");
-      const initialLabel = explicitBaseIsLetter ? explicitBaseLabel : (firstMarker ? firstMarker.label : "");
-
-      if (!isLetterBranchLabel(initialLabel)) return [block];
-
-      const segments = [{ label: initialLabel, lines: [] }];
-      let foundExtraBranch = false;
-
-      promptLines.forEach((line, index) => {
-        const marker = getInlineLetterBranchMatch(line);
-        const currentLabel = segments[segments.length - 1].label;
-        const currentNormalized = normalizeBranchLabel(currentLabel);
-
-        if (marker) {
-          const markerNormalized = normalizeBranchLabel(marker.label);
-
-          if (index === 0 && markerNormalized === currentNormalized) {
-            if (marker.content) segments[segments.length - 1].lines.push(marker.content);
-            return;
-          }
-
-          if (markerNormalized && markerNormalized !== currentNormalized) {
-            foundExtraBranch = true;
-            segments.push({
-              label: marker.label,
-              lines: marker.content ? [marker.content] : []
-            });
-            return;
-          }
-        }
-
-        segments[segments.length - 1].lines.push(line);
-      });
-
-      if (!foundExtraBranch) return [block];
-
-      return segments.map((segment, index) => ({
-        ...block,
-        label: index === 0 ? (explicitBaseIsLetter ? explicitBaseLabel : segment.label) : segment.label,
-        prompt: trimEmptyLines(segment.lines.join("\n")),
-        degree: index === 0 ? block.degree : ""
-      }));
+      return AR_LETTERS.includes(raw) || /^[A-Za-zأ-ي]+$/.test(raw);
     }
 
     function makeBlock(type = "normal", label = "") {
@@ -3126,51 +3127,15 @@
         return { ...base, prompt: "عرّف ما يأتي:", items: [makePoint()] };
       }
 
-      if (type === "mcq") {
-        return {
-          ...base,
-          prompt: "",
-          options: [makeTextItem(), makeTextItem(), makeTextItem(), makeTextItem()]
-        };
-      }
-
-      if (type === "trueFalse") {
-        return {
-          ...base,
-          prompt: "ضع علامة (✓) أو (✗) أمام النقاط التالية:",
-          items: [makeTextItem()]
-        };
-      }
-
-      if (type === "matching") {
-        return {
-          ...base,
-          prompt: "صل بين ما يأتي:",
-          leftItems: [makeMatchingPair()],
-          rightItems: [makeMatchingPair()]
-        };
-      }
-
-      if (type === "ordering") {
-        return {
-          ...base,
-          prompt: "رتب ما يأتي:",
-          items: [makeTextItem()]
-        };
-      }
-
-      if (type === "numeric") {
-        return {
-          ...base,
-          prompt: "",
-          answerWidth: "40"
-        };
+      if (type === "points") {
+        return { ...base, prompt: "", items: [makePoint()] };
       }
 
       if (type === "blanks") {
         return {
           ...base,
           prompt: "",
+          items: [makePoint()],
           hint: "اكتب الجملة وضع (فراغ) أو ___ مكان الفراغ المطلوب"
         };
       }
@@ -3378,6 +3343,7 @@
               </div>
               <div class="question-side-actions">
                 <button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>
+                ${renderSymbolButton()}
                 <button type="button" class="collapse-toggle" data-action="toggle-question" data-question-id="${question.id}" aria-expanded="${questionCollapsed ? "false" : "true"}" aria-label="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}" title="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}">
                   <span class="collapse-icon icon-collapsed" aria-hidden="true">
                     <svg viewBox="0 0 24 24" focusable="false">
@@ -3396,13 +3362,13 @@
               </div>
             </div>
 
-            <div class="grid-2">
-              <div class="field">
-                <label>منطوق السؤال</label>
-                <textarea data-scope="question" data-field="title" data-q="${qIndex}" placeholder="اكتب نص السؤال الرئيسي هنا...">${escapeHtml(question.title)}</textarea>
+            <div class="question-meta-grid">
+              <div class="field question-meta-field">
+                <label class="question-meta-badge">منطوق السؤال</label>
+                <textarea data-scope="question" data-field="title" data-q="${qIndex}" data-symbol-preferred="true" placeholder="اكتب نص السؤال الرئيسي هنا...">${escapeHtml(question.title)}</textarea>
               </div>
-              <div class="field">
-                <label>درجة السؤال</label>
+              <div class="field question-meta-field">
+                <label class="question-meta-badge">درجة السؤال</label>
                 <input data-scope="question" data-field="degree" data-q="${qIndex}" type="text" value="${escapeHtml(question.degree)}" placeholder="مثال: 10" />
               </div>
             </div>
@@ -3413,12 +3379,8 @@
                 <select id="blockType-${question.id}">
                   <option value="normal">نص / فرع عادي</option>
                   <option value="blanks">فراغات</option>
-                  <option value="definitions">تعاريف / نقاط</option>
-                  <option value="mcq">اختيار من متعدد</option>
-                  <option value="trueFalse">صح / خطأ</option>
-                  <option value="matching">توصيل / مطابقة</option>
-                  <option value="ordering">ترتيب / خطوات</option>
-                  <option value="numeric">إجابة رقمية</option>
+                  <option value="definitions">تعاريف</option>
+                  <option value="points">نقاط</option>
                 </select>
                 <button class="btn btn-success" data-action="add-block" data-q="${qIndex}" data-question-id="${question.id}">إضافة عنصر</button>
               </div>
@@ -3434,6 +3396,10 @@
       container.innerHTML = html;
     }
 
+    function renderSymbolButton() {
+      return `<button class="btn btn-soft" type="button" data-action="open-symbols-context">الرموز</button>`;
+    }
+
     function renderBlockEditor(block, qIndex, bIndex) {
       const commonHeader = `
         <div class="question-top">
@@ -3443,6 +3409,7 @@
           <div class="inline-actions">
             <button class="btn btn-soft" data-action="duplicate-block" data-q="${qIndex}" data-b="${bIndex}">نسخ العنصر</button>
             <button class="btn btn-danger" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}">حذف العنصر</button>
+            ${renderSymbolButton()}
           </div>
         </div>
         <div class="grid-4">
@@ -3473,17 +3440,51 @@
             ${commonHeader}
             <div class="field">
               <label>عنوان هذا العنصر</label>
-              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="مثال: عرّف ما يأتي:">${escapeHtml(block.prompt)}</textarea>
+              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="مثال: عرّف ما يأتي:">${escapeHtml(block.prompt)}</textarea>
             </div>
             <div class="inline-actions">
-              <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة نقطة / تعريف</button>
+              <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة تعريف</button>
+              ${renderSymbolButton()}
             </div>
             ${(block.items || []).map((item, i) => `
               <div class="subitem">
                 <div class="grid-2">
                   <div class="field">
-                    <label>نص النقطة / التعريف</label>
-                    <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب المطلوب هنا" />
+                    <label>نص التعريف</label>
+                    <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب المطلوب هنا" />
+                  </div>
+                  <div class="field">
+                    <label>درجة التعريف (اختياري)</label>
+                    <input data-scope="point" data-group="items" data-field="degree" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.degree || "")}" placeholder="مثال: 2" />
+                  </div>
+                </div>
+                <div class="inline-actions">
+                  <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}">حذف التعريف</button>
+                </div>
+              </div>
+            `).reverse().join("")}
+          </div>
+        `;
+      }
+
+      if (block.type === "points") {
+        return `
+          <div class="block-item">
+            ${commonHeader}
+            <div class="field">
+              <label>عنوان هذا العنصر</label>
+              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="مثال: اكتب النقاط الآتية:">${escapeHtml(block.prompt)}</textarea>
+            </div>
+            <div class="inline-actions">
+              <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة نقطة</button>
+              ${renderSymbolButton()}
+            </div>
+            ${(block.items || []).map((item, i) => `
+              <div class="subitem">
+                <div class="grid-2">
+                  <div class="field">
+                    <label>نص النقطة</label>
+                    <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب النقطة هنا" />
                   </div>
                   <div class="field">
                     <label>درجة النقطة (اختياري)</label>
@@ -3494,152 +3495,7 @@
                   <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}">حذف النقطة</button>
                 </div>
               </div>
-            `).join("")}
-          </div>
-        `;
-      }
-
-      if (block.type === "mcq") {
-        return `
-          <div class="block-item">
-            ${commonHeader}
-            <div class="field">
-              <label>سؤال الاختيار من متعدد</label>
-              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="اكتب السؤال ثم الخيارات بالأسفل">${escapeHtml(block.prompt)}</textarea>
-            </div>
-            <div class="inline-actions">
-              <button class="btn btn-success" data-action="add-option" data-q="${qIndex}" data-b="${bIndex}">إضافة خيار</button>
-            </div>
-            ${(block.options || []).map((option, i) => `
-              <div class="subitem">
-                <div class="field">
-                  <label>الخيار ${toArabicDigits(i + 1)}</label>
-                  <input data-scope="point" data-group="options" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(option.text)}" placeholder="اكتب نص الخيار" />
-                </div>
-                <div class="inline-actions">
-                  <button class="btn btn-danger" data-action="remove-option" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}">حذف الخيار</button>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-      }
-
-      if (block.type === "trueFalse") {
-        return `
-          <div class="block-item">
-            ${commonHeader}
-            <div class="field">
-              <label>تعليمة العنصر</label>
-              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="مثال: ضع علامة صح أمام العبارة الصحيحة...">${escapeHtml(block.prompt)}</textarea>
-            </div>
-            <div class="inline-actions">
-              <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}" data-group="items">إضافة عبارة</button>
-            </div>
-            ${(block.items || []).map((item, i) => `
-              <div class="subitem">
-                <div class="field">
-                  <label>العبارة ${toArabicDigits(i + 1)}</label>
-                  <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب العبارة" />
-                </div>
-                <div class="inline-actions">
-                  <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-group="items">حذف العبارة</button>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-      }
-
-      if (block.type === "matching") {
-        return `
-          <div class="block-item">
-            ${commonHeader}
-            <div class="field">
-              <label>تعليمة عنصر التوصيل</label>
-              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="مثال: صل بين ما يأتي">${escapeHtml(block.prompt)}</textarea>
-            </div>
-            <div class="grid-2">
-              <div class="subitem">
-                <div class="question-top">
-                  <strong>العمود الأول</strong>
-                  <button class="btn btn-success" data-action="add-matching-item" data-q="${qIndex}" data-b="${bIndex}" data-side="leftItems">إضافة بند</button>
-                </div>
-                ${(block.leftItems || []).map((item, i) => `
-                  <div class="subitem">
-                    <div class="field">
-                      <label>بند ${toArabicDigits(i + 1)}</label>
-                      <input data-scope="point" data-group="leftItems" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب البند" />
-                    </div>
-                    <div class="inline-actions">
-                      <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-group="leftItems">حذف</button>
-                    </div>
-                  </div>
-                `).join("")}
-              </div>
-              <div class="subitem">
-                <div class="question-top">
-                  <strong>العمود الثاني</strong>
-                  <button class="btn btn-success" data-action="add-matching-item" data-q="${qIndex}" data-b="${bIndex}" data-side="rightItems">إضافة بند</button>
-                </div>
-                ${(block.rightItems || []).map((item, i) => `
-                  <div class="subitem">
-                    <div class="field">
-                      <label>بند ${toArabicDigits(i + 1)}</label>
-                      <input data-scope="point" data-group="rightItems" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب البند" />
-                    </div>
-                    <div class="inline-actions">
-                      <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-group="rightItems">حذف</button>
-                    </div>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-            ${degreeBadge}
-          </div>
-        `;
-      }
-
-      if (block.type === "ordering") {
-        return `
-          <div class="block-item">
-            ${commonHeader}
-            <div class="field">
-              <label>تعليمة الترتيب</label>
-              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="مثال: رتب ما يأتي">${escapeHtml(block.prompt)}</textarea>
-            </div>
-            <div class="inline-actions">
-              <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}" data-group="items">إضافة خطوة / بند</button>
-            </div>
-            ${(block.items || []).map((item, i) => `
-              <div class="subitem">
-                <div class="field">
-                  <label>البند ${toArabicDigits(i + 1)}</label>
-                  <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب البند" />
-                </div>
-                <div class="inline-actions">
-                  <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-group="items">حذف البند</button>
-                </div>
-              </div>
-            `).join("")}
-          </div>
-        `;
-      }
-
-      if (block.type === "numeric") {
-        return `
-          <div class="block-item">
-            ${commonHeader}
-            <div class="grid-2">
-              <div class="field">
-                <label>نص المطلوب العددي</label>
-                <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="مثال: جد ناتج الضرب: 8 × 7">${escapeHtml(block.prompt)}</textarea>
-              </div>
-              <div class="field">
-                <label>عرض سطر الإجابة (بالمليمتر تقريبًا)</label>
-                <input data-scope="block" data-field="answerWidth" data-q="${qIndex}" data-b="${bIndex}" type="number" min="20" max="90" value="${escapeHtml(block.answerWidth || "40")}" />
-              </div>
-            </div>
+            `).reverse().join("")}
           </div>
         `;
       }
@@ -3649,10 +3505,31 @@
           <div class="block-item">
             ${commonHeader}
             <div class="field">
-              <label>نص الفراغات</label>
-              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(block.prompt)}</textarea>
+              <label>عنوان هذا العنصر</label>
+              <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="مثال: أكمل ما يأتي:">${escapeHtml(block.prompt)}</textarea>
             </div>
-            <div class="small-note">لإظهار الفراغ في الطباعة اكتب (فراغ) أو ثلاث شرطات سفلية أو أكثر مثل: ___</div>
+            <div class="inline-actions">
+              <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة فراغ</button>
+              ${renderSymbolButton()}
+            </div>
+            ${(block.items || []).map((item, i) => `
+              <div class="subitem">
+                <div class="grid-2">
+                  <div class="field">
+                    <label>نص الفراغ</label>
+                    <textarea data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(item.text)}</textarea>
+                  </div>
+                  <div class="field">
+                    <label>درجة الفراغ (اختياري)</label>
+                    <input data-scope="point" data-group="items" data-field="degree" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.degree || "")}" placeholder="مثال: 2" />
+                  </div>
+                </div>
+                <div class="small-note">لإظهار الفراغ في الطباعة اكتب (فراغ) أو ثلاث شرطات سفلية أو أكثر مثل: ___</div>
+                <div class="inline-actions">
+                  <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}">حذف الفراغ</button>
+                </div>
+              </div>
+            `).reverse().join("")}
           </div>
         `;
       }
@@ -3662,7 +3539,7 @@
           ${commonHeader}
           <div class="field">
             <label>نص العنصر</label>
-            <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" placeholder="اكتب منطوق الفرع أو العنصر هنا">${escapeHtml(block.prompt)}</textarea>
+            <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="اكتب منطوق الفرع أو العنصر هنا">${escapeHtml(block.prompt)}</textarea>
           </div>
         </div>
       `;
@@ -3672,12 +3549,8 @@
       const types = [
         ["normal", "نص / فرع عادي"],
         ["blanks", "فراغات"],
-        ["definitions", "تعاريف / نقاط"],
-        ["mcq", "اختيار من متعدد"],
-        ["trueFalse", "صح / خطأ"],
-        ["matching", "توصيل / مطابقة"],
-        ["ordering", "ترتيب / خطوات"],
-        ["numeric", "إجابة رقمية"]
+        ["definitions", "تعاريف"],
+        ["points", "نقاط"]
       ];
 
       return types.map(([value, label]) => `
@@ -3688,13 +3561,9 @@
     function typeDescription(type) {
       const map = {
         normal: "عنصر نصي مرن",
-        blanks: "يحوّل ___ إلى فراغات",
-        definitions: "تعاريف أو نقاط متعددة",
-        mcq: "سؤال مع خيارات",
-        trueFalse: "عبارات صح أو خطأ",
-        matching: "عمودين للتوصيل",
-        ordering: "ترتيب خطوات أو نقاط",
-        numeric: "نص مع سطر جواب"
+        blanks: "فراغات متعددة وتحويل (فراغ) و___",
+        definitions: "تعاريف متعددة",
+        points: "نقاط عمودية متعددة"
       };
       return map[type] || "عنصر مرن";
     }
@@ -3793,7 +3662,7 @@
       const questionsHtml = state.questions.map((question, qIndex) => {
         const degreeText = question.degree ? `(${escapeHtml(formatDegree(question.degree))})` : "";
         const questionNumberLabel = `س${toArabicDigits(qIndex + 1)}/`;
-        const mergeFirstBranch = !String(question.title || "").trim() && Array.isArray(question.blocks) && question.blocks.length && ["normal", "definitions", "blanks"].includes(question.blocks[0].type);
+        const mergeFirstBranch = !String(question.title || "").trim() && Array.isArray(question.blocks) && question.blocks.length && ["normal", "definitions", "points", "blanks"].includes(question.blocks[0].type);
 
         return `
           <div class="question-block">
@@ -3809,9 +3678,8 @@
             ${question.blocks && question.blocks.length ? `
               <div class="question-elements ${mergeFirstBranch ? "question-elements-merged" : ""}">
                 ${(() => {
-                  const renderBlocks = question.blocks.reduce((acc, block) => acc.concat(expandInlineLetterBranchesForRender(block)), []);
                   let previousBranchWasLetter = false;
-                  return renderBlocks.map((block, blockIndex) => {
+                  return question.blocks.map((block, blockIndex) => {
                     const currentBranchIsLetter = isLetterBranchLabel(block.label || "");
                     const branchGapBefore = previousBranchWasLetter && currentBranchIsLetter ? letterBranchesGapMm : 0;
                     previousBranchWasLetter = currentBranchIsLetter;
@@ -3938,6 +3806,29 @@
                   <div class="def-item">
                     <span class="dot">${toArabicDigits(index + 1)}-</span>
                     <div>
+                      ${renderExamText(item.text || "تعريف فارغ")}
+                      ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
+                    </div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
+            ${trailingBadge}
+          </div>
+        `;
+      }
+
+      if (block.type === "points") {
+        return `
+          <div class="element-line${branchClass}"${rootStyleAttr}>
+            ${labelPrefix}
+            <div class="element-body">
+              ${prompt}
+              <div class="ordering-list">
+                ${(block.items || []).map((item, index) => `
+                  <div class="ordering-item">
+                    <span class="dot">${toArabicDigits(index + 1)}-</span>
+                    <div>
                       ${renderExamText(item.text || "نقطة فارغة")}
                       ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
                     </div>
@@ -3950,126 +3841,31 @@
         `;
       }
 
-      if (block.type === "mcq") {
-        return `
-          <div class="element-line${branchClass}"${rootStyleAttr}>
-            ${labelPrefix}
-            <div class="element-body">
-              ${prompt}
-              <div class="mcq-list">
-                ${(block.options || []).map((option, index) => `
-                  <div class="mcq-item">
-                    <span class="dot">${nextLabel(index)}.</span>
-                    <div>${renderExamText(option.text || "خيار فارغ")}</div>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-            ${trailingBadge}
-          </div>
-        `;
-      }
-
-      if (block.type === "trueFalse") {
-        const tfPrompt = block.prompt ? nlToBr(block.prompt) : 'ضع علامة (✓) أو (✗) أمام النقاط التالية:';
-        return `
-          <div class="element-line${branchClass}"${rootStyleAttr}>
-            ${labelPrefix}
-            <div class="element-body">
-              ${tfPrompt}
-              <div class="tf-list">
-                ${(block.items || []).map((item, index) => `
-                  <div class="tf-item">
-                    <span class="dot">${toArabicDigits(index + 1)}.</span>
-                    <div>
-                      ${renderExamText(item.text || "عبارة فارغة")}
-                      <span class="tf-answer-hint" style="white-space:nowrap;"> ( &nbsp;&nbsp; ) صح / ( &nbsp;&nbsp; ) خطأ </span>
-                    </div>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-            ${trailingBadge}
-          </div>
-        `;
-      }
-
-      if (block.type === "matching") {
-        return `
-          <div class="element-line${branchClass}"${rootStyleAttr}>
-            ${labelPrefix}
-            <div class="element-body">
-              ${prompt}
-              <div class="matching-grid">
-                <div class="matching-col">
-                  ${(block.leftItems || []).map((item, index) => `
-                    <div class="match-item">
-                      <span class="match-token">${toArabicDigits(index + 1)}.</span>
-                      <div>${renderExamText(item.text || "بند فارغ")}</div>
-                    </div>
-                  `).join("")}
-                </div>
-                <div class="matching-col">
-                  ${(block.rightItems || []).map((item, index) => `
-                    <div class="match-item">
-                      <span class="match-token">${nextLabel(index)}.</span>
-                      <div>${renderExamText(item.text || "بند فارغ")}</div>
-                    </div>
-                  `).join("")}
-                </div>
-              </div>
-            </div>
-            ${trailingBadge}
-          </div>
-        `;
-      }
-
-      if (block.type === "ordering") {
-        return `
-          <div class="element-line${branchClass}"${rootStyleAttr}>
-            ${labelPrefix}
-            <div class="element-body">
-              ${prompt}
-              <div class="ordering-list">
-                ${(block.items || []).map((item, index) => `
-                  <div class="ordering-item">
-                    <span class="dot">${toArabicDigits(index + 1)}.</span>
-                    <div>${renderExamText(item.text || "بند فارغ")}</div>
-                  </div>
-                `).join("")}
-              </div>
-            </div>
-            ${trailingBadge}
-          </div>
-        `;
-      }
-
-      if (block.type === "numeric") {
-        const width = Math.min(Math.max(Number(block.answerWidth || 40), 20), 90);
-        return `
-          <div class="element-line${branchClass}"${rootStyleAttr}>
-            ${labelPrefix}
-            <div class="element-body">
-              ${prompt}
-              <span class="numeric-line" style="min-width:${width}mm;"></span>
-            </div>
-            ${trailingBadge}
-          </div>
-        `;
-      }
-
       if (block.type === "blanks") {
         return `
           <div class="element-line${branchClass}"${rootStyleAttr}>
             ${labelPrefix}
-            <div class="element-body">${block.prompt ? renderBlanks(block.prompt) : '<span class="empty-hint">اكتب النص واستعمل ___ بمكان الفراغ</span>'}</div>
+            <div class="element-body">
+              ${block.prompt ? nlToBr(block.prompt) : ""}
+              <div class="ordering-list">
+                ${(block.items || []).map((item, index) => `
+                  <div class="ordering-item">
+                    <span class="dot">${toArabicDigits(index + 1)}-</span>
+                    <div>
+                      ${item.text ? renderBlanks(item.text) : '<span class="empty-hint">اكتب النص واستعمل ___ بمكان الفراغ</span>'}
+                      ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
+                    </div>
+                  </div>
+                `).join("")}
+              </div>
+            </div>
             ${trailingBadge}
           </div>
         `;
       }
 
       return `
-        <div class="element-line${branchClass}"${rootStyleAttr}>
+        <div class="element-line"${rootStyleAttr}>
           ${labelPrefix}
           <div class="element-body">${prompt}</div>
           ${trailingBadge}
@@ -4355,6 +4151,16 @@
       const oldBlock = question.blocks[bIndex];
       const newBlock = makeBlock(newType, oldBlock.label || nextLabel(bIndex));
       newBlock.prompt = oldBlock.prompt || newBlock.prompt;
+      newBlock.degree = oldBlock.degree || "";
+
+      if (["definitions", "points", "blanks"].includes(oldBlock.type) && ["definitions", "points", "blanks"].includes(newType) && Array.isArray(oldBlock.items) && oldBlock.items.length) {
+        newBlock.items = oldBlock.items.map((item) => ({
+          id: item && item.id ? item.id : uid(),
+          text: item && typeof item.text === "string" ? item.text : "",
+          degree: item && typeof item.degree === "string" ? item.degree : ""
+        }));
+      }
+
       question.blocks[bIndex] = newBlock;
       saveDraft();
       renderAll();
@@ -4374,13 +4180,10 @@
 
     function addGroupedItem(qIndex, bIndex, group) {
       const block = state.questions[qIndex].blocks[bIndex];
-      if (group === "options") {
-        block.options.push(makeTextItem());
-      } else if (group === "leftItems" || group === "rightItems") {
-        block[group].push(makeMatchingPair());
+      if (block.type === "definitions" || block.type === "points" || block.type === "blanks") {
+        block.items.push(makePoint());
       } else {
-        if (block.type === "definitions") block.items.push(makePoint());
-        else block.items.push(makeTextItem());
+        block.items.push(makeTextItem());
       }
       saveDraft();
       renderAll();
@@ -4874,6 +4677,9 @@ ${buildPrintScopeCss()}
         if (action === "reset-advanced-settings") resetPrintSettings();
         if (action === "toggle-static-card") toggleStaticCard(button.dataset.cardId);
         if (action === "toggle-question") toggleQuestionCollapse(button.dataset.questionId);
+        if (action === "open-symbols-context") {
+          openSymbolDrawer();
+        }
         if (action === "remove-question") removeQuestion(q);
         if (action === "add-block") {
           const select = document.getElementById(`blockType-${button.dataset.questionId}`);
@@ -4962,6 +4768,27 @@ ${buildPrintScopeCss()}
 
     let lastFocusedTextInput = null;
 
+    function openSymbolDrawer() {
+      const drawer = document.getElementById("symbolDrawer");
+      if (!drawer) return;
+      drawer.classList.add("open");
+      drawer.setAttribute("aria-hidden", "false");
+    }
+
+    function closeSymbolDrawer() {
+      const drawer = document.getElementById("symbolDrawer");
+      if (!drawer) return;
+      drawer.classList.remove("open");
+      drawer.setAttribute("aria-hidden", "true");
+    }
+
+    function focusFieldAndOpenSymbols(field) {
+      if (!(field instanceof HTMLInputElement || field instanceof HTMLTextAreaElement)) return;
+      lastFocusedTextInput = field;
+      field.focus();
+      openSymbolDrawer();
+    }
+
     function insertAtCursor(el, textToInsert) {
       if (!el) return;
       const start = typeof el.selectionStart === "number" ? el.selectionStart : el.value.length;
@@ -4997,23 +4824,15 @@ ${buildPrintScopeCss()}
       const drawer = document.getElementById("symbolDrawer");
       const toggle = document.getElementById("toggleSymbols");
       const close = document.getElementById("closeSymbols");
-      if (!drawer || !toggle || !close) return;
+      if (!drawer || !close) return;
 
-      const openDrawer = () => {
-        drawer.classList.add("open");
-        drawer.setAttribute("aria-hidden", "false");
-      };
+      if (toggle) {
+        toggle.addEventListener("click", () => {
+          drawer.classList.contains("open") ? closeSymbolDrawer() : openSymbolDrawer();
+        });
+      }
 
-      const closeDrawer = () => {
-        drawer.classList.remove("open");
-        drawer.setAttribute("aria-hidden", "true");
-      };
-
-      toggle.addEventListener("click", () => {
-        drawer.classList.contains("open") ? closeDrawer() : openDrawer();
-      });
-
-      close.addEventListener("click", closeDrawer);
+      close.addEventListener("click", closeSymbolDrawer);
 
       document.addEventListener("focusin", (event) => {
         const target = event.target;
@@ -5026,7 +4845,7 @@ ${buildPrintScopeCss()}
 
       drawer.addEventListener("click", (event) => {
         if (event.target === drawer) {
-          closeDrawer();
+          closeSymbolDrawer();
           return;
         }
         const button = event.target.closest("[data-symbol]");
