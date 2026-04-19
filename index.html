@@ -1651,7 +1651,7 @@
       border: 1px solid rgba(148, 163, 184, 0.28);
       border-radius: 18px;
       background: rgba(248, 250, 252, 0.42);
-      overflow: hidden;
+      overflow: visible;
     }
 
     .advanced-card summary {
@@ -1931,6 +1931,17 @@
 
     .advanced-card details[open] {
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.42);
+    }
+
+    .advanced-card details[open] > summary {
+      position: sticky;
+      top: 8px;
+      z-index: 18;
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      border-radius: 16px;
+      box-shadow: 0 10px 22px rgba(33, 53, 85, 0.08);
+      backdrop-filter: blur(8px);
     }
 
     @media (max-width: 1180px) {
@@ -4025,12 +4036,12 @@
       }
 
       const itemLabelMap = {
-        points: ["إضافة نقطة", "نص النقطة", "درجة النقطة (اختياري)", "حذف النقطة"],
-        definitions: ["إضافة تعريف", "نص التعريف", "درجة التعريف (اختياري)", "حذف التعريف"],
-        blanks: ["إضافة فراغ", "نص الفراغ", "درجة الفراغ (اختياري)", "حذف الفراغ"]
+        points: ["إضافة نقطة", "نص النقطة", "حذف النقطة"],
+        definitions: ["إضافة تعريف", "نص التعريف", "حذف التعريف"],
+        blanks: ["إضافة فراغ", "نص الفراغ", "حذف الفراغ"]
       };
 
-      const [addLabel, textLabel, degreeLabel, removeLabel] = itemLabelMap[questionType] || itemLabelMap.points;
+      const [addLabel, textLabel, removeLabel] = itemLabelMap[questionType] || itemLabelMap.points;
 
       return `
         ${typeField}
@@ -4040,18 +4051,12 @@
         </div>
         ${(question.items || []).map((item, i) => `
           <div class="subitem">
-            <div class="grid-2">
-              <div class="field">
-                <label>${textLabel}</label>
-                ${questionType === "blanks"
-                  ? `<textarea data-scope="question-item" data-field="text" data-q="${qIndex}" data-i="${i}" data-symbol-preferred="true" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(item.text || "")}</textarea>`
-                  : `<input data-scope="question-item" data-field="text" data-q="${qIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text || "")}" placeholder="اكتب المطلوب هنا" />`
-                }
-              </div>
-              <div class="field">
-                <label>${degreeLabel}</label>
-                <input data-scope="question-item" data-field="degree" data-q="${qIndex}" data-i="${i}" type="text" value="${escapeHtml(item.degree || "")}" placeholder="مثال: 2" />
-              </div>
+            <div class="field">
+              <label>${textLabel}</label>
+              ${questionType === "blanks"
+                ? `<textarea data-scope="question-item" data-field="text" data-q="${qIndex}" data-i="${i}" data-symbol-preferred="true" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(item.text || "")}</textarea>`
+                : `<input data-scope="question-item" data-field="text" data-q="${qIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text || "")}" placeholder="اكتب المطلوب هنا" />`
+              }
             </div>
             ${questionType === "blanks" ? `<div class="small-note">لإظهار الفراغ في الطباعة اكتب (فراغ) أو ثلاث شرطات سفلية أو أكثر مثل: ___</div>` : ``}
             <div class="inline-actions">
@@ -4106,15 +4111,9 @@
             </div>
             ${(block.items || []).map((item, i) => `
               <div class="subitem">
-                <div class="grid-2">
-                  <div class="field">
-                    <label>نص التعريف</label>
-                    <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب المطلوب هنا" />
-                  </div>
-                  <div class="field">
-                    <label>درجة التعريف (اختياري)</label>
-                    <input data-scope="point" data-group="items" data-field="degree" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.degree || "")}" placeholder="مثال: 2" />
-                  </div>
+                <div class="field">
+                  <label>نص التعريف</label>
+                  <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب المطلوب هنا" />
                 </div>
                 <div class="inline-actions">
                   <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}">حذف التعريف</button>
@@ -4139,15 +4138,9 @@
             </div>
             ${(block.items || []).map((item, i) => `
               <div class="subitem">
-                <div class="grid-2">
-                  <div class="field">
-                    <label>نص النقطة</label>
-                    <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب النقطة هنا" />
-                  </div>
-                  <div class="field">
-                    <label>درجة النقطة (اختياري)</label>
-                    <input data-scope="point" data-group="items" data-field="degree" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.degree || "")}" placeholder="مثال: 2" />
-                  </div>
+                <div class="field">
+                  <label>نص النقطة</label>
+                  <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب النقطة هنا" />
                 </div>
                 <div class="inline-actions">
                   <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}">حذف النقطة</button>
@@ -4172,15 +4165,9 @@
             </div>
             ${(block.items || []).map((item, i) => `
               <div class="subitem">
-                <div class="grid-2">
-                  <div class="field">
-                    <label>نص الفراغ</label>
-                    <textarea data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(item.text)}</textarea>
-                  </div>
-                  <div class="field">
-                    <label>درجة الفراغ (اختياري)</label>
-                    <input data-scope="point" data-group="items" data-field="degree" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" type="text" value="${escapeHtml(item.degree || "")}" placeholder="مثال: 2" />
-                  </div>
+                <div class="field">
+                  <label>نص الفراغ</label>
+                  <textarea data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(item.text)}</textarea>
                 </div>
                 <div class="small-note">لإظهار الفراغ في الطباعة اكتب (فراغ) أو ثلاث شرطات سفلية أو أكثر مثل: ___</div>
                 <div class="inline-actions">
