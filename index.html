@@ -5532,6 +5532,8 @@
       const question = state.questions[qIndex];
       const label = nextLabel(question.blocks.length);
       question.blocks.push(makeBlock(type, label));
+      const blockIndex = question.blocks.length - 1;
+      pendingFocusSelector = `[data-scope="block"][data-field="prompt"][data-q="${qIndex}"][data-b="${blockIndex}"]`;
       saveDraft();
       renderAll();
     }
