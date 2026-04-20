@@ -6183,14 +6183,23 @@ ${buildPrintScopeCss()}
         if (action === "open-symbols-context") {
           openSymbolDrawer();
         }
-        if (action === "remove-question") removeQuestion(q);
+        if (action === "remove-question") {
+          showConfirmToast("هل تريد حذف هذا السؤال الرئيسي؟", () => removeQuestion(q));
+          return;
+        }
         if (action === "add-question-item") addQuestionItem(q);
-        if (action === "remove-question-item") removeQuestionItem(q, i);
+        if (action === "remove-question-item") {
+          showConfirmToast("هل تريد حذف هذا السؤال الفرعي؟", () => removeQuestionItem(q, i));
+          return;
+        }
         if (action === "add-block") {
           const select = document.getElementById(`blockType-${button.dataset.questionId}`);
           addBlock(q, select ? select.value : "normal");
         }
-        if (action === "remove-block") removeBlock(q, b);
+        if (action === "remove-block") {
+          showConfirmToast("هل تريد حذف هذا السؤال الفرعي؟", () => removeBlock(q, b));
+          return;
+        }
         if (action === "duplicate-block") duplicateBlock(q, b);
         if (action === "add-point") addGroupedItem(q, b, button.dataset.group || "items");
         if (action === "remove-point") removeGroupedItem(q, b, button.dataset.group || "items", i);
@@ -6198,7 +6207,10 @@ ${buildPrintScopeCss()}
         if (action === "remove-option") removeGroupedItem(q, b, "options", i);
         if (action === "add-matching-item") addGroupedItem(q, b, button.dataset.side);
         if (action === "load-model") loadModel(id);
-        if (action === "delete-model") deleteModel(id);
+        if (action === "delete-model") {
+          showConfirmToast("هل تريد حذف هذا الملف المحفوظ؟", () => deleteModel(id));
+          return;
+        }
       });
     }
 
