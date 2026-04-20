@@ -2150,6 +2150,364 @@
         print-color-adjust: exact;
       }
     }
+
+
+    /* compact badge + tighter spacing tune */
+    .question-card,
+    .block-item {
+      gap: 10px;
+    }
+
+    .question-card {
+      padding: 12px;
+      border-radius: 18px;
+    }
+
+    .question-card + .question-card {
+      margin-top: 10px;
+    }
+
+    #questionsEditor {
+      gap: 12px;
+    }
+
+    .block-list {
+      gap: 10px;
+    }
+
+    .block-item {
+      padding: 12px;
+      border-radius: 18px;
+    }
+
+    .question-top {
+      gap: 8px;
+    }
+
+    .head-main,
+    .question-side-actions,
+    .inline-actions {
+      gap: 6px;
+    }
+
+    .question-card:not(.is-collapsed) > .question-top,
+    .block-list > .block-item > .question-top {
+      padding: 7px 9px !important;
+      border-radius: 14px;
+    }
+
+    .question-card > .question-top .chip,
+    .block-list > .block-item > .question-top .chip {
+      min-width: 46px;
+      height: 46px;
+      padding: 0 10px;
+      border-radius: 15px;
+      font-size: 19px;
+      box-shadow: 0 6px 12px rgba(33, 53, 85, 0.045) !important;
+    }
+
+    .question-card > .question-top .inline-actions,
+    .block-list > .block-item > .question-top .inline-actions {
+      padding: 3px 4px;
+      border-radius: 12px;
+    }
+
+    .question-meta-grid,
+    .question-main-controls-grid,
+    .question-main-controls-shell {
+      gap: 10px;
+    }
+
+    .question-meta-field,
+    .question-main-control-card,
+    .action-badge-group,
+    .block-item > .grid-4 > .field,
+    .block-item > .grid-3 > .field,
+    .subitem > .grid-2 > .field {
+      padding: 9px;
+      gap: 7px;
+      border-radius: 16px;
+    }
+
+    .question-meta-field {
+      min-height: 132px;
+    }
+
+    .question-meta-badge,
+    .block-item > .grid-4 > .field label,
+    .block-item > .grid-3 > .field label,
+    .subitem > .grid-2 > .field label,
+    .question-main-controls-cell label,
+    .question-main-control-card label {
+      min-height: 28px;
+      padding: 0 10px;
+      font-size: 11px;
+      border-radius: 999px;
+    }
+
+    .question-meta-field input,
+    .question-meta-field textarea {
+      min-height: 78px;
+      height: 78px;
+      border-radius: 15px;
+    }
+
+
+
+    /* tighter question header controls */
+    .question-card {
+      padding: 10px;
+      gap: 8px;
+      border-radius: 16px;
+    }
+
+    .question-card + .question-card {
+      margin-top: 8px;
+    }
+
+    .question-card:not(.is-collapsed) > .question-top,
+    .block-list > .block-item > .question-top {
+      padding: 6px 8px !important;
+      border-radius: 12px;
+    }
+
+    .head-main,
+    .question-side-actions,
+    .inline-actions {
+      gap: 4px;
+    }
+
+    .question-card > .question-top .chip,
+    .block-list > .block-item > .question-top .chip {
+      min-width: 42px;
+      height: 42px;
+      padding: 0 8px;
+      border-radius: 13px;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .question-side-actions .btn,
+    .block-list > .block-item > .question-top .btn {
+      min-height: 38px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      gap: 6px;
+      box-shadow: none;
+    }
+
+    .question-side-actions .btn-danger,
+    .block-list > .block-item > .question-top .btn-danger {
+      padding-inline: 12px;
+    }
+
+    .collapse-toggle {
+      width: 38px;
+      height: 38px;
+      border-radius: 12px;
+      box-shadow:
+        0 6px 14px rgba(41, 84, 129, 0.10),
+        inset 0 1px 0 rgba(255,255,255,0.92),
+        inset 0 -1px 0 rgba(137, 167, 201, 0.18);
+    }
+
+    .collapse-toggle::before {
+      border-radius: 11px;
+    }
+
+    .collapse-icon {
+      width: 18px;
+      height: 18px;
+    }
+
+
+
+    /* final tighter header + equal question spacing */
+    #questionsEditor {
+      gap: 8px !important;
+    }
+
+    .question-card + .question-card {
+      margin-top: 0 !important;
+    }
+
+    .question-card {
+      padding: 9px;
+      gap: 7px;
+      border-radius: 15px;
+    }
+
+    .question-card:not(.is-collapsed) > .question-top,
+    .block-list > .block-item > .question-top {
+      padding: 5px 7px !important;
+      border-radius: 11px;
+    }
+
+    .head-main,
+    .question-side-actions,
+    .inline-actions,
+    .question-top {
+      gap: 3px;
+    }
+
+    .question-card > .question-top .chip,
+    .block-list > .block-item > .question-top .chip {
+      min-width: 38px;
+      height: 38px;
+      padding: 0 7px;
+      border-radius: 11px;
+      font-size: 16px;
+    }
+
+    .question-side-actions .btn,
+    .block-list > .block-item > .question-top .btn {
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 11px;
+      gap: 5px;
+    }
+
+    .collapse-toggle {
+      width: 34px;
+      height: 34px;
+      border-radius: 10px;
+    }
+
+    .collapse-toggle::before {
+      border-radius: 9px;
+    }
+
+    .collapse-icon {
+      width: 16px;
+      height: 16px;
+    }
+
+
+
+    /* slight size rollback for better balance */
+    .question-card > .question-top .chip,
+    .block-list > .block-item > .question-top .chip {
+      min-width: 40px;
+      height: 40px;
+      padding: 0 8px;
+      border-radius: 12px;
+      font-size: 17px;
+    }
+
+    .question-side-actions .btn,
+    .block-list > .block-item > .question-top .btn {
+      min-height: 36px;
+      padding: 7px 11px;
+      border-radius: 11px;
+      font-size: 11.5px;
+    }
+
+    .collapse-toggle {
+      width: 36px;
+      height: 36px;
+      border-radius: 11px;
+    }
+
+    .collapse-toggle::before {
+      border-radius: 10px;
+    }
+
+    .collapse-icon {
+      width: 17px;
+      height: 17px;
+    }
+
+
+
+    /* reordered question controls + sticky add button */
+    .question-meta-badge,
+    .question-main-controls-cell label,
+    .question-main-control-card label {
+      min-height: 24px;
+      padding: 0 9px;
+      font-size: 10.5px;
+    }
+
+    .question-main-controls-shell,
+    .question-main-controls-grid,
+    .question-meta-grid {
+      gap: 8px;
+    }
+
+    .question-main-controls-shell {
+      padding: 10px;
+      border-radius: 16px;
+    }
+
+    .question-main-controls-cell,
+    .question-main-control-card,
+    .question-meta-field {
+      gap: 7px;
+    }
+
+    .header-sticky-add-btn {
+      display: none !important;
+    }
+
+    .question-card.header-is-sticky > .question-top .header-sticky-add-btn {
+      display: inline-flex !important;
+    }
+
+
+
+    /* slight badge size increase */
+    .question-meta-badge,
+    .question-main-controls-cell label,
+    .question-main-control-card label {
+      min-height: 27px;
+      padding: 0 11px;
+      font-size: 11.25px;
+    }
+
+
+
+    /* elegant medium badge for block main title */
+    .block-item > .field > label {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: fit-content;
+      min-height: 28px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: linear-gradient(135deg, rgba(233, 239, 248, 0.96), rgba(219, 229, 243, 0.94));
+      color: #314d74;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid rgba(83, 119, 175, 0.18);
+      box-shadow: 0 4px 10px rgba(33, 53, 85, 0.04);
+      justify-self: start;
+      text-align: center;
+    }
+
+
+
+    /* wrap block field with title inside a badge-like card */
+    .block-item > .field {
+      border: 1px solid #dce6f2;
+      border-radius: 18px;
+      padding: 10px;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      box-shadow: 0 8px 18px rgba(33, 53, 85, 0.04);
+      gap: 8px;
+    }
+
+    .block-item > .field > label {
+      min-height: 29px;
+      padding: 0 14px;
+      font-size: 12px;
+      font-weight: 700;
+      justify-self: center;
+      margin-inline: auto;
+    }
+
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -3839,6 +4197,7 @@
       renderQuestionEditors();
       renderPreview();
       renderSavedList();
+      requestAnimationFrame(syncStickyQuestionHeaders);
 
       if (pendingFocusSelector) {
         const selector = pendingFocusSelector;
@@ -3947,6 +4306,7 @@
                 <div class="chip">س${toArabicDigits(qIndex + 1)}</div>
               </div>
               <div class="question-side-actions">
+                ${renderQuestionHeaderQuickAction(question, qIndex)}
                 <button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>
                 ${renderSymbolButton()}
                 <button type="button" class="collapse-toggle" data-action="toggle-question" data-question-id="${question.id}" aria-expanded="${questionCollapsed ? "false" : "true"}" aria-label="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}" title="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}">
@@ -3966,6 +4326,8 @@
                 </button>
               </div>
             </div>
+
+            ${renderQuestionPrimaryControls(question, qIndex)}
 
             <div class="question-meta-grid">
               <div class="field question-meta-field">
@@ -4003,7 +4365,19 @@
       `).join("");
     }
 
-    function renderQuestionEditorBody(question, qIndex) {
+    function renderQuestionHeaderQuickAction(question, qIndex) {
+      const questionType = question.type || "normal";
+      const quickActionMap = {
+        normal: { label: "إضافة عنصر", action: "add-block" },
+        points: { label: "إضافة نقطة", action: "add-question-item" },
+        definitions: { label: "إضافة تعريف", action: "add-question-item" },
+        blanks: { label: "إضافة فراغ", action: "add-question-item" }
+      };
+      const quickAction = quickActionMap[questionType] || quickActionMap.normal;
+      return `<button class="btn btn-success header-sticky-add-btn" data-action="${quickAction.action}" data-q="${qIndex}">${quickAction.label}</button>`;
+    }
+
+    function renderQuestionPrimaryControls(question, qIndex) {
       const questionType = question.type || "normal";
 
       const typeField = `
@@ -4029,6 +4403,31 @@
               <button class="btn btn-success" data-action="add-block" data-q="${qIndex}">إضافة عنصر</button>
             </div>
           </div>
+        `;
+      }
+
+      const itemLabelMap = {
+        points: ["إضافة نقطة"],
+        definitions: ["إضافة تعريف"],
+        blanks: ["إضافة فراغ"]
+      };
+
+      const [addLabel] = itemLabelMap[questionType] || itemLabelMap.points;
+
+      return `
+        ${typeField}
+        <div class="inline-actions action-badge-group">
+          <button class="btn btn-success" data-action="add-question-item" data-q="${qIndex}">${addLabel}</button>
+          ${renderSymbolButton()}
+        </div>
+      `;
+    }
+
+    function renderQuestionEditorBody(question, qIndex) {
+      const questionType = question.type || "normal";
+
+      if (questionType === "normal") {
+        return `
           <div class="block-list">
             ${question.blocks.map((block, bIndex) => renderBlockEditor(block, qIndex, bIndex)).join("")}
           </div>
@@ -4041,14 +4440,9 @@
         blanks: ["إضافة فراغ", "نص الفراغ", "حذف الفراغ"]
       };
 
-      const [addLabel, textLabel, removeLabel] = itemLabelMap[questionType] || itemLabelMap.points;
+      const [, textLabel, removeLabel] = itemLabelMap[questionType] || itemLabelMap.points;
 
       return `
-        ${typeField}
-        <div class="inline-actions action-badge-group">
-          <button class="btn btn-success" data-action="add-question-item" data-q="${qIndex}">${addLabel}</button>
-          ${renderSymbolButton()}
-        </div>
         ${(question.items || []).map((item, i) => `
           <div class="subitem">
             <div class="field">
@@ -5565,6 +5959,26 @@ ${buildPrintScopeCss()}
       el.focus();
     }
 
+    function syncStickyQuestionHeaders() {
+      const stickyOffset = 10;
+      const panelStack = document.querySelector(".panel-stack");
+      const containerTop = panelStack ? panelStack.getBoundingClientRect().top : 0;
+      const stickyLine = containerTop + stickyOffset;
+
+      document.querySelectorAll(".question-card").forEach(card => {
+        const header = Array.from(card.children).find(child => child.classList && child.classList.contains("question-top"));
+        if (!header || card.classList.contains("is-collapsed")) {
+          card.classList.remove("header-is-sticky");
+          return;
+        }
+
+        const headerRect = header.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        const isSticky = headerRect.top <= stickyLine + 0.5 && cardRect.bottom > stickyLine + headerRect.height + 10;
+        card.classList.toggle("header-is-sticky", isSticky);
+      });
+    }
+
     function toggleScrollTopButton() {
       const button = document.getElementById("scrollTopBtn");
       const panelStack = document.querySelector(".panel-stack");
@@ -5573,6 +5987,7 @@ ${buildPrintScopeCss()}
       const panelScroll = panelStack ? panelStack.scrollTop : 0;
       const shouldShow = Math.max(pageScroll, panelScroll) > 120;
       button.classList.toggle("is-visible", shouldShow);
+      syncStickyQuestionHeaders();
     }
 
     function scrollToEditorTop() {
