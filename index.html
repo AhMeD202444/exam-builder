@@ -2688,14 +2688,12 @@
 
 
     /* premium guided highlight */
-    #quickActionsCard,
     .saved-item {
       position: relative;
       overflow: hidden;
       isolation: isolate;
     }
 
-    #quickActionsCard::after,
     .saved-item::after {
       content: "";
       position: absolute;
@@ -2715,13 +2713,11 @@
       z-index: 0;
     }
 
-    #quickActionsCard > *,
     .saved-item > * {
       position: relative;
       z-index: 1;
     }
 
-    #quickActionsCard.is-guided-focus,
     .saved-item.is-saved-flash {
       border-color: #8caddb;
       box-shadow:
@@ -2729,17 +2725,9 @@
         0 0 0 5px rgba(129, 166, 221, 0.12),
         0 18px 34px rgba(27, 53, 92, 0.12);
       animation: premiumGuideHalo 1.35s cubic-bezier(.22, .61, .36, 1);
-    }
-
-    #quickActionsCard.is-guided-focus {
-      background: linear-gradient(180deg, #ffffff, #f4f9ff);
-    }
-
-    .saved-item.is-saved-flash {
       background: linear-gradient(180deg, #ffffff, #f5f9ff);
     }
 
-    #quickActionsCard.is-guided-focus::after,
     .saved-item.is-saved-flash::after {
       opacity: 1;
       animation: premiumGuideSheen 1.35s cubic-bezier(.22, .61, .36, 1);
@@ -4745,7 +4733,7 @@
       return Boolean(ui.collapsedBlocks[blockId]);
     }
 
-    function scrollTargetBelowStickyHero(target) {
+    function scrollTargetBelowStickyHero(target, preferredGap = 14) {
       if (!target) return;
 
       const hero = document.querySelector(".hero");
@@ -4760,14 +4748,14 @@
         const targetRect = target.getBoundingClientRect();
         const currentScroll = panelStack.scrollTop;
         const targetOffset = targetRect.top - panelRect.top + currentScroll;
-        const visibleOffset = Math.max(safeViewportTop - panelRect.top, 14);
+        const visibleOffset = Math.max(safeViewportTop - panelRect.top, preferredGap);
         const nextScrollTop = Math.max(targetOffset - visibleOffset, 0);
         panelStack.scrollTo({ top: nextScrollTop, behavior: "smooth" });
         return;
       }
 
       const absoluteTop = window.scrollY + target.getBoundingClientRect().top;
-      const nextWindowTop = Math.max(absoluteTop - safeViewportTop, 0);
+      const nextWindowTop = Math.max(absoluteTop - Math.max(safeViewportTop, preferredGap), 0);
       window.scrollTo({ top: nextWindowTop, behavior: "smooth" });
     }
 
