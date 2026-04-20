@@ -2508,6 +2508,327 @@
       margin-inline: auto;
     }
 
+
+
+    /* sticky compact hero */
+    .hero {
+      position: sticky;
+      top: 8px;
+      z-index: 85;
+      transition: padding .24s ease, border-radius .24s ease, gap .24s ease, box-shadow .24s ease, background .24s ease;
+    }
+
+    .hero h1,
+    .hero .hero-actions,
+    .hero .hero-actions .btn {
+      transition: font-size .24s ease, margin .24s ease, min-height .24s ease, padding .24s ease, border-radius .24s ease, gap .24s ease, transform .24s ease;
+    }
+
+    .hero.is-compact {
+      padding: 10px 14px;
+      border-radius: 20px;
+      gap: 10px;
+      box-shadow: 0 10px 24px rgba(24, 39, 66, 0.18);
+      background: linear-gradient(135deg, rgba(29, 47, 77, 0.97), rgba(54, 84, 134, 0.96) 58%, rgba(83, 119, 175, 0.95));
+      backdrop-filter: blur(8px);
+    }
+
+    .hero.is-compact h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.15;
+    }
+
+    .hero.is-compact .hero-actions {
+      gap: 8px;
+    }
+
+    .hero.is-compact .hero-actions .btn {
+      min-height: 36px;
+      padding: 7px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      box-shadow: none;
+    }
+
+
+
+    /* compact saved models cards */
+    .saved-item {
+      padding: 10px;
+      gap: 6px;
+      border-radius: 16px;
+    }
+
+    .saved-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .saved-title {
+      line-height: 1.45;
+      flex: 1 1 auto;
+    }
+
+    .saved-meta {
+      font-size: 11.5px;
+    }
+
+    .saved-actions {
+      flex-wrap: nowrap;
+      gap: 6px;
+      flex: 0 0 auto;
+    }
+
+    .saved-actions .btn {
+      min-height: 34px;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      box-shadow: none;
+    }
+
+
+
+    /* extra-compact saved cards with vertical centering */
+    .saved-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 10px;
+      min-height: 0;
+    }
+
+    .saved-copy {
+      display: grid;
+      gap: 3px;
+      flex: 1 1 auto;
+      min-width: 0;
+      align-content: center;
+    }
+
+    .saved-title,
+    .saved-meta,
+    .saved-actions {
+      align-self: center;
+    }
+
+    .saved-title {
+      font-size: 13.5px;
+      line-height: 1.35;
+    }
+
+    .saved-meta {
+      font-size: 11px;
+      line-height: 1.25;
+    }
+
+    .saved-actions .btn {
+      min-height: 32px;
+      padding: 5px 11px;
+      font-size: 11.5px;
+    }
+
+
+
+    /* sticky hero save-as guide */
+    .hero-save-as-btn {
+      display: none;
+    }
+
+    .hero.is-compact .hero-save-as-btn {
+      display: inline-flex;
+    }
+
+    #quickActionsCard {
+      transition: box-shadow .24s ease, border-color .24s ease, transform .24s ease;
+    }
+
+    #quickActionsCard.is-guided-focus {
+      border-color: #7fa2d6;
+      box-shadow: 0 0 0 4px rgba(113, 153, 214, 0.18), 0 18px 34px rgba(37, 69, 111, 0.12);
+      animation: quickCardPulse 0.9s ease 2;
+    }
+
+    @keyframes quickCardPulse {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-1px) scale(1.006);
+      }
+    }
+
+
+
+    /* saved model focus after manual save */
+    .saved-item {
+      transition: box-shadow .24s ease, border-color .24s ease, transform .24s ease, background .24s ease;
+    }
+
+    .saved-item.is-saved-flash {
+      border-color: #7fa2d6;
+      box-shadow: 0 0 0 4px rgba(113, 153, 214, 0.18), 0 16px 30px rgba(38, 69, 112, 0.12);
+      background: linear-gradient(180deg, #ffffff, #f2f8ff);
+      animation: savedItemPulse 0.9s ease 2;
+    }
+
+    @keyframes savedItemPulse {
+      0%, 100% {
+        transform: translateY(0) scale(1);
+      }
+      50% {
+        transform: translateY(-1px) scale(1.008);
+      }
+    }
+
+
+
+    /* premium guided highlight */
+    #quickActionsCard,
+    .saved-item {
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    #quickActionsCard::after,
+    .saved-item::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      background: linear-gradient(115deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0) 28%,
+        rgba(185, 211, 248, 0.12) 42%,
+        rgba(255,255,255,0.58) 50%,
+        rgba(176, 205, 245, 0.16) 58%,
+        rgba(255,255,255,0) 72%,
+        rgba(255,255,255,0) 100%);
+      transform: translateX(130%);
+      opacity: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    #quickActionsCard > *,
+    .saved-item > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    #quickActionsCard.is-guided-focus,
+    .saved-item.is-saved-flash {
+      border-color: #8caddb;
+      box-shadow:
+        0 0 0 1px rgba(120, 157, 213, 0.18),
+        0 0 0 5px rgba(129, 166, 221, 0.12),
+        0 18px 34px rgba(27, 53, 92, 0.12);
+      animation: premiumGuideHalo 1.35s cubic-bezier(.22, .61, .36, 1);
+    }
+
+    #quickActionsCard.is-guided-focus {
+      background: linear-gradient(180deg, #ffffff, #f4f9ff);
+    }
+
+    .saved-item.is-saved-flash {
+      background: linear-gradient(180deg, #ffffff, #f5f9ff);
+    }
+
+    #quickActionsCard.is-guided-focus::after,
+    .saved-item.is-saved-flash::after {
+      opacity: 1;
+      animation: premiumGuideSheen 1.35s cubic-bezier(.22, .61, .36, 1);
+    }
+
+    @keyframes premiumGuideHalo {
+      0% {
+        box-shadow:
+          0 0 0 0 rgba(129, 166, 221, 0),
+          0 0 0 0 rgba(129, 166, 221, 0),
+          0 10px 20px rgba(27, 53, 92, 0.04);
+        border-color: rgba(140, 173, 219, 0.45);
+      }
+      38% {
+        box-shadow:
+          0 0 0 1px rgba(120, 157, 213, 0.22),
+          0 0 0 8px rgba(129, 166, 221, 0.14),
+          0 22px 38px rgba(27, 53, 92, 0.14);
+        border-color: #8caddb;
+      }
+      100% {
+        box-shadow:
+          0 0 0 1px rgba(120, 157, 213, 0.16),
+          0 0 0 4px rgba(129, 166, 221, 0.10),
+          0 14px 28px rgba(27, 53, 92, 0.10);
+        border-color: #8caddb;
+      }
+    }
+
+    @keyframes premiumGuideSheen {
+      0% {
+        transform: translateX(130%);
+        opacity: 0;
+      }
+      12% {
+        opacity: 0.95;
+      }
+      70% {
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateX(-135%);
+        opacity: 0;
+      }
+    }
+
+
+
+    /* refined minimal highlight override */
+    #quickActionsCard::after,
+    .saved-item::after {
+      display: none;
+    }
+
+    #quickActionsCard.is-guided-focus,
+    .saved-item.is-saved-flash {
+      border-color: #90add6;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      box-shadow:
+        0 0 0 1px rgba(129, 166, 221, 0.16),
+        0 0 0 6px rgba(129, 166, 221, 0.09),
+        0 14px 26px rgba(27, 53, 92, 0.08);
+      animation: refinedBorderBreath 1.2s ease;
+    }
+
+    @keyframes refinedBorderBreath {
+      0% {
+        border-color: rgba(144, 173, 214, 0.45);
+        box-shadow:
+          0 0 0 0 rgba(129, 166, 221, 0),
+          0 0 0 0 rgba(129, 166, 221, 0),
+          0 10px 18px rgba(27, 53, 92, 0.04);
+      }
+      42% {
+        border-color: #90add6;
+        box-shadow:
+          0 0 0 1px rgba(129, 166, 221, 0.18),
+          0 0 0 8px rgba(129, 166, 221, 0.11),
+          0 18px 30px rgba(27, 53, 92, 0.09);
+      }
+      100% {
+        border-color: #90add6;
+        box-shadow:
+          0 0 0 1px rgba(129, 166, 221, 0.14),
+          0 0 0 4px rgba(129, 166, 221, 0.07),
+          0 12px 22px rgba(27, 53, 92, 0.07);
+      }
+    }
+
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -2520,6 +2841,8 @@
       <div class="hero-actions">
         <button class="btn btn-accent" id="printTopBtn">طباعة الورقة</button>
         <button class="btn btn-soft" id="saveTopBtn">حفظ النموذج</button>
+        <button class="btn btn-primary" id="heroNewBtn">جديد</button>
+        <button class="btn btn-soft hero-save-as-btn" id="heroSaveAsBtn">حفظ باسم</button>
       </div>
     </section>
 
@@ -3075,7 +3398,7 @@
           </details>
         </div>
 
-        <div class="card">
+        <div class="card" id="quickActionsCard">
           <h2>أوامر سريعة</h2>
           <div class="toolbar">
             <div class="field">
@@ -4197,7 +4520,10 @@
       renderQuestionEditors();
       renderPreview();
       renderSavedList();
-      requestAnimationFrame(syncStickyQuestionHeaders);
+      requestAnimationFrame(() => {
+        syncHeroStickyState();
+        syncStickyQuestionHeaders();
+      });
 
       if (pendingFocusSelector) {
         const selector = pendingFocusSelector;
@@ -5230,12 +5556,30 @@
       renderAll();
     }
 
+    function focusSavedModelCard(modelId) {
+      if (!modelId) return;
+      const target = document.querySelector(`.saved-item[data-model-id="${modelId}"]`);
+      if (!target) return;
+
+      target.classList.remove("is-saved-flash");
+      target.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+
+      requestAnimationFrame(() => {
+        target.classList.add("is-saved-flash");
+      });
+
+      setTimeout(() => {
+        target.classList.remove("is-saved-flash");
+      }, 1800);
+    }
+
     function saveModel() {
       persistCurrentModel({
         silent: false,
         showSuccessToast: true,
         successMessage: "تم حفظ النموذج داخل المتصفح."
       });
+      requestAnimationFrame(() => focusSavedModelCard(state.modelId));
     }
 
     function loadModel(id) {
@@ -5265,9 +5609,11 @@
       }
 
       savedList.innerHTML = models.map(model => `
-        <div class="saved-item">
-          <div class="saved-title">${escapeHtml(model.title || "نموذج بلا عنوان")}</div>
-          <div class="saved-meta">تاريخ الحفظ: ${escapeHtml(model.createdAt || "")}</div>
+        <div class="saved-item" data-model-id="${model.id}">
+          <div class="saved-copy">
+            <div class="saved-title">${escapeHtml(model.title || "نموذج بلا عنوان")}</div>
+            <div class="saved-meta">تاريخ الحفظ: ${escapeHtml(model.createdAt || "")}</div>
+          </div>
           <div class="saved-actions">
             <button class="btn btn-primary" data-action="load-model" data-id="${model.id}">فتح</button>
             <button class="btn btn-danger" data-action="delete-model" data-id="${model.id}">حذف</button>
@@ -5752,6 +6098,8 @@ ${buildPrintScopeCss()}
 
     function bindMainButtons() {
       document.getElementById("addQuestionBtn").addEventListener("click", addQuestion);
+      document.getElementById("heroNewBtn").addEventListener("click", resetState);
+      document.getElementById("heroSaveAsBtn").addEventListener("click", scrollToQuickSavePanel);
       document.getElementById("saveBtn").addEventListener("click", saveModel);
       document.getElementById("saveTopBtn").addEventListener("click", saveModel);
       document.getElementById("newBtn").addEventListener("click", resetState);
@@ -5959,6 +6307,37 @@ ${buildPrintScopeCss()}
       el.focus();
     }
 
+    function scrollToQuickSavePanel() {
+      const panel = document.getElementById("quickActionsCard");
+      const saveNameInput = document.getElementById("saveName");
+      if (!panel) return;
+
+      panel.classList.remove("is-guided-focus");
+      panel.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+
+      requestAnimationFrame(() => {
+        panel.classList.add("is-guided-focus");
+      });
+
+      setTimeout(() => {
+        panel.classList.remove("is-guided-focus");
+      }, 1800);
+
+      setTimeout(() => {
+        saveNameInput?.focus();
+        saveNameInput?.select?.();
+      }, 460);
+    }
+
+    function syncHeroStickyState() {
+      const hero = document.querySelector(".hero");
+      const panelStack = document.querySelector(".panel-stack");
+      if (!hero) return;
+      const pageScroll = window.scrollY || document.documentElement.scrollTop || 0;
+      const panelScroll = panelStack ? panelStack.scrollTop : 0;
+      hero.classList.toggle("is-compact", Math.max(pageScroll, panelScroll) > 18);
+    }
+
     function syncStickyQuestionHeaders() {
       const stickyOffset = 10;
       const panelStack = document.querySelector(".panel-stack");
@@ -5987,6 +6366,7 @@ ${buildPrintScopeCss()}
       const panelScroll = panelStack ? panelStack.scrollTop : 0;
       const shouldShow = Math.max(pageScroll, panelScroll) > 120;
       button.classList.toggle("is-visible", shouldShow);
+      syncHeroStickyState();
       syncStickyQuestionHeaders();
     }
 
