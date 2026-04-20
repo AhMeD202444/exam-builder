@@ -2897,6 +2897,64 @@
       bottom: 72px;
     }
 
+
+
+    /* desktop-only independent scrolling for editor and preview */
+    @media (min-width: 1181px) {
+      html, body {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      body {
+        overscroll-behavior: none;
+      }
+
+      .app-shell {
+        height: calc(100vh - 44px);
+        grid-template-rows: auto 1fr;
+        overflow: hidden;
+      }
+
+      .workspace {
+        min-height: 0;
+        height: 100%;
+        align-items: stretch;
+      }
+
+      .panel-stack {
+        position: relative;
+        top: 0;
+        min-height: 0;
+        max-height: none;
+        height: 100%;
+        overflow: auto;
+      }
+
+      #previewPane {
+        min-height: 0;
+        max-height: none;
+        height: 100%;
+        overflow: auto;
+        padding-left: 4px;
+      }
+
+      #previewPane::-webkit-scrollbar,
+      .panel-stack::-webkit-scrollbar {
+        width: 10px;
+      }
+
+      #previewPane::-webkit-scrollbar-thumb,
+      .panel-stack::-webkit-scrollbar-thumb {
+        background: rgba(54, 84, 134, .22);
+        border-radius: 999px;
+      }
+
+      #previewPane .sheet-stage {
+        overflow: visible;
+      }
+    }
+
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
