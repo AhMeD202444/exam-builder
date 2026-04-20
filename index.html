@@ -2955,6 +2955,50 @@
       }
     }
 
+
+
+    /* desktop right-side elegant scrollbars */
+    @media (min-width: 1181px) {
+      .panel-stack,
+      #previewPane {
+        direction: ltr;
+        scrollbar-gutter: stable;
+        padding-right: 6px;
+        padding-left: 0;
+        scrollbar-width: thin;
+        scrollbar-color: #6f90c3 rgba(212, 224, 241, 0.68);
+      }
+
+      .panel-stack > *,
+      #previewPane > * {
+        direction: rtl;
+      }
+
+      .panel-stack::-webkit-scrollbar,
+      #previewPane::-webkit-scrollbar {
+        width: 12px;
+      }
+
+      .panel-stack::-webkit-scrollbar-track,
+      #previewPane::-webkit-scrollbar-track {
+        background: linear-gradient(180deg, rgba(226, 235, 247, 0.74), rgba(212, 224, 241, 0.58));
+        border-radius: 999px;
+      }
+
+      .panel-stack::-webkit-scrollbar-thumb,
+      #previewPane::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #7f9ecd, #577db9);
+        border-radius: 999px;
+        border: 3px solid rgba(243, 247, 252, 0.96);
+        box-shadow: 0 6px 16px rgba(41, 63, 101, 0.16);
+      }
+
+      .panel-stack::-webkit-scrollbar-thumb:hover,
+      #previewPane::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #6f90c3, #486ea9);
+      }
+    }
+
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
