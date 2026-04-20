@@ -4573,6 +4573,30 @@
       return Boolean(ui.collapsedBlocks[blockId]);
     }
 
+    function scrollTargetBelowStickyHero(target) {
+      if (!target) return;
+
+      const hero = document.querySelector(".hero");
+      const panelStack = document.querySelector(".panel-stack");
+      const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
+      const safeViewportTop = heroBottom > 0 ? heroBottom + 12 : 18;
+
+      if (panelStack && panelStack.contains(target)) {
+        const panelRect = panelStack.getBoundingClientRect();
+        const targetRect = target.getBoundingClientRect();
+        const currentScroll = panelStack.scrollTop;
+        const targetOffset = targetRect.top - panelRect.top + currentScroll;
+        const visibleOffset = Math.max(safeViewportTop - panelRect.top, 14);
+        const nextScrollTop = Math.max(targetOffset - visibleOffset, 0);
+        panelStack.scrollTo({ top: nextScrollTop, behavior: "smooth" });
+        return;
+      }
+
+      const absoluteTop = window.scrollY + target.getBoundingClientRect().top;
+      const nextWindowTop = Math.max(absoluteTop - safeViewportTop, 0);
+      window.scrollTo({ top: nextWindowTop, behavior: "smooth" });
+    }
+
     function toggleQuestionCollapse(questionId) {
       const ui = ensureUiState();
       const currentlyCollapsed = ui.collapsedQuestions[questionId] !== false;
@@ -4584,9 +4608,7 @@
       if (nextCollapsed) {
         requestAnimationFrame(() => {
           const questionsHeader = document.getElementById("addQuestionBtn");
-          if (questionsHeader) {
-            questionsHeader.scrollIntoView({ behavior: "smooth", block: "start" });
-          }
+          scrollTargetBelowStickyHero(questionsHeader);
         });
       }
     }
