@@ -3584,7 +3584,7 @@
           </div>
         </div>
 
-        <div class="card">
+        <div class="card" id="questionsSectionCard">
           <div class="editor-header">
             <h2 style="margin:0;">الأسئلة</h2>
             <button class="btn btn-primary" id="addQuestionBtn">إضافة سؤال جديد</button>
@@ -4753,7 +4753,9 @@
       const heroBottom = hero ? hero.getBoundingClientRect().bottom : 0;
       const safeViewportTop = heroBottom > 0 ? heroBottom + 12 : 18;
 
-      if (panelStack && panelStack.contains(target)) {
+      const panelStackCanScroll = panelStack && panelStack.scrollHeight > panelStack.clientHeight + 4;
+
+      if (panelStack && panelStack.contains(target) && panelStackCanScroll) {
         const panelRect = panelStack.getBoundingClientRect();
         const targetRect = target.getBoundingClientRect();
         const currentScroll = panelStack.scrollTop;
@@ -4779,8 +4781,8 @@
 
       if (nextCollapsed) {
         requestAnimationFrame(() => {
-          const questionsHeader = document.getElementById("addQuestionBtn");
-          scrollTargetBelowStickyHero(questionsHeader);
+          const addQuestionButton = document.getElementById("addQuestionBtn");
+          scrollTargetBelowStickyHero(addQuestionButton);
         });
       }
     }
