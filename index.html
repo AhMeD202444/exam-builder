@@ -3415,7 +3415,7 @@
               <div class="general-settings-section-head">
                 <div>
                   <h3>لوحة الأوامر</h3>
-                  <p>من هنا تكدر تحفظ باسم، تبدأ نموذج جديد، أو تطبع مباشرة من نفس البادج.</p>
+                  <p>من هنا تكدر تحفظ باسم أو تبدأ نموذج جديد.</p>
                 </div>
               </div>
               <div class="toolbar">
@@ -3425,7 +3425,6 @@
                 </div>
                 <button class="btn btn-primary" id="saveBtn">حفظ</button>
                 <button class="btn btn-soft" id="newBtn">جديد</button>
-                <button class="btn btn-accent" id="printBtn">طباعة</button>
               </div>
               <div class="hint">
                 الحفظ يكون داخل المتصفح. كل تغيير أيضًا ينحفظ كمسودة تلقائيًا حتى لا يضيع الشغل.
@@ -6775,7 +6774,7 @@ ${buildPrintScopeCss()}
       document.getElementById("saveBtn").addEventListener("click", saveModel);
       document.getElementById("saveTopBtn").addEventListener("click", saveModel);
       document.getElementById("newBtn").addEventListener("click", resetState);
-      document.getElementById("printBtn").addEventListener("click", openPrintWindow);
+      document.getElementById("printBtn")?.addEventListener("click", openPrintWindow);
       document.getElementById("printTopBtn").addEventListener("click", openPrintWindow);
     }
 
