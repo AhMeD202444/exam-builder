@@ -5177,7 +5177,7 @@
                 </button>
         `;
         return `
-          <div class="question-card ${questionCollapsed ? "is-collapsed" : ""}">
+          <div class="question-card ${questionCollapsed ? "is-collapsed" : ""}" data-q="${qIndex}" data-question-id="${question.id}">
             <div class="question-top ${questionCollapsed ? "question-top-collapsed-clickable" : ""}" ${questionCollapsed ? `data-action="toggle-question" data-question-id="${question.id}" role="button" tabindex="0" aria-label="فتح السؤال"` : ``}>
               <div class="head-main">
                 <div class="chip">س${toArabicDigits(qIndex + 1)}</div>
@@ -5232,8 +5232,8 @@
         : "";
 
       const headerBlockAction = questionType === "normal" ? getQuestionHeaderBlockAction(question) : null;
-      const headerBlockItemButton = headerBlockAction
-        ? `<button class="btn btn-success header-add-block-item-btn" data-action="add-point" data-q="${qIndex}" data-b="${headerBlockAction.blockIndex}">${headerBlockAction.addLabel}</button>`
+      const headerBlockItemButton = questionType === "normal"
+        ? `<button class="btn btn-success header-add-block-item-btn" data-action="add-point" data-q="${qIndex}" ${headerBlockAction ? `data-b="${headerBlockAction.blockIndex}"` : ``} ${headerBlockAction ? `` : `hidden`} aria-label="${headerBlockAction?.addLabel || ""}" title="${headerBlockAction?.addLabel || ""}">${headerBlockAction?.addLabel || ""}</button>`
         : "";
 
       return `
@@ -5366,6 +5366,57 @@
       return null;
     }
 
+    function getHeaderActionFromVisibleBlock(card, anchorY) {
+      const blocks = Array.from(card.querySelectorAll('.block-list > .block-item'));
+      if (!blocks.length) return null;
+
+      let activeBlock = blocks.find(block => {
+        const rect = block.getBoundingClientRect();
+        return rect.top <= anchorY && rect.bottom > anchorY;
+      });
+
+      if (!activeBlock) {
+        activeBlock = blocks.find(block => block.getBoundingClientRect().top > anchorY) || blocks[blocks.length - 1];
+      }
+
+      if (!activeBlock) return null;
+
+      const blockType = activeBlock.dataset.blockType || "normal";
+      if (blockType === "normal") return null;
+
+      const blockIndex = Number(activeBlock.dataset.blockIndex);
+      if (!Number.isFinite(blockIndex)) return null;
+
+      const addLabel = getQuestionTypeActionLabel(blockType);
+      if (!addLabel) return null;
+
+      return {
+        blockIndex,
+        addLabel
+      };
+    }
+
+    function syncQuestionHeaderQuickAction(card, anchorY) {
+      const button = card.querySelector('.header-add-block-item-btn');
+      if (!button) return;
+
+      const action = getHeaderActionFromVisibleBlock(card, anchorY);
+      if (!action) {
+        button.hidden = true;
+        button.textContent = '';
+        button.removeAttribute('data-b');
+        button.setAttribute('aria-label', '');
+        button.setAttribute('title', '');
+        return;
+      }
+
+      button.hidden = false;
+      button.dataset.b = String(action.blockIndex);
+      button.textContent = action.addLabel;
+      button.setAttribute('aria-label', action.addLabel);
+      button.setAttribute('title', action.addLabel);
+    }
+
     function renderQuestionPrimaryControls(question, qIndex) {
       const questionType = question.type || "normal";
 
@@ -5450,7 +5501,7 @@
 
       if (block.type === "definitions") {
         return `
-          <div class="block-item">
+          <div class="block-item" data-block-index="${bIndex}" data-block-type="definitions">
             ${commonHeader}
             <div class="field">
               <label>عنوان هذا الفرع</label>
@@ -5463,7 +5514,7 @@
 
       if (block.type === "points") {
         return `
-          <div class="block-item">
+          <div class="block-item" data-block-index="${bIndex}" data-block-type="points">
             ${commonHeader}
             <div class="field">
               <label>عنوان هذا الفرع</label>
@@ -5476,7 +5527,7 @@
 
       if (block.type === "blanks") {
         return `
-          <div class="block-item">
+          <div class="block-item" data-block-index="${bIndex}" data-block-type="blanks">
             ${commonHeader}
             <div class="field">
               <label>عنوان هذا الفرع</label>
@@ -5488,7 +5539,7 @@
       }
 
       return `
-        <div class="block-item">
+        <div class="block-item" data-block-index="${bIndex}" data-block-type="normal">
           ${commonHeader}
           <div class="field">
             <label>نص الفرع</label>
@@ -7001,6 +7052,9 @@ ${buildPrintScopeCss()}
 
         const headerRect = header.getBoundingClientRect();
         const cardRect = card.getBoundingClientRect();
+        const anchorY = headerRect.bottom + 8;
+        syncQuestionHeaderQuickAction(card, anchorY);
+
         const isSticky = headerRect.top <= stickyLine + 0.5 && cardRect.bottom > stickyLine + headerRect.height + 10;
         card.classList.toggle("header-is-sticky", isSticky);
       });
