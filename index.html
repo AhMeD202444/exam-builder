@@ -662,6 +662,14 @@
       flex-wrap: wrap;
     }
 
+    .question-card.is-collapsed > .question-top.question-top-collapsed-clickable {
+      cursor: pointer;
+    }
+
+    .question-card.is-collapsed > .question-top.question-top-collapsed-clickable:hover {
+      filter: saturate(1.03);
+    }
+
     .question-card:not(.is-collapsed) > .question-top {
       position: sticky;
       top: 10px;
@@ -792,9 +800,58 @@
       margin: 0;
     }
 
+    .sticky-fold-card > .fold-card-header {
+      padding: 10px 12px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.94);
+      border: 1px solid rgba(83, 119, 175, 0.14);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.88);
+    }
+
+    .sticky-fold-card:not(.is-collapsed) > .fold-card-header {
+      position: sticky;
+      top: 8px;
+      z-index: 18;
+      box-shadow: 0 10px 22px rgba(33, 53, 85, 0.08);
+      backdrop-filter: blur(8px);
+    }
+
     .fold-card-body {
       display: grid;
       gap: 12px;
+    }
+
+    .general-settings-section {
+      display: grid;
+      gap: 12px;
+      padding: 14px;
+      border-radius: 20px;
+      border: 1px solid #dce6f2;
+      background: linear-gradient(180deg, #ffffff, #f7fbff);
+      box-shadow: 0 10px 24px rgba(33, 53, 85, 0.05);
+    }
+
+    .general-settings-section-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .general-settings-section-head h3 {
+      margin: 0;
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .general-settings-section-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.8;
+      max-width: 760px;
     }
 
     .fold-card.is-collapsed .fold-card-body {
@@ -2467,13 +2524,6 @@
       gap: 7px;
     }
 
-    .header-sticky-add-btn {
-      display: none !important;
-    }
-
-    .question-card.header-is-sticky > .question-top .header-sticky-add-btn {
-      display: inline-flex !important;
-    }
 
 
 
@@ -3009,6 +3059,243 @@
       }
     }
 
+
+
+
+
+    .question-main-controls-shell.question-main-controls-shell-wide {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .question-main-controls-shell.question-main-controls-shell-wide .question-type-wide-cell label {
+      min-height: 38px;
+      padding: 0 14px;
+      width: 100%;
+      justify-content: center;
+      margin-inline: auto;
+    }
+
+    .question-main-controls-shell.question-main-controls-shell-wide .question-type-wide-cell select {
+      width: 100%;
+    }
+
+    .header-add-branch-btn {
+      display: inline-flex !important;
+    }
+
+    .header-add-block-item-btn {
+      display: inline-flex !important;
+    }
+
+
+
+
+    /* compact editor badges for definitions / points / blanks */
+    .subitem.item-badge {
+      position: relative;
+      padding: 9px 10px 8px;
+      border-radius: 15px;
+      background: #fff;
+      border: 1px solid rgba(83, 119, 175, 0.16);
+      box-shadow: 0 8px 20px rgba(33, 53, 85, 0.05);
+      gap: 6px;
+    }
+
+    .subitem.item-badge::after {
+      display: none;
+    }
+
+    .item-badge-head {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      min-width: 0;
+      padding-inline-start: 2px;
+      padding-inline-end: 58px;
+    }
+
+    .item-badge-title {
+      display: inline-flex;
+      align-items: center;
+      min-width: 0;
+      flex-wrap: wrap;
+    }
+
+    .item-badge-kind {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: rgba(66, 106, 192, 0.08);
+      border: 1px solid rgba(66, 106, 192, 0.16);
+      color: #27446f;
+      font-size: 11.5px;
+      font-weight: 800;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    .item-badge-remove {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      z-index: 2;
+      min-width: 44px !important;
+      height: 24px;
+      padding: 0 10px !important;
+      border-radius: 999px !important;
+      display: inline-flex !important;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1;
+      box-shadow: none;
+    }
+
+    .item-badge-field {
+      border: none !important;
+      background: transparent !important;
+      box-shadow: none !important;
+      padding: 0 !important;
+      min-height: auto !important;
+      display: block !important;
+    }
+
+    .item-badge-field label {
+      display: none !important;
+    }
+
+    .item-badge-field input,
+    .item-badge-field textarea,
+    .item-badge-field select,
+    .subitem.item-badge .field input,
+    .subitem.item-badge .field textarea,
+    .subitem.item-badge .field select {
+      min-height: 46px !important;
+      border-radius: 13px !important;
+      padding: 10px 13px !important;
+      border: 1px solid rgba(83, 119, 175, 0.15) !important;
+      background: rgba(255, 255, 255, 0.98) !important;
+      text-align: right !important;
+      box-shadow: none;
+    }
+
+    .subitem.item-badge .field textarea {
+      min-height: 64px !important;
+      resize: vertical;
+    }
+
+    .item-badge-note {
+      margin-top: -1px;
+      padding-inline-start: 2px;
+      font-size: 10.8px;
+      line-height: 1.5;
+      color: #5c6e86;
+    }
+
+    .subitem.item-badge .inline-actions {
+      display: none !important;
+    }
+
+    .header-sticky-add-btn {
+      display: none !important;
+    }
+
+    .question-card.header-is-sticky > .question-top .header-sticky-add-btn {
+      display: inline-flex !important;
+    }
+
+    .question-card.header-is-sticky > .question-top .question-side-actions .btn,
+    .question-card.header-is-sticky > .question-top .collapse-toggle {
+      min-height: 32px;
+      height: 32px;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-size: 10.75px;
+    }
+
+    .question-card.header-is-sticky > .question-top [data-action="remove-question"] {
+      display: none !important;
+    }
+
+    .question-card.header-is-sticky > .question-top .header-add-branch-btn {
+      background: linear-gradient(180deg, #eef5ff, #dbe9ff);
+      color: #244e86;
+      border-color: #bcd3f7;
+    }
+
+    .question-card.header-is-sticky > .question-top .header-add-block-item-btn {
+      background: linear-gradient(180deg, #effcf4, #d9f5e4);
+      color: #1f6b47;
+      border-color: #b8e8cb;
+    }
+
+    .question-card.header-is-sticky > .question-top .header-sticky-add-btn {
+      background: linear-gradient(180deg, #fff6e8, #ffe7bf);
+      color: #8a5a14;
+      border-color: #f2cf8d;
+    }
+
+    .question-card.header-is-sticky > .question-top [data-action="open-symbols-context"] {
+      background: linear-gradient(180deg, #f3eeff, #e3d6ff);
+      color: #5a33a2;
+      border-color: #cdb8f3;
+    }
+
+    .question-card.header-is-sticky > .question-top .collapse-toggle {
+      width: 32px;
+      padding: 0;
+      background: linear-gradient(180deg, #edf3ff, #dce8fb);
+      color: #274a7d;
+      border-color: #c1d4f2;
+      box-shadow: 0 8px 18px rgba(41, 84, 129, 0.10), inset 0 1px 0 rgba(255,255,255,0.94);
+    }
+
+    .question-card.header-is-sticky > .question-top .collapse-icon {
+      width: 15px;
+      height: 15px;
+    }
+
+    @media (max-width: 720px) {
+      .subitem.item-badge {
+        padding: 8px 9px 7px;
+        border-radius: 14px;
+      }
+
+      .item-badge-head {
+        padding-inline-end: 54px;
+      }
+
+      .item-badge-kind {
+        min-height: 24px;
+        font-size: 11px;
+      }
+
+      .item-badge-remove {
+        top: 7px;
+        left: 7px;
+        min-width: 40px !important;
+        height: 23px;
+        font-size: 10.5px;
+      }
+
+      .question-card.header-is-sticky > .question-top .question-side-actions .btn,
+      .question-card.header-is-sticky > .question-top .collapse-toggle {
+        min-height: 30px;
+        height: 30px;
+        padding: 5px 9px;
+        font-size: 10.25px;
+      }
+
+      .question-card.header-is-sticky > .question-top .collapse-toggle {
+        width: 30px;
+        padding: 0;
+      }
+    }
+
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -3032,10 +3319,10 @@
 
     <section class="workspace">
       <aside class="panel-stack">
-        <div class="card fold-card is-collapsed" id="headerInfoCard">
+        <div class="card fold-card sticky-fold-card is-collapsed" id="generalSettingsCard">
           <div class="fold-card-header">
-            <h2>معلومات الهيدر</h2>
-            <button type="button" class="collapse-toggle" data-action="toggle-static-card" data-card-id="headerInfoCard" aria-expanded="false" aria-label="فتح معلومات الهيدر" title="فتح معلومات الهيدر">
+            <h2>إعدادات عامة</h2>
+            <button type="button" class="collapse-toggle" data-action="toggle-static-card" data-card-id="generalSettingsCard" aria-expanded="false" aria-label="فتح إعدادات عامة" title="فتح إعدادات عامة">
               <span class="collapse-icon icon-collapsed" aria-hidden="true">
                 <svg viewBox="0 0 24 24" focusable="false">
                   <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
@@ -3052,84 +3339,98 @@
             </button>
           </div>
           <div class="fold-card-body">
-            <div class="grid-2">
-              <div class="field">
-                <label>الإدارة</label>
-                <input id="administration" type="text" placeholder="مثال: إدارة المدرسة" />
+            <div class="general-settings-section">
+              <div class="general-settings-section-head">
+                <div>
+                  <h3>إعدادات الهيدر</h3>
+                  <p>هنا تجمع بيانات الإدارة والمدرسة والعنوان والمادة والصف والملاحظة بنفس مكان واحد.</p>
+                </div>
               </div>
-              <div class="field">
-                <label>اسم المدرسة</label>
-                <input id="schoolName" type="text" placeholder="اكتب اسم المدرسة" />
+              <div class="grid-2">
+                <div class="field">
+                  <label>الإدارة</label>
+                  <input id="administration" type="text" placeholder="مثال: إدارة المدرسة" />
+                </div>
+                <div class="field">
+                  <label>اسم المدرسة</label>
+                  <input id="schoolName" type="text" placeholder="اكتب اسم المدرسة" />
+                </div>
+                <div class="field">
+                  <label>النص العلوي الأوسط</label>
+                  <input id="basmala" type="text" placeholder="مثال: باسمه تعالى" />
+                </div>
+                <div class="field">
+                  <label>اسم المادة</label>
+                  <input id="subject" type="text" placeholder="مثال: الرياضيات" />
+                </div>
+                <div class="field">
+                  <label>نوع الامتحان</label>
+                  <input id="examType" type="text" placeholder="مثال: امتحان نهاية السنة" />
+                </div>
+                <div class="field">
+                  <label>الصف</label>
+                  <input id="grade" type="text" placeholder="مثال: الرابع الابتدائي" />
+                </div>
+                <div class="field">
+                  <label>الدور</label>
+                  <input id="round" type="text" placeholder="مثال: الدور الأول" />
+                </div>
+                <div class="field">
+                  <label>العام الدراسي</label>
+                  <input id="academicYear" type="text" placeholder="مثال: 2025 - 2026" />
+                </div>
+                <div class="field">
+                  <label>التاريخ (غير ظاهر بالطباعة)</label>
+                  <input id="examDate" type="text" placeholder="مثال: 2026/05/18" />
+                </div>
               </div>
-              <div class="field">
-                <label>النص العلوي الأوسط</label>
-                <input id="basmala" type="text" placeholder="مثال: باسمه تعالى" />
-              </div>
-              <div class="field">
-                <label>اسم المادة</label>
-                <input id="subject" type="text" placeholder="مثال: الرياضيات" />
-              </div>
-              <div class="field">
-                <label>نوع الامتحان</label>
-                <input id="examType" type="text" placeholder="مثال: امتحان نهاية السنة" />
-              </div>
-              <div class="field">
-                <label>الصف</label>
-                <input id="grade" type="text" placeholder="مثال: الرابع الابتدائي" />
-              </div>
-              <div class="field">
-                <label>الدور</label>
-                <input id="round" type="text" placeholder="مثال: الدور الأول" />
-              </div>
-              <div class="field">
-                <label>العام الدراسي</label>
-                <input id="academicYear" type="text" placeholder="مثال: 2025 - 2026" />
-              </div>
-              <div class="field">
-                <label>التاريخ (غير ظاهر بالطباعة)</label>
-                <input id="examDate" type="text" placeholder="مثال: 2026/05/18" />
+              <div class="field" style="margin-top:12px;">
+                <label>الملاحظة</label>
+                <textarea id="note" placeholder="مثال: أجب عن أربعة أسئلة فقط..."></textarea>
               </div>
             </div>
 
-            <div class="field" style="margin-top:12px;">
-              <label>الملاحظة</label>
-              <textarea id="note" placeholder="مثال: أجب عن أربعة أسئلة فقط..."></textarea>
+            <div class="general-settings-section">
+              <div class="general-settings-section-head">
+                <div>
+                  <h3>توقيع المدرس</h3>
+                  <p>هذا القسم مخصص لعنوان التوقيع واسم المدرس حتى يظهر أسفل ورقة الامتحان.</p>
+                </div>
+              </div>
+              <div class="grid-2">
+                <div class="field">
+                  <label>عنوان التوقيع</label>
+                  <input id="rightTitle" type="text" placeholder="مثال: مدرس المادة" />
+                </div>
+                <div class="field">
+                  <label>اسم المدرس</label>
+                  <input id="rightName" type="text" placeholder="اكتب الاسم" />
+                </div>
+              </div>
+              <input id="leftTitle" type="hidden" value="" />
+              <input id="leftName" type="hidden" value="" />
             </div>
-          </div>
-        </div>
 
-        <div class="card fold-card is-collapsed" id="teacherSignatureCard">
-          <div class="fold-card-header">
-            <h2>توقيع مدرس المادة</h2>
-            <button type="button" class="collapse-toggle" data-action="toggle-static-card" data-card-id="teacherSignatureCard" aria-expanded="false" aria-label="فتح توقيع مدرس المادة" title="فتح توقيع مدرس المادة">
-              <span class="collapse-icon icon-collapsed" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false">
-                  <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
-                  <path d="M12 8.4v7.2"></path>
-                  <path d="M8.4 12h7.2"></path>
-                </svg>
-              </span>
-              <span class="collapse-icon icon-expanded" aria-hidden="true">
-                <svg viewBox="0 0 24 24" focusable="false">
-                  <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
-                  <path d="M8.4 12h7.2"></path>
-                </svg>
-              </span>
-            </button>
-          </div>
-          <div class="fold-card-body">
-            <div class="grid-2">
-              <div class="field">
-                <label>عنوان التوقيع</label>
-                <input id="rightTitle" type="text" placeholder="مثال: مدرس المادة" />
+            <div class="general-settings-section" id="quickActionsCard">
+              <div class="general-settings-section-head">
+                <div>
+                  <h3>لوحة الأوامر</h3>
+                  <p>من هنا تكدر تحفظ باسم، تبدأ نموذج جديد، أو تطبع مباشرة من نفس البادج.</p>
+                </div>
               </div>
-              <div class="field">
-                <label>اسم المدرس</label>
-                <input id="rightName" type="text" placeholder="اكتب الاسم" />
+              <div class="toolbar">
+                <div class="field">
+                  <label>اسم الحفظ</label>
+                  <input id="saveName" type="text" placeholder="مثال: نهائي الرياضيات / الرابع" />
+                </div>
+                <button class="btn btn-primary" id="saveBtn">حفظ</button>
+                <button class="btn btn-soft" id="newBtn">جديد</button>
+                <button class="btn btn-accent" id="printBtn">طباعة</button>
+              </div>
+              <div class="hint">
+                الحفظ يكون داخل المتصفح. كل تغيير أيضًا ينحفظ كمسودة تلقائيًا حتى لا يضيع الشغل.
               </div>
             </div>
-            <input id="leftTitle" type="hidden" value="" />
-            <input id="leftName" type="hidden" value="" />
           </div>
         </div>
 
@@ -3576,22 +3877,6 @@
               </fieldset>
             </div>
           </details>
-        </div>
-
-        <div class="card" id="quickActionsCard">
-          <h2>أوامر سريعة</h2>
-          <div class="toolbar">
-            <div class="field">
-              <label>اسم الحفظ</label>
-              <input id="saveName" type="text" placeholder="مثال: نهائي الرياضيات / الرابع" />
-            </div>
-            <button class="btn btn-primary" id="saveBtn">حفظ</button>
-            <button class="btn btn-soft" id="newBtn">جديد</button>
-            <button class="btn btn-accent" id="printBtn">طباعة</button>
-          </div>
-          <div class="hint">
-            الحفظ يكون داخل المتصفح. كل تغيير أيضًا ينحفظ كمسودة تلقائيًا حتى لا يضيع الشغل.
-          </div>
         </div>
 
         <div class="card" id="questionsSectionCard">
@@ -4562,12 +4847,12 @@
           schoolName: "",
           basmala: "باسمه تعالى",
           subject: "",
-          examType: "أسئلة امتحان",
+          examType: "أسئلة الامتحانات النهائية / الدور الأول",
           grade: "",
           round: "",
-          academicYear: "",
+          academicYear: "2025 - 2026",
           examDate: "",
-          note: ""
+          note: "الإجابة عن خمسة أسئلة فقط (لكل سؤال 20 درجة)"
         },
         signatures: {
           rightTitle: "مدرس المادة",
@@ -4829,7 +5114,7 @@
       card.classList.toggle("is-collapsed", collapsed);
       const button = card.querySelector('[data-action="toggle-static-card"]');
       if (button) {
-        const label = card.id === "teacherSignatureCard" ? "توقيع مدرس المادة" : "معلومات الهيدر";
+        const label = (card.querySelector(".fold-card-header h2")?.textContent || "القسم").trim();
         button.setAttribute("aria-expanded", collapsed ? "false" : "true");
         button.setAttribute("aria-label", collapsed ? `فتح ${label}` : `طي ${label}`);
         button.setAttribute("title", collapsed ? `فتح ${label}` : `طي ${label}`);
@@ -4851,15 +5136,9 @@
       const html = state.questions.map((question, qIndex) => {
         updateQuestionLabels(question);
         const questionCollapsed = isQuestionCollapsed(question.id);
-        return `
-          <div class="question-card ${questionCollapsed ? "is-collapsed" : ""}">
-            <div class="question-top">
-              <div class="head-main">
-                <div class="chip">س${toArabicDigits(qIndex + 1)}</div>
-              </div>
-              <div class="question-side-actions">
-                ${renderQuestionHeaderQuickAction(question, qIndex)}
-                <button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>
+        const removeQuestionButton = `<button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>`;
+        const collapsedHeaderActions = `
+                ${removeQuestionButton}
                 ${renderSymbolButton()}
                 <button type="button" class="collapse-toggle" data-action="toggle-question" data-question-id="${question.id}" aria-expanded="${questionCollapsed ? "false" : "true"}" aria-label="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}" title="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}">
                   <span class="collapse-icon icon-collapsed" aria-hidden="true">
@@ -4876,6 +5155,35 @@
                     </svg>
                   </span>
                 </button>
+        `;
+        const expandedHeaderActions = `
+                ${renderQuestionHeaderQuickAction(question, qIndex)}
+                ${((question.type || "normal") === "normal") ? removeQuestionButton : ``}
+                ${renderSymbolButton()}
+                <button type="button" class="collapse-toggle" data-action="toggle-question" data-question-id="${question.id}" aria-expanded="${questionCollapsed ? "false" : "true"}" aria-label="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}" title="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}">
+                  <span class="collapse-icon icon-collapsed" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
+                      <path d="M12 8.4v7.2"></path>
+                      <path d="M8.4 12h7.2"></path>
+                    </svg>
+                  </span>
+                  <span class="collapse-icon icon-expanded" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" focusable="false">
+                      <rect x="4.5" y="4.5" width="15" height="15" rx="4"></rect>
+                      <path d="M8.4 12h7.2"></path>
+                    </svg>
+                  </span>
+                </button>
+        `;
+        return `
+          <div class="question-card ${questionCollapsed ? "is-collapsed" : ""}">
+            <div class="question-top ${questionCollapsed ? "question-top-collapsed-clickable" : ""}" ${questionCollapsed ? `data-action="toggle-question" data-question-id="${question.id}" role="button" tabindex="0" aria-label="فتح السؤال"` : ``}>
+              <div class="head-main">
+                <div class="chip">س${toArabicDigits(qIndex + 1)}</div>
+              </div>
+              <div class="question-side-actions">
+                ${questionCollapsed ? collapsedHeaderActions : expandedHeaderActions}
               </div>
             </div>
 
@@ -4919,14 +5227,143 @@
 
     function renderQuestionHeaderQuickAction(question, qIndex) {
       const questionType = question.type || "normal";
-      const quickActionMap = {
-        normal: { label: "إضافة عنصر", action: "add-block" },
-        points: { label: "إضافة نقطة", action: "add-question-item" },
-        definitions: { label: "إضافة تعريف", action: "add-question-item" },
-        blanks: { label: "إضافة فراغ", action: "add-question-item" }
+      const headerBranchButton = questionType === "normal"
+        ? `<button class="btn btn-soft header-add-branch-btn" data-action="add-sticky-branch" data-q="${qIndex}">إضافة فرع</button>`
+        : "";
+
+      const headerBlockAction = questionType === "normal" ? getQuestionHeaderBlockAction(question) : null;
+      const headerBlockItemButton = headerBlockAction
+        ? `<button class="btn btn-success header-add-block-item-btn" data-action="add-point" data-q="${qIndex}" data-b="${headerBlockAction.blockIndex}">${headerBlockAction.addLabel}</button>`
+        : "";
+
+      return `
+        ${headerBranchButton}
+        ${headerBlockItemButton}
+        <button class="btn btn-success header-sticky-add-btn" data-action="add-question-from-sticky" data-q="${qIndex}">إضافة سؤال</button>
+      `;
+    }
+
+    function getItemEditorMeta(type) {
+      const map = {
+        points: {
+          singular: "نقطة",
+          addLabel: "إضافة نقطة",
+          textLabel: "نص النقطة",
+          removeLabel: "حذف النقطة",
+          placeholder: "اكتب النقطة هنا",
+          isTextarea: false,
+          note: ""
+        },
+        definitions: {
+          singular: "تعريف",
+          addLabel: "إضافة تعريف",
+          textLabel: "نص التعريف",
+          removeLabel: "حذف التعريف",
+          placeholder: "اكتب المطلوب هنا",
+          isTextarea: false,
+          note: ""
+        },
+        blanks: {
+          singular: "فراغ",
+          addLabel: "إضافة فراغ",
+          textLabel: "نص الفراغ",
+          removeLabel: "حذف الفراغ",
+          placeholder: "اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ",
+          isTextarea: true,
+          note: "لإظهار الفراغ في الطباعة اكتب (فراغ) أو ثلاث شرطات سفلية أو أكثر مثل: ___"
+        }
       };
-      const quickAction = quickActionMap[questionType] || quickActionMap.normal;
-      return `<button class="btn btn-success header-sticky-add-btn" data-action="${quickAction.action}" data-q="${qIndex}">${quickAction.label}</button>`;
+      return map[type] || map.points;
+    }
+
+    function renderEditorBadgeItem({
+      index,
+      kindLabel,
+      value,
+      placeholder,
+      isTextarea = false,
+      fieldAttrs = "",
+      removeAction,
+      removeLabel,
+      removeAttrs = "",
+      note = ""
+    }) {
+      const control = isTextarea
+        ? `<textarea ${fieldAttrs} placeholder="${placeholder}">${escapeHtml(value || "")}</textarea>`
+        : `<input ${fieldAttrs} type="text" value="${escapeHtml(value || "")}" placeholder="${placeholder}" />`;
+
+      return `
+        <div class="subitem item-badge">
+          <button type="button" class="btn btn-danger item-badge-remove" data-action="${removeAction}" ${removeAttrs} title="${removeLabel}" aria-label="${removeLabel}">حذف</button>
+          <div class="item-badge-head">
+            <div class="item-badge-title">
+              <span class="item-badge-kind">${kindLabel} ${toArabicDigits(index + 1)}</span>
+            </div>
+          </div>
+          <div class="field item-badge-field">
+            ${control}
+          </div>
+          ${note ? `<div class="small-note item-badge-note">${note}</div>` : ``}
+        </div>
+      `;
+    }
+
+    function renderQuestionItemEditor(item, qIndex, itemIndex, questionType) {
+      const meta = getItemEditorMeta(questionType);
+      return renderEditorBadgeItem({
+        index: itemIndex,
+        kindLabel: meta.singular,
+        value: item.text || "",
+        placeholder: meta.placeholder,
+        isTextarea: meta.isTextarea,
+        fieldAttrs: `data-scope="question-item" data-field="text" data-q="${qIndex}" data-i="${itemIndex}" data-symbol-preferred="true"`,
+        removeAction: "remove-question-item",
+        removeLabel: meta.removeLabel,
+        removeAttrs: `data-q="${qIndex}" data-i="${itemIndex}"`,
+        note: meta.note || ""
+      });
+    }
+
+    function renderBlockItemEditor(item, qIndex, bIndex, itemIndex, blockType) {
+      const meta = getItemEditorMeta(blockType);
+      return renderEditorBadgeItem({
+        index: itemIndex,
+        kindLabel: meta.singular,
+        value: item.text || "",
+        placeholder: meta.placeholder,
+        isTextarea: meta.isTextarea,
+        fieldAttrs: `data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${itemIndex}" data-symbol-preferred="true"`,
+        removeAction: "remove-point",
+        removeLabel: meta.removeLabel,
+        removeAttrs: `data-q="${qIndex}" data-b="${bIndex}" data-i="${itemIndex}"`,
+        note: meta.note || ""
+      });
+    }
+
+
+    function getQuestionTypeActionLabel(questionType) {
+      const itemLabelMap = {
+        points: "إضافة نقطة",
+        definitions: "إضافة تعريف",
+        blanks: "إضافة فراغ"
+      };
+      return itemLabelMap[questionType] || "";
+    }
+
+    function getQuestionHeaderBlockAction(question) {
+      const blocks = Array.isArray(question?.blocks) ? question.blocks : [];
+
+      for (let i = blocks.length - 1; i >= 0; i -= 1) {
+        const blockType = blocks[i]?.type || "normal";
+        if (blockType !== "normal") {
+          return {
+            blockIndex: i,
+            addLabel: getQuestionTypeActionLabel(blockType)
+          };
+        }
+      }
+
+      return null;
     }
 
     function renderQuestionPrimaryControls(question, qIndex) {
@@ -4943,34 +5380,24 @@
 
       if (questionType === "normal") {
         return `
-          <div class="field question-main-controls-shell">
-            <div class="question-main-controls-cell">
+          <div class="field question-main-controls-shell question-main-controls-shell-wide">
+            <div class="question-main-controls-cell question-type-wide-cell">
               <label>نوع السؤال الرئيسي</label>
               <select data-scope="question-type" data-q="${qIndex}">
                 ${renderQuestionTypeOptions(questionType)}
               </select>
             </div>
-            <div class="question-main-controls-cell question-add-block-field">
-              <label>أضف عنصر داخل السؤال</label>
-              <button class="btn btn-success" data-action="add-block" data-q="${qIndex}">إضافة عنصر</button>
-            </div>
           </div>
         `;
       }
 
-      const itemLabelMap = {
-        points: ["إضافة نقطة"],
-        definitions: ["إضافة تعريف"],
-        blanks: ["إضافة فراغ"]
-      };
-
-      const [addLabel] = itemLabelMap[questionType] || itemLabelMap.points;
+      const addLabel = getQuestionTypeActionLabel(questionType);
 
       return `
         ${typeField}
         <div class="inline-actions action-badge-group">
           <button class="btn btn-success" data-action="add-question-item" data-q="${qIndex}">${addLabel}</button>
-          ${renderSymbolButton()}
+          <button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>
         </div>
       `;
     }
@@ -4986,30 +5413,8 @@
         `;
       }
 
-      const itemLabelMap = {
-        points: ["إضافة نقطة", "نص النقطة", "حذف النقطة"],
-        definitions: ["إضافة تعريف", "نص التعريف", "حذف التعريف"],
-        blanks: ["إضافة فراغ", "نص الفراغ", "حذف الفراغ"]
-      };
-
-      const [, textLabel, removeLabel] = itemLabelMap[questionType] || itemLabelMap.points;
-
       return `
-        ${(question.items || []).map((item, i) => `
-          <div class="subitem">
-            <div class="field">
-              <label>${textLabel}</label>
-              ${questionType === "blanks"
-                ? `<textarea data-scope="question-item" data-field="text" data-q="${qIndex}" data-i="${i}" data-symbol-preferred="true" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(item.text || "")}</textarea>`
-                : `<input data-scope="question-item" data-field="text" data-q="${qIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text || "")}" placeholder="اكتب المطلوب هنا" />`
-              }
-            </div>
-            ${questionType === "blanks" ? `<div class="small-note">لإظهار الفراغ في الطباعة اكتب (فراغ) أو ثلاث شرطات سفلية أو أكثر مثل: ___</div>` : ``}
-            <div class="inline-actions">
-              <button class="btn btn-danger" data-action="remove-question-item" data-q="${qIndex}" data-i="${i}">${removeLabel}</button>
-            </div>
-          </div>
-        `).reverse().join("")}
+        ${(question.items || []).map((item, i) => renderQuestionItemEditor(item, qIndex, i, questionType)).reverse().join("")}
       `;
     }
 
@@ -5020,18 +5425,18 @@
             <div class="chip">${escapeHtml(toArabicDigits(block.label || nextLabel(bIndex)))}</div>
           </div>
           <div class="inline-actions">
-            <button class="btn btn-soft" data-action="duplicate-block" data-q="${qIndex}" data-b="${bIndex}">نسخ العنصر</button>
-            <button class="btn btn-danger" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}">حذف العنصر</button>
+            <button class="btn btn-soft" data-action="duplicate-block" data-q="${qIndex}" data-b="${bIndex}">نسخ الفرع</button>
+            <button class="btn btn-danger" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}">حذف الفرع</button>
             ${renderSymbolButton()}
           </div>
         </div>
         <div class="grid-3">
           <div class="field">
-            <label>رمز العنصر</label>
+            <label>رمز الفرع</label>
             <input data-scope="block" data-field="label" data-q="${qIndex}" data-b="${bIndex}" type="text" value="${escapeHtml(toArabicDigits(block.label || ""))}" />
           </div>
           <div class="field">
-            <label>نوع العنصر</label>
+            <label>نوع الفرع</label>
             <select data-scope="block-type" data-q="${qIndex}" data-b="${bIndex}">
               ${renderTypeOptions(block.type)}
             </select>
@@ -5048,24 +5453,10 @@
           <div class="block-item">
             ${commonHeader}
             <div class="field">
-              <label>عنوان هذا العنصر</label>
+              <label>عنوان هذا الفرع</label>
               <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="مثال: عرّف ما يأتي:">${escapeHtml(block.prompt)}</textarea>
             </div>
-            <div class="inline-actions action-badge-group">
-              <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة تعريف</button>
-              ${renderSymbolButton()}
-            </div>
-            ${(block.items || []).map((item, i) => `
-              <div class="subitem">
-                <div class="field">
-                  <label>نص التعريف</label>
-                  <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب المطلوب هنا" />
-                </div>
-                <div class="inline-actions">
-                  <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}">حذف التعريف</button>
-                </div>
-              </div>
-            `).reverse().join("")}
+            ${(block.items || []).map((item, i) => renderBlockItemEditor(item, qIndex, bIndex, i, "definitions")).reverse().join("")}
           </div>
         `;
       }
@@ -5075,24 +5466,10 @@
           <div class="block-item">
             ${commonHeader}
             <div class="field">
-              <label>عنوان هذا العنصر</label>
+              <label>عنوان هذا الفرع</label>
               <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="مثال: اكتب النقاط الآتية:">${escapeHtml(block.prompt)}</textarea>
             </div>
-            <div class="inline-actions action-badge-group">
-              <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة نقطة</button>
-              ${renderSymbolButton()}
-            </div>
-            ${(block.items || []).map((item, i) => `
-              <div class="subitem">
-                <div class="field">
-                  <label>نص النقطة</label>
-                  <input data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" type="text" value="${escapeHtml(item.text)}" placeholder="اكتب النقطة هنا" />
-                </div>
-                <div class="inline-actions">
-                  <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}">حذف النقطة</button>
-                </div>
-              </div>
-            `).reverse().join("")}
+            ${(block.items || []).map((item, i) => renderBlockItemEditor(item, qIndex, bIndex, i, "points")).reverse().join("")}
           </div>
         `;
       }
@@ -5102,25 +5479,10 @@
           <div class="block-item">
             ${commonHeader}
             <div class="field">
-              <label>عنوان هذا العنصر</label>
+              <label>عنوان هذا الفرع</label>
               <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="مثال: أكمل ما يأتي:">${escapeHtml(block.prompt)}</textarea>
             </div>
-            <div class="inline-actions action-badge-group">
-              <button class="btn btn-success" data-action="add-point" data-q="${qIndex}" data-b="${bIndex}">إضافة فراغ</button>
-              ${renderSymbolButton()}
-            </div>
-            ${(block.items || []).map((item, i) => `
-              <div class="subitem">
-                <div class="field">
-                  <label>نص الفراغ</label>
-                  <textarea data-scope="point" data-group="items" data-field="text" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}" data-symbol-preferred="true" placeholder="اكتب النص واستعمل (فراغ) أو ___ بمكان الفراغ">${escapeHtml(item.text)}</textarea>
-                </div>
-                <div class="small-note">لإظهار الفراغ في الطباعة اكتب (فراغ) أو ثلاث شرطات سفلية أو أكثر مثل: ___</div>
-                <div class="inline-actions">
-                  <button class="btn btn-danger" data-action="remove-point" data-q="${qIndex}" data-b="${bIndex}" data-i="${i}">حذف الفراغ</button>
-                </div>
-              </div>
-            `).reverse().join("")}
+            ${(block.items || []).map((item, i) => renderBlockItemEditor(item, qIndex, bIndex, i, "blanks")).reverse().join("")}
           </div>
         `;
       }
@@ -5129,8 +5491,8 @@
         <div class="block-item">
           ${commonHeader}
           <div class="field">
-            <label>نص العنصر</label>
-            <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="اكتب منطوق الفرع أو العنصر هنا">${escapeHtml(block.prompt)}</textarea>
+            <label>نص الفرع</label>
+            <textarea data-scope="block" data-field="prompt" data-q="${qIndex}" data-b="${bIndex}" data-symbol-preferred="true" placeholder="اكتب منطوق الفرع هنا">${escapeHtml(block.prompt)}</textarea>
           </div>
         </div>
       `;
@@ -5151,12 +5513,12 @@
 
     function typeDescription(type) {
       const map = {
-        normal: "عنصر نصي مرن",
+        normal: "فرع نصي مرن",
         blanks: "فراغات متعددة وتحويل (فراغ) و___",
         definitions: "تعاريف متعددة",
         points: "نقاط عمودية متعددة"
       };
-      return map[type] || "عنصر مرن";
+      return map[type] || "فرع مرن";
     }
 
     function balanceHeaderColumns() {
@@ -5311,7 +5673,7 @@
 
             <div class="head-col center">
               <div class="center-stack">
-                <div class="title-main">${escapeHtml(meta.examType || "أسئلة امتحان")}</div>
+                <div class="title-main">${escapeHtml(meta.examType || "أسئلة الامتحانات النهائية / الدور الأول")}</div>
                 ${meta.round ? `<div class="title-sub">${escapeHtml(meta.round)}</div>` : ""}
                 <div class="title-year">${meta.academicYear ? `للعام الدراسي ${escapeHtml(toArabicDigits(meta.academicYear))}` : ""}</div>
               </div>
@@ -5329,7 +5691,7 @@
 
           <div class="sheet-note">
             ملاحظة:
-            <span>${meta.note ? nlToBr(meta.note) : "........................................................"}</span>
+            <span>${meta.note ? nlToBr(meta.note) : "الإجابة عن خمسة أسئلة فقط (لكل سؤال 20 درجة)"}</span>
           </div>
 
           <div class="questions-area">
@@ -5389,7 +5751,7 @@
         ? `<span class="element-label"><strong>${mergedQuestionLabel}</strong> ${escapeHtml(toArabicDigits(label))}-</span>`
         : (label ? `<span class="element-label">${escapeHtml(toArabicDigits(label))}-</span>` : "");
       const degreeBadge = block.degree ? `<span class="element-degree">(${escapeHtml(formatDegree(block.degree))})</span>` : "";
-      const prompt = block.prompt ? nlToBr(block.prompt) : '<span class="empty-hint">عنصر فارغ</span>';
+      const prompt = block.prompt ? nlToBr(block.prompt) : '<span class="empty-hint">فرع فارغ</span>';
       const trailingBadge = `${degreeBadge}${mergedQuestionDegree}`;
 
       if (block.type === "definitions") {
@@ -5562,8 +5924,39 @@
       return "";
     }
 
-    function addQuestion() {
-      state.questions.push(makeQuestion());
+    function getQuestionPromptSelector(qIndex) {
+      return `[data-scope="question"][data-field="title"][data-q="${qIndex}"]`;
+    }
+
+    function addQuestion(options = {}) {
+      const nextQuestion = makeQuestion();
+      state.questions.push(nextQuestion);
+      const nextIndex = state.questions.length - 1;
+      const ui = ensureUiState();
+      ui.collapsedQuestions[nextQuestion.id] = false;
+
+      if (options.collapseQuestionId) {
+        ui.collapsedQuestions[options.collapseQuestionId] = true;
+      }
+
+      pendingFocusSelector = getQuestionPromptSelector(nextIndex);
+      saveDraft();
+      renderAll();
+    }
+
+    function addQuestionFromSticky(qIndex) {
+      const currentQuestion = state.questions[qIndex];
+      const nextQuestion = makeQuestion();
+      const insertIndex = Math.max(0, Math.min(qIndex + 1, state.questions.length));
+      state.questions.splice(insertIndex, 0, nextQuestion);
+
+      const ui = ensureUiState();
+      ui.collapsedQuestions[nextQuestion.id] = false;
+      if (currentQuestion && currentQuestion.id) {
+        ui.collapsedQuestions[currentQuestion.id] = true;
+      }
+
+      pendingFocusSelector = getQuestionPromptSelector(insertIndex);
       saveDraft();
       renderAll();
     }
@@ -5607,7 +6000,7 @@
     function removeQuestionItem(qIndex, itemIndex) {
       const question = state.questions[qIndex];
       if (!Array.isArray(question.items) || question.items.length <= 1) {
-        showToast("لا يمكن حذف كل العناصر هنا. خليه يبقى عنصر واحد على الأقل.", "warning");
+        showToast("لا يمكن حذف كل الفروع هنا. خليه يبقى فرع واحد على الأقل.", "warning");
         return;
       }
       question.items.splice(itemIndex, 1);
@@ -5776,7 +6169,7 @@
     function removeBlock(qIndex, bIndex) {
       const question = state.questions[qIndex];
       if (question.blocks.length === 1) {
-        showToast("لا يمكن حذف كل عناصر السؤال. خليه يبقى عنصر واحد على الأقل.", "warning");
+        showToast("لا يمكن حذف كل فروع السؤال. خليه يبقى فرع واحد على الأقل.", "warning");
         return;
       }
       question.blocks.splice(bIndex, 1);
@@ -5886,7 +6279,7 @@
       const block = state.questions[qIndex].blocks[bIndex];
       const collection = block[group];
       if (!Array.isArray(collection) || collection.length <= 1) {
-        showToast("لا يمكن حذف كل العناصر هنا. خليه يبقى عنصر واحد على الأقل.", "warning");
+        showToast("لا يمكن حذف كل الفروع هنا. خليه يبقى فرع واحد على الأقل.", "warning");
         return;
       }
       collection.splice(itemIndex, 1);
@@ -6416,6 +6809,14 @@ ${buildPrintScopeCss()}
           return;
         }
         if (action === "add-question-item") addQuestionItem(q);
+        if (action === "add-question-from-sticky") {
+          addQuestionFromSticky(q);
+          return;
+        }
+        if (action === "add-sticky-branch") {
+          addBlock(q, "normal");
+          return;
+        }
         if (action === "remove-question-item") {
           showConfirmToast("هل تريد حذف هذا السؤال الفرعي؟", () => removeQuestionItem(q, i));
           return;
@@ -6549,14 +6950,21 @@ ${buildPrintScopeCss()}
 
     function scrollToQuickSavePanel() {
       const panel = document.getElementById("quickActionsCard");
+      const wrapperCard = document.getElementById("generalSettingsCard");
       const saveNameInput = document.getElementById("saveName");
       if (!panel) return;
 
-      panel.classList.remove("is-guided-focus");
-      panel.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+      if (wrapperCard && wrapperCard.classList.contains("is-collapsed")) {
+        setStaticCardCollapsed(wrapperCard, false);
+      }
 
       requestAnimationFrame(() => {
-        panel.classList.add("is-guided-focus");
+        panel.classList.remove("is-guided-focus");
+        panel.scrollIntoView({ behavior: "smooth", block: "center", inline: "nearest" });
+
+        requestAnimationFrame(() => {
+          panel.classList.add("is-guided-focus");
+        });
       });
 
       setTimeout(() => {
