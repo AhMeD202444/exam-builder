@@ -7554,35 +7554,69 @@ ${buildPrintScopeCss()}
       return finalName;
     }
 
-    function createPhonePdfExportNode() {
+    function preparePhonePdfExportSource() {
       const preview = document.getElementById("sheetPreview");
-      if (!preview || !preview.innerHTML.trim()) return null;
+      const stage = preview ? preview.closest(".sheet-stage") : null;
+      if (!preview || !stage || !preview.innerHTML.trim()) return null;
 
-      const host = document.createElement("div");
-      host.setAttribute("aria-hidden", "true");
-      host.style.position = "fixed";
-      host.style.left = "-100000px";
-      host.style.top = "0";
-      host.style.width = "auto";
-      host.style.padding = "0";
-      host.style.margin = "0";
-      host.style.background = "#ffffff";
-      host.style.zIndex = "-1";
+      const previewStyle = {
+        position: preview.style.position,
+        top: preview.style.top,
+        left: preview.style.left,
+        transform: preview.style.transform,
+        transformOrigin: preview.style.transformOrigin,
+        width: preview.style.width,
+        minWidth: preview.style.minWidth,
+        maxWidth: preview.style.maxWidth,
+        minHeight: preview.style.minHeight,
+        margin: preview.style.margin
+      };
 
-      const clone = preview.cloneNode(true);
-      clone.removeAttribute("id");
-      clone.style.position = "static";
-      clone.style.left = "0";
-      clone.style.top = "0";
-      clone.style.transform = "none";
-      clone.style.transformOrigin = "top left";
-      clone.style.width = `${preview.offsetWidth || 794}px`;
-      clone.style.maxWidth = "none";
-      clone.style.margin = "0";
+      const stageStyle = {
+        height: stage.style.height,
+        minHeight: stage.style.minHeight,
+        overflow: stage.style.overflow,
+        padding: stage.style.padding
+      };
 
-      host.appendChild(clone);
-      document.body.appendChild(host);
-      return { host, clone };
+      preview.style.position = "relative";
+      preview.style.top = "0";
+      preview.style.left = "0";
+      preview.style.transform = "none";
+      preview.style.transformOrigin = "top center";
+      preview.style.width = "210mm";
+      preview.style.minWidth = "210mm";
+      preview.style.maxWidth = "none";
+      preview.style.minHeight = "297mm";
+      preview.style.margin = "0 auto";
+
+      stage.style.height = "auto";
+      stage.style.minHeight = "auto";
+      stage.style.overflow = "visible";
+      stage.style.padding = "8px";
+
+      return { preview, stage, previewStyle, stageStyle };
+    }
+
+    function restorePhonePdfExportSource(context) {
+      if (!context) return;
+      const { preview, stage, previewStyle, stageStyle } = context;
+      preview.style.position = previewStyle.position;
+      preview.style.top = previewStyle.top;
+      preview.style.left = previewStyle.left;
+      preview.style.transform = previewStyle.transform;
+      preview.style.transformOrigin = previewStyle.transformOrigin;
+      preview.style.width = previewStyle.width;
+      preview.style.minWidth = previewStyle.minWidth;
+      preview.style.maxWidth = previewStyle.maxWidth;
+      preview.style.minHeight = previewStyle.minHeight;
+      preview.style.margin = previewStyle.margin;
+
+      stage.style.height = stageStyle.height;
+      stage.style.minHeight = stageStyle.minHeight;
+      stage.style.overflow = stageStyle.overflow;
+      stage.style.padding = stageStyle.padding;
+      syncPhonePreviewScale();
     }
 
     async function savePhonePdfToDevice() {
@@ -7594,8 +7628,8 @@ ${buildPrintScopeCss()}
         return;
       }
 
-      const exportNode = createPhonePdfExportNode();
-      if (!exportNode) {
+      const exportContext = preparePhonePdfExportSource();
+      if (!exportContext) {
         showToast("المعاينة غير جاهزة حالياً.", "error", { duration: 4200 });
         return;
       }
@@ -7620,12 +7654,12 @@ ${buildPrintScopeCss()}
             orientation: "portrait"
           },
           pagebreak: { mode: ["css", "legacy"] }
-        }).from(exportNode.clone).save();
+        }).from(exportContext.preview).save();
       } catch (error) {
         console.error(error);
         showToast("فشل حفظ ملف الـ PDF على الجهاز. حاول مرة ثانية.", "error", { duration: 5600 });
       } finally {
-        exportNode.host.remove();
+        restorePhonePdfExportSource(exportContext);
       }
     }
 
