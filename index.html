@@ -374,6 +374,23 @@
       transition: .22s ease;
     }
 
+    @media only screen and (min-width: 921px) {
+      button,
+      select,
+      summary,
+      .btn,
+      .collapse-toggle,
+      .toast-close,
+      .scroll-top-btn,
+      .question-card.is-collapsed > .question-top.question-top-collapsed-clickable {
+        position: relative;
+        overflow: hidden;
+        isolation: isolate;
+        -webkit-tap-highlight-color: transparent;
+        background-clip: padding-box;
+      }
+    }
+
     .btn {
       display: inline-flex;
       align-items: center;
@@ -3385,6 +3402,35 @@
         justify-content: center;
       }
 
+      button,
+      select,
+      summary,
+      .btn,
+      .collapse-toggle,
+      .toast-close,
+      .scroll-top-btn,
+      .question-card.is-collapsed > .question-top.question-top-collapsed-clickable {
+        position: relative !important;
+        overflow: hidden !important;
+        isolation: isolate !important;
+        -webkit-tap-highlight-color: transparent;
+        background-clip: padding-box;
+      }
+
+      .advanced-card .stepper-shell input[data-print-type="number"] {
+        pointer-events: none !important;
+        user-select: none !important;
+        -webkit-user-select: none !important;
+        caret-color: transparent !important;
+      }
+
+      .advanced-card .stepper-btn {
+        touch-action: manipulation;
+        user-select: none;
+        -webkit-user-select: none;
+        -webkit-touch-callout: none;
+      }
+
       .workspace {
         grid-template-columns: 1fr !important;
         gap: 10px !important;
@@ -6118,10 +6164,110 @@
       header.style.setProperty("--header-side-width", `${sideWidth}px`);
     }
 
+    function isPhoneStepperMode() {
+      return window.innerWidth <= 920;
+    }
+
     function countStepperDecimals(stepValue) {
       const raw = String(stepValue || "");
       if (!raw.includes(".")) return 0;
       return raw.split(".")[1].length;
+    }
+
+    function syncAdvancedStepperInteractionMode() {
+      const scope = document.querySelector(".advanced-card");
+      if (!scope) return;
+
+      const isPhone = isPhoneStepperMode();
+      scope.querySelectorAll('.stepper-shell input[data-print-type="number"]').forEach((input) => {
+        if (!input.dataset.stepperOriginalReadonlyInitialized) {
+          input.dataset.stepperOriginalReadonly = input.readOnly ? "1" : "0";
+          input.dataset.stepperOriginalReadonlyInitialized = "1";
+        }
+        if (!input.dataset.stepperOriginalTabindexInitialized) {
+          input.dataset.stepperOriginalTabindex = input.getAttribute("tabindex") || "";
+          input.dataset.stepperOriginalTabindexInitialized = "1";
+        }
+
+        if (isPhone) {
+          input.readOnly = true;
+          input.setAttribute("inputmode", "none");
+          input.setAttribute("tabindex", "-1");
+          input.setAttribute("aria-readonly", "true");
+        } else {
+          input.readOnly = input.dataset.stepperOriginalReadonly === "1";
+          input.removeAttribute("inputmode");
+          if (input.dataset.stepperOriginalTabindex) {
+            input.setAttribute("tabindex", input.dataset.stepperOriginalTabindex);
+          } else {
+            input.removeAttribute("tabindex");
+          }
+          if (input.readOnly) {
+            input.setAttribute("aria-readonly", "true");
+          } else {
+            input.removeAttribute("aria-readonly");
+          }
+        }
+      });
+    }
+
+    function bindPhoneStepperHold(button, direction, stepInputValue) {
+      let holdDelayId = null;
+      let holdIntervalId = null;
+      let suppressResetId = null;
+      let hadPhonePress = false;
+
+      const clearTimers = () => {
+        if (holdDelayId) {
+          window.clearTimeout(holdDelayId);
+          holdDelayId = null;
+        }
+        if (holdIntervalId) {
+          window.clearInterval(holdIntervalId);
+          holdIntervalId = null;
+        }
+      };
+
+      const suppressNextClick = () => {
+        button.dataset.stepperSuppressClick = "1";
+        if (suppressResetId) window.clearTimeout(suppressResetId);
+        suppressResetId = window.setTimeout(() => {
+          delete button.dataset.stepperSuppressClick;
+          suppressResetId = null;
+        }, 700);
+      };
+
+      const startHold = (event) => {
+        if (!isPhoneStepperMode()) return;
+        if (event.pointerType === "mouse" && event.button !== 0) return;
+        event.preventDefault();
+        hadPhonePress = true;
+        stepInputValue(direction, { focusInput: false });
+        holdDelayId = window.setTimeout(() => {
+          holdIntervalId = window.setInterval(() => {
+            stepInputValue(direction, { focusInput: false });
+          }, 85);
+        }, 320);
+      };
+
+      const stopHold = () => {
+        clearTimers();
+        if (!hadPhonePress) return;
+        suppressNextClick();
+        hadPhonePress = false;
+      };
+
+      button.addEventListener("pointerdown", startHold);
+      button.addEventListener("pointerup", stopHold);
+      button.addEventListener("pointercancel", stopHold);
+      button.addEventListener("lostpointercapture", stopHold);
+      button.addEventListener("pointerleave", stopHold);
+      button.addEventListener("blur", stopHold);
+      button.addEventListener("contextmenu", (event) => {
+        if (isPhoneStepperMode()) {
+          event.preventDefault();
+        }
+      });
     }
 
     function enhanceAdvancedSteppers() {
@@ -6153,8 +6299,9 @@
         shell.appendChild(input);
         shell.appendChild(increaseBtn);
 
-        const stepInputValue = (direction) => {
-          if (input.disabled || input.readOnly) return;
+        const stepInputValue = (direction, options = {}) => {
+          const { focusInput = !isPhoneStepperMode() } = options;
+          if (input.disabled) return;
           const step = Number.parseFloat(input.step);
           const amount = Number.isFinite(step) && step > 0 ? step : 1;
           const decimals = countStepperDecimals(amount);
@@ -6174,6 +6321,7 @@
           input.value = normalized;
           input.dispatchEvent(new Event('input', { bubbles: true }));
           input.dispatchEvent(new Event('change', { bubbles: true }));
+          if (!focusInput) return;
           try {
             input.focus({ preventScroll: true });
           } catch (error) {
@@ -6181,9 +6329,28 @@
           }
         };
 
-        decreaseBtn.addEventListener('click', () => stepInputValue(-1));
-        increaseBtn.addEventListener('click', () => stepInputValue(1));
+        decreaseBtn.addEventListener('click', (event) => {
+          if (decreaseBtn.dataset.stepperSuppressClick === '1') {
+            event.preventDefault();
+            delete decreaseBtn.dataset.stepperSuppressClick;
+            return;
+          }
+          stepInputValue(-1);
+        });
+        increaseBtn.addEventListener('click', (event) => {
+          if (increaseBtn.dataset.stepperSuppressClick === '1') {
+            event.preventDefault();
+            delete increaseBtn.dataset.stepperSuppressClick;
+            return;
+          }
+          stepInputValue(1);
+        });
+
+        bindPhoneStepperHold(decreaseBtn, -1, stepInputValue);
+        bindPhoneStepperHold(increaseBtn, 1, stepInputValue);
       });
+
+      syncAdvancedStepperInteractionMode();
     }
 
     function renderPreview() {
@@ -7848,8 +8015,10 @@ ${buildPrintScopeCss()}
     bindDelegation();
     bindEnterFieldNavigation();
     window.addEventListener("resize", balanceHeaderColumns);
+    window.addEventListener("resize", syncAdvancedStepperInteractionMode, { passive: true });
     window.addEventListener("resize", syncMobileQuestionHeaderOffset, { passive: true });
     window.addEventListener("resize", syncPhonePreviewScale, { passive: true });
+    window.addEventListener("orientationchange", syncAdvancedStepperInteractionMode, { passive: true });
     window.addEventListener("orientationchange", syncMobileQuestionHeaderOffset, { passive: true });
     window.addEventListener("orientationchange", syncPhonePreviewScale, { passive: true });
     window.addEventListener("scroll", toggleScrollTopButton, { passive: true });
