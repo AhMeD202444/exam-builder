@@ -4657,7 +4657,7 @@
     }
 
     function getPreferredSaveName() {
-      return normalizePdfFileNameInput(state.saveName || autoSaveName()) || "نموذج امتحاني";
+      return normalizeModelTitle(state.saveName || autoSaveName()) || "نموذج امتحاني";
     }
 
     function defaultPrintSettings() {
@@ -5471,14 +5471,6 @@
 
     function normalizeModelTitle(value) {
       return String(value || "").replace(/\s+/g, " ").trim();
-    }
-
-    function normalizePdfFileNameInput(value) {
-      return normalizeModelTitle(value)
-        .replace(/\.pdf$/i, "")
-        .replace(/[\/:*?"<>|]/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
     }
 
     function saveDraft(options = {}) {
@@ -7542,9 +7534,9 @@ ${buildPrintScopeCss()}
 
     function requestPhonePrintName() {
       const initialName = getPreferredSaveName();
-      const rawName = window.prompt("اكتب الاسم فقط بدون الامتداد", initialName);
+      const rawName = window.prompt("اكتب اسم ملف الـ PDF", initialName);
       if (rawName === null) return null;
-      const finalName = normalizePdfFileNameInput(rawName) || initialName;
+      const finalName = normalizeModelTitle(rawName) || initialName;
       state.saveName = finalName;
       const saveNameInput = document.getElementById("saveName");
       if (saveNameInput) saveNameInput.value = finalName;
@@ -7553,38 +7545,19 @@ ${buildPrintScopeCss()}
       return finalName;
     }
 
-    function invokeAndroidSystemPrint(documentName) {
-      const bridge = window.AndroidPrintBridge || window.NativePrintBridge || window.AppBridge;
-      if (!bridge) return false;
-
-      const candidateMethods = [
-        "openSystemPrintDialog",
-        "printCurrentPage",
-        "printDocument",
-        "openPrintDialog",
-        "printPdf",
-        "printPage"
-      ];
-
-      for (const methodName of candidateMethods) {
-        if (typeof bridge[methodName] !== "function") continue;
-        try {
-          bridge[methodName](documentName);
-          return true;
-        } catch (error) {
-          console.error(error);
-        }
-      }
-
-      return false;
-    }
-
-    async function handlePhonePrintAction() {
+    function handlePhonePrintAction() {
       if (window.innerWidth <= 920) {
+        const printWindow = window.open("", "_blank", "width=1100,height=900");
+        if (!printWindow) {
+          showToast("المتصفح منع نافذة الطباعة. افتح السماح للـ pop-ups وحاول مرة ثانية.", "error", { duration: 5600 });
+          return;
+        }
         const finalName = requestPhonePrintName();
-        if (!finalName) return;
-        if (invokeAndroidSystemPrint(finalName)) return;
-        openPrintWindow();
+        if (!finalName) {
+          try { printWindow.close(); } catch (error) {}
+          return;
+        }
+        openPrintWindow(printWindow);
         return;
       }
       openPrintWindow();
