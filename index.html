@@ -3300,11 +3300,517 @@
       }
     }
 
+
+    .mobile-shell {
+      display: none;
+    }
+
+    @media only screen and (max-width: 920px) {
+      html,
+      body {
+        width: 100%;
+        max-width: 100vw;
+        overflow-x: hidden !important;
+      }
+
+      body {
+        padding: 0 !important;
+        background: #eef3fb !important;
+      }
+
+      .app-shell,
+      .workspace,
+      .panel-stack,
+      .card,
+      .general-settings-section,
+      .advanced-card,
+      .advanced-card details,
+      .question-card,
+      .block-list > .block-item,
+      #previewPane {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+      }
+
+      .app-shell {
+        gap: 10px !important;
+      }
+
+      .hero,
+      .page-footer {
+        display: none !important;
+      }
+
+      .mobile-shell {
+        display: block !important;
+        position: sticky;
+        top: 0;
+        z-index: 120;
+        margin: 0;
+        padding: 10px;
+        background: linear-gradient(135deg, #274777 0%, #365a94 60%, #4f76b1 100%);
+        border-radius: 0 0 18px 18px;
+        box-shadow: 0 14px 28px rgba(27, 50, 89, .18);
+      }
+
+      .mobile-shell-title {
+        margin: 0 0 10px;
+        color: #fff;
+        font-size: 15px;
+        font-weight: 800;
+        line-height: 1.35;
+        text-align: center;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .mobile-shell-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+      }
+
+      .mobile-shell-actions .btn {
+        width: 100%;
+        min-width: 0;
+        min-height: 42px;
+        padding: 0 10px;
+        border-radius: 14px;
+        font-size: 13px;
+        font-weight: 800;
+        box-shadow: none;
+        justify-content: center;
+      }
+
+      .workspace {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        padding: 0 8px 14px !important;
+      }
+
+      .panel-stack {
+        position: static !important;
+        top: auto !important;
+        max-height: none !important;
+        height: auto !important;
+        overflow: visible !important;
+        gap: 10px !important;
+        padding-left: 0 !important;
+      }
+
+      .card,
+      .general-settings-section,
+      .advanced-card details,
+      .question-card,
+      .block-list > .block-item {
+        border-radius: 18px !important;
+      }
+
+      .card {
+        padding: 12px !important;
+      }
+
+      .card-header h2,
+      .general-settings-section-head h3,
+      .preview-toolbar h2 {
+        font-size: 16px !important;
+      }
+
+      .card-header p,
+      .general-settings-section-head p,
+      .preview-note {
+        font-size: 11px !important;
+        line-height: 1.65 !important;
+      }
+
+      .toolbar .field {
+        flex: 1 1 100% !important;
+        max-width: 100% !important;
+      }
+
+      .question-card > .question-top,
+      .block-list > .block-item > .question-top {
+        padding: 9px 9px 9px 10px !important;
+        gap: 6px !important;
+        border-radius: 15px !important;
+      }
+
+      .question-card > .question-top .inline-actions,
+      .block-list > .block-item > .question-top .inline-actions,
+      .question-card > .question-top .question-side-actions {
+        gap: 5px !important;
+        flex-wrap: wrap !important;
+      }
+
+      .question-top .btn,
+      .question-top .collapse-toggle {
+        min-height: 34px !important;
+        font-size: 11px !important;
+        padding: 6px 8px !important;
+      }
+
+      .question-top .collapse-toggle {
+        width: 34px !important;
+        padding: 0 !important;
+      }
+
+      .question-card > .question-top .chip,
+      .block-list > .block-item > .question-top .chip {
+        min-width: 52px !important;
+        min-height: 38px !important;
+        padding: 7px 8px !important;
+        border-radius: 13px !important;
+        font-size: 15px !important;
+      }
+
+      #previewPane {
+        padding-left: 0 !important;
+      }
+
+      #previewPane .sheet-stage {
+        position: relative !important;
+        width: 100% !important;
+        overflow: hidden !important;
+        padding: 8px 0 12px !important;
+        border-radius: 18px !important;
+        background: linear-gradient(180deg, rgba(241, 245, 252, .96), rgba(231, 238, 248, .94)) !important;
+      }
+
+      #previewPane .exam-sheet {
+        position: absolute !important;
+        top: 8px;
+        left: 50%;
+        width: 210mm !important;
+        min-width: 210mm !important;
+        max-width: none !important;
+        min-height: 297mm !important;
+        margin: 0 !important;
+        transform-origin: top center !important;
+      }
+
+      .scroll-top-btn {
+        bottom: 16px !important;
+        right: 14px !important;
+        width: 52px !important;
+        height: 52px !important;
+      }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      .question-card:not(.is-collapsed) > .question-top {
+        top: var(--mobile-question-sticky-top, 10px) !important;
+      }
+
+      .question-card:not(.is-collapsed) > .question-top [data-action="remove-question"] {
+        display: none !important;
+      }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      .question-card.mobile-fixed-sticky {
+        padding-top: var(--mobile-fixed-header-height, 0px) !important;
+      }
+
+      .question-card.mobile-fixed-sticky > .question-top {
+        position: fixed !important;
+        top: var(--mobile-question-sticky-top, 10px) !important;
+        z-index: 95 !important;
+        margin: 0 !important;
+        box-shadow: 0 14px 30px rgba(32, 54, 95, .16) !important;
+      }
+
+      .question-card.mobile-fixed-sticky > .question-top [data-action="remove-question"] {
+        display: none !important;
+      }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      .mobile-shell.is-compact {
+        padding: 6px 8px !important;
+        border-radius: 0 0 14px 14px !important;
+      }
+
+      .mobile-shell.is-compact .mobile-shell-title {
+        display: none !important;
+      }
+
+      .mobile-shell.is-compact .mobile-shell-actions {
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+      }
+
+      .mobile-shell.is-compact .mobile-shell-actions .btn {
+        min-height: 36px !important;
+        padding: 7px 4px !important;
+        border-radius: 12px !important;
+        font-size: 11px !important;
+      }
+
+      .toast-region {
+        top: var(--mobile-toast-top, 10px) !important;
+      }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      #previewPane .sheet-header {
+        grid-template-columns: var(--header-side-width, 48mm) minmax(0, 1fr) var(--header-side-width, 48mm) !important;
+        gap: 4px !important;
+      }
+
+      #previewPane .head-col.left {
+        padding-left: 2mm !important;
+      }
+
+      #previewPane .head-col.left .meta-stack {
+        margin-right: auto !important;
+        margin-left: 0 !important;
+        padding-left: 1.5mm !important;
+      }
+
+      #previewPane .exam-sheet {
+        padding: 24px 20px !important;
+      }
+    }
+
+    @media print {
+      .sheet-header {
+        grid-template-columns: var(--header-side-width, 48mm) minmax(0, 1fr) var(--header-side-width, 48mm) !important;
+        gap: 4px !important;
+      }
+
+      .head-col.left {
+        padding-left: 2mm !important;
+      }
+
+      .head-col.left .meta-stack {
+        margin-right: auto !important;
+        margin-left: 0 !important;
+        padding-left: 1.5mm !important;
+      }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      .mobile-shell-actions {
+        position: relative !important;
+        display: flex !important;
+        justify-content: flex-end !important;
+      }
+
+      .mobile-menu-toggle {
+        width: min(220px, 100%) !important;
+      }
+
+      .mobile-action-menu {
+        position: absolute;
+        right: 0;
+        bottom: calc(100% + 10px);
+        width: min(240px, calc(100vw - 28px));
+        display: grid;
+        gap: 8px;
+        padding: 10px;
+        border-radius: 18px;
+        background: rgba(255,255,255,.98);
+        border: 1px solid rgba(66, 98, 153, .16);
+        box-shadow: 0 18px 36px rgba(25, 45, 86, .18);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(8px);
+        pointer-events: none;
+        transition: opacity .18s ease, transform .18s ease, visibility .18s ease;
+      }
+
+      .mobile-shell-actions.is-open .mobile-action-menu {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .mobile-action-menu .btn {
+        width: 100% !important;
+      }
+
+      .toast-region {
+        top: 10px !important;
+        z-index: 9999 !important;
+      }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      .mobile-shell-actions.single-rotating-action {
+        display: flex !important;
+        justify-content: center !important;
+      }
+
+      .mobile-rotating-action {
+        width: min(210px, 72vw) !important;
+        min-height: 44px !important;
+        border-radius: 999px !important;
+        box-shadow: 0 10px 24px rgba(37, 63, 112, .18) !important;
+      }
+
+      .mobile-rotating-action.is-animating {
+        animation: mobileActionSwap .32s ease;
+      }
+    }
+
+    @keyframes mobileActionSwap {
+      0% { opacity: .55; transform: translateY(6px) scale(.98); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      .mobile-shell-actions.compact-header-actions {
+        display: grid !important;
+        grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+        gap: 6px !important;
+      }
+
+      .mobile-shell-actions.compact-header-actions .btn {
+        min-height: 36px !important;
+        padding: 7px 4px !important;
+        font-size: 11px !important;
+        border-radius: 12px !important;
+        letter-spacing: 0 !important;
+      }
+    }
+
+
+
+    @media only screen and (max-width: 920px) {
+      #generalSettingsCard.sticky-fold-card:not(.is-collapsed) > .fold-card-header,
+      .card.advanced-card #advancedSettingsCard[open] > summary {
+        position: sticky !important;
+        top: var(--mobile-question-sticky-top, 10px) !important;
+        z-index: 70 !important;
+        background: rgba(255, 255, 255, 0.96) !important;
+        backdrop-filter: blur(10px) !important;
+        box-shadow: 0 12px 24px rgba(33, 53, 85, 0.10) !important;
+      }
+
+      #generalSettingsCard.sticky-fold-card:not(.is-collapsed) > .fold-card-header {
+        border-radius: 18px !important;
+      }
+
+      .card.advanced-card #advancedSettingsCard[open] > summary {
+        border-radius: 18px !important;
+      }
+
+      .scroll-top-btn {
+        left: 12px !important;
+        right: auto !important;
+        bottom: 14px !important;
+        width: 46px !important;
+        height: 46px !important;
+        border-radius: 50% !important;
+        background: linear-gradient(180deg, #f05a5a, #d93636) !important;
+        box-shadow: 0 10px 20px rgba(166, 33, 33, 0.22), inset 0 1px 0 rgba(255,255,255,.35) !important;
+        border: 1px solid rgba(255,255,255,.32) !important;
+        font-size: 22px !important;
+        z-index: 140 !important;
+      }
+
+      .scroll-top-btn[data-mode="return"] {
+        background: linear-gradient(180deg, #db4a4a, #be2727) !important;
+      }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      .scroll-top-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+      }
+
+      .scroll-top-btn .jump-btn-icon {
+        line-height: 1;
+        transform: translateY(-1px);
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .scroll-top-btn[data-mode="preview"] .jump-btn-icon::before,
+      .scroll-top-btn[data-mode="return"] .jump-btn-icon::before {
+        content: "";
+      }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      .question-card.header-is-sticky > .question-top {
+        padding: 6px 7px !important;
+        gap: 4px !important;
+      }
+
+      .question-card.header-is-sticky > .question-top .inline-actions,
+      .question-card.header-is-sticky > .question-top .question-side-actions {
+        gap: 4px !important;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        scrollbar-width: none;
+      }
+
+      .question-card.header-is-sticky > .question-top .inline-actions::-webkit-scrollbar,
+      .question-card.header-is-sticky > .question-top .question-side-actions::-webkit-scrollbar {
+        display: none;
+      }
+
+      .question-card.header-is-sticky > .question-top .question-side-actions .btn,
+      .question-card.header-is-sticky > .question-top .collapse-toggle,
+      .question-card.header-is-sticky > .question-top .header-sticky-add-btn,
+      .question-card.header-is-sticky > .question-top .header-add-branch-btn,
+      .question-card.header-is-sticky > .question-top .header-add-block-item-btn,
+      .question-card.header-is-sticky > .question-top [data-action="open-symbols-context"] {
+        min-height: 28px !important;
+        height: 28px !important;
+        padding: 4px 7px !important;
+        border-radius: 9px !important;
+        font-size: 9.5px !important;
+        white-space: nowrap !important;
+        flex: 0 0 auto !important;
+      }
+
+      .question-card.header-is-sticky > .question-top .collapse-toggle {
+        width: 28px !important;
+        padding: 0 !important;
+      }
+
+      .question-card.header-is-sticky > .question-top .chip {
+        min-width: 44px !important;
+        min-height: 32px !important;
+        padding: 5px 7px !important;
+        border-radius: 11px !important;
+        font-size: 13px !important;
+        flex: 0 0 auto !important;
+      }
+    }
+
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
 <body>
   <div class="app-shell">
+    <section class="mobile-shell" aria-label="شريط أوامر الهاتف">
+      <h1 class="mobile-shell-title">منشئ الأسئلة الامتحانية الاحترافي</h1>
+      <div class="mobile-shell-actions compact-header-actions">
+        <button class="btn btn-primary" id="mobileNewBtn" type="button">جديد</button>
+        <button class="btn btn-soft" id="mobileSaveAsBtn" type="button">حفظ باسم</button>
+        <button class="btn btn-accent" id="mobilePrintBtn" type="button">طباعة</button>
+        <button class="btn btn-soft" id="mobileSaveBtn" type="button">حفظ</button>
+      </div>
+    </section>
+
     <section class="hero">
       <div>
         <h1>منشئ الأسئلة الامتحانية الاحترافي</h1>
@@ -3442,7 +3948,6 @@
             <summary>
               <div class="advanced-summary-text">
                 <h2>إعدادات متقدمة للطباعة</h2>
-                <p>هذه الخانة اختيارية واحترافية. تتحكم بالهيدر والملاحظة والأسئلة والتوقيع بدقة كاملة حتى تبقى الطباعة مرتبة ومرنة.</p>
               </div>
               <span class="advanced-pill">احترافي</span>
             </summary>
@@ -3888,7 +4393,7 @@
             <button class="btn btn-primary" id="addQuestionBtn">إضافة سؤال جديد</button>
           </div>
           <div class="muted-box">
-            هذا المحرر مرن: كل سؤال تقدر تضيف بداخله عناصر من أنواع مختلفة مثل
+            هذا المحرر مرن: كل سؤال تقدر تضيف بداخله افرع مختلفة مثل
             <strong>نص عادي، فراغات، تعاريف، نقاط</strong>.
           </div>
           <div id="questionsEditor" style="margin-top:12px;"></div>
@@ -3915,7 +4420,7 @@
   </div>
 
 
-  <button type="button" class="scroll-top-btn" id="scrollTopBtn" aria-label="الرجوع إلى أعلى">↑</button>
+  <button type="button" class="scroll-top-btn" id="scrollTopBtn" aria-label="الانتقال إلى المعاينة" data-mode="preview"><span class="jump-btn-icon">⤓</span></button>
 
   <footer class="page-footer" aria-label="حقوق النشر">جميع الحقوق محفوظة للمبرمج أحمد البياتي @ 2026</footer>
 
@@ -5789,6 +6294,39 @@
       balanceHeaderColumns();
       applyAdaptiveDefinitions(sheet);
       convertRenderedDigitsToEnglish(sheet);
+      syncPhonePreviewScale();
+    }
+
+    function syncPhonePreviewScale() {
+      const sheet = document.getElementById("sheetPreview");
+      const stage = sheet ? sheet.closest(".sheet-stage") : null;
+      if (!sheet || !stage) return;
+
+      const isPhone = window.innerWidth <= 920;
+      if (!isPhone) {
+        sheet.style.position = "";
+        sheet.style.top = "";
+        sheet.style.left = "";
+        sheet.style.transform = "";
+        stage.style.height = "";
+        stage.style.minHeight = "";
+        return;
+      }
+
+      const availableWidth = Math.max(0, stage.clientWidth - 4);
+      if (!availableWidth) return;
+
+      sheet.style.position = "absolute";
+      sheet.style.top = "8px";
+      sheet.style.left = "50%";
+      sheet.style.transform = "translateX(-50%) scale(1)";
+      const naturalWidth = sheet.offsetWidth || 1;
+      const naturalHeight = sheet.offsetHeight || 1;
+      const scale = Math.min(1, availableWidth / naturalWidth);
+      sheet.style.transform = `translateX(-50%) scale(${scale})`;
+      const scaledHeight = Math.ceil(naturalHeight * scale);
+      stage.style.height = `${scaledHeight + 16}px`;
+      stage.style.minHeight = `${scaledHeight + 16}px`;
     }
 
     function applyAdaptiveDefinitions(root = document) {
@@ -6795,6 +7333,56 @@ ${buildPrintScopeCss()}
       printWindow.document.close();
     }
 
+    function bindMobileRotatingAction() {
+      const smartBtn = document.getElementById("mobileSmartActionBtn");
+      if (!smartBtn) return;
+
+      const actions = [
+        { key: "new", label: "جديد", run: () => resetState() },
+        { key: "saveAs", label: "حفظ باسم", run: () => scrollToQuickSavePanel() },
+        { key: "print", label: "طباعة", run: () => openPrintWindow() },
+        { key: "save", label: "حفظ", run: () => saveModel() }
+      ];
+
+      let actionIndex = 0;
+      let rotateTimer = null;
+
+      const applyAction = (index) => {
+        actionIndex = index % actions.length;
+        const current = actions[actionIndex];
+        smartBtn.dataset.actionKey = current.key;
+        smartBtn.classList.remove("is-animating");
+        void smartBtn.offsetWidth;
+        smartBtn.textContent = current.label;
+        smartBtn.classList.add("is-animating");
+      };
+
+      const rotateAction = () => {
+        applyAction((actionIndex + 1) % actions.length);
+      };
+
+      const restartTimer = () => {
+        if (rotateTimer) clearInterval(rotateTimer);
+        rotateTimer = window.setInterval(() => {
+          if (document.hidden) return;
+          rotateAction();
+        }, 2200);
+      };
+
+      smartBtn.addEventListener("click", () => {
+        const current = actions[actionIndex];
+        current.run();
+        restartTimer();
+      });
+
+      window.addEventListener("visibilitychange", () => {
+        if (!document.hidden) restartTimer();
+      });
+
+      applyAction(0);
+      restartTimer();
+    }
+
     function bindMainButtons() {
       document.getElementById("addQuestionBtn").addEventListener("click", addQuestion);
       document.getElementById("heroNewBtn").addEventListener("click", resetState);
@@ -6804,6 +7392,10 @@ ${buildPrintScopeCss()}
       document.getElementById("newBtn").addEventListener("click", resetState);
       document.getElementById("printBtn")?.addEventListener("click", openPrintWindow);
       document.getElementById("printTopBtn").addEventListener("click", openPrintWindow);
+      document.getElementById("mobileNewBtn")?.addEventListener("click", resetState);
+      document.getElementById("mobileSaveBtn")?.addEventListener("click", saveModel);
+      document.getElementById("mobileSaveAsBtn")?.addEventListener("click", scrollToQuickSavePanel);
+      document.getElementById("mobilePrintBtn")?.addEventListener("click", openPrintWindow);
     }
 
     function bindDelegation() {
@@ -7058,17 +7650,71 @@ ${buildPrintScopeCss()}
     function syncHeroStickyState() {
       const hero = document.querySelector(".hero");
       const panelStack = document.querySelector(".panel-stack");
-      if (!hero) return;
+      const mobileShell = document.querySelector(".mobile-shell");
       const pageScroll = window.scrollY || document.documentElement.scrollTop || 0;
       const panelScroll = panelStack ? panelStack.scrollTop : 0;
-      hero.classList.toggle("is-compact", Math.max(pageScroll, panelScroll) > 18);
+      const compact = Math.max(pageScroll, panelScroll) > 18;
+      if (hero) hero.classList.toggle("is-compact", compact);
+      if (mobileShell) mobileShell.classList.toggle("is-compact", compact);
+    }
+
+    function syncMobileQuestionHeaderOffset() {
+      const isPhone = window.innerWidth <= 920;
+      const mobileShell = document.querySelector(".mobile-shell");
+      const shellHeight = isPhone && mobileShell ? Math.ceil(mobileShell.getBoundingClientRect().height) : 0;
+      const offset = isPhone ? shellHeight + 8 : 10;
+      document.documentElement.style.setProperty("--mobile-question-sticky-top", `${offset}px`);
+      document.documentElement.style.setProperty("--mobile-toast-top", `${offset}px`);
+      return offset;
+    }
+
+    function clearMobileFixedStickyHeaders() {
+      document.querySelectorAll(".question-card.mobile-fixed-sticky").forEach(card => {
+        card.classList.remove("mobile-fixed-sticky");
+        card.style.removeProperty("--mobile-fixed-header-height");
+        const header = Array.from(card.children).find(child => child.classList && child.classList.contains("question-top"));
+        if (!header) return;
+        header.style.left = "";
+        header.style.width = "";
+      });
+    }
+
+    function syncMobileFixedStickyHeaders(stickyOffset) {
+      clearMobileFixedStickyHeaders();
+      if (window.innerWidth > 920) return;
+
+      let activeCard = null;
+      let activeHeader = null;
+      const activationLine = 8;
+      document.querySelectorAll(".question-card").forEach(card => {
+        const header = Array.from(card.children).find(child => child.classList && child.classList.contains("question-top"));
+        if (!header || card.classList.contains("is-collapsed")) return;
+        const headerRect = header.getBoundingClientRect();
+        const cardRect = card.getBoundingClientRect();
+        if (headerRect.top <= activationLine && cardRect.bottom > stickyOffset + headerRect.height + 10) {
+          activeCard = card;
+          activeHeader = header;
+        }
+      });
+
+      if (!activeCard || !activeHeader) return;
+      const cardRect = activeCard.getBoundingClientRect();
+      const headerHeight = activeHeader.offsetHeight || 0;
+      activeCard.classList.add("mobile-fixed-sticky");
+      activeCard.style.setProperty("--mobile-fixed-header-height", `${headerHeight + 8}px`);
+      activeHeader.style.left = `${Math.round(cardRect.left)}px`;
+      activeHeader.style.width = `${Math.round(cardRect.width)}px`;
     }
 
     function syncStickyQuestionHeaders() {
-      const stickyOffset = 10;
+      const stickyOffset = syncMobileQuestionHeaderOffset();
+      syncMobileFixedStickyHeaders(stickyOffset);
       const panelStack = document.querySelector(".panel-stack");
-      const containerTop = panelStack ? panelStack.getBoundingClientRect().top : 0;
-      const stickyLine = containerTop + stickyOffset;
+      const panelStyle = panelStack ? window.getComputedStyle(panelStack) : null;
+      const panelActsAsScrollContainer = !!panelStack && ((panelStyle?.overflowY && panelStyle.overflowY !== "visible") || panelStack.scrollHeight > panelStack.clientHeight + 4);
+      const stickyLine = panelActsAsScrollContainer
+        ? panelStack.getBoundingClientRect().top + stickyOffset
+        : stickyOffset;
 
       document.querySelectorAll(".question-card").forEach(card => {
         const header = Array.from(card.children).find(child => child.classList && child.classList.contains("question-top"));
@@ -7087,25 +7733,73 @@ ${buildPrintScopeCss()}
       });
     }
 
-    function toggleScrollTopButton() {
+    let phonePreviewReturnScrollY = 0;
+    let phonePreviewJumpActive = false;
+
+    function setPhonePreviewJumpButton(mode) {
       const button = document.getElementById("scrollTopBtn");
-      const panelStack = document.querySelector(".panel-stack");
       if (!button) return;
-      const pageScroll = window.scrollY || document.documentElement.scrollTop || 0;
-      const panelScroll = panelStack ? panelStack.scrollTop : 0;
-      const shouldShow = Math.max(pageScroll, panelScroll) > 120;
-      button.classList.toggle("is-visible", shouldShow);
-      syncHeroStickyState();
-      syncStickyQuestionHeaders();
+      const icon = mode === "return" ? "↺" : "⤓";
+      button.dataset.mode = mode;
+      button.innerHTML = `<span class="jump-btn-icon">${icon}</span>`;
+      button.setAttribute("aria-label", mode === "return" ? "الرجوع إلى نفس المكان السابق" : "الانتقال إلى معاينة الأسئلة");
     }
 
-    function scrollToEditorTop() {
-      const panelStack = document.querySelector(".panel-stack");
-      if (panelStack && panelStack.scrollTop > 0) {
-        panelStack.scrollTo({ top: 0, behavior: "smooth" });
+    function syncPhonePreviewJumpState() {
+      const button = document.getElementById("scrollTopBtn");
+      const previewPane = document.getElementById("previewPane");
+      if (!button || !previewPane || window.innerWidth > 920) {
+        if (button) button.classList.remove("is-visible");
+        return;
       }
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      setTimeout(toggleScrollTopButton, 260);
+
+      const currentY = window.scrollY || document.documentElement.scrollTop || 0;
+      const previewTop = previewPane.getBoundingClientRect().top + currentY;
+      const nearPreview = currentY >= Math.max(0, previewTop - 80);
+      const shouldShow = currentY > 60 || nearPreview || phonePreviewJumpActive;
+      button.classList.toggle("is-visible", shouldShow);
+
+      if (phonePreviewJumpActive) {
+        setPhonePreviewJumpButton("return");
+      } else {
+        if (!nearPreview) phonePreviewJumpActive = false;
+        setPhonePreviewJumpButton("preview");
+      }
+    }
+
+    function toggleScrollTopButton() {
+      syncHeroStickyState();
+      syncStickyQuestionHeaders();
+      syncPhonePreviewJumpState();
+    }
+
+    function handlePhonePreviewJump() {
+      const previewPane = document.getElementById("previewPane");
+      if (!previewPane) return;
+
+      const currentY = window.scrollY || document.documentElement.scrollTop || 0;
+      if (window.innerWidth > 920) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        setTimeout(toggleScrollTopButton, 260);
+        return;
+      }
+
+      if (!phonePreviewJumpActive) {
+        phonePreviewReturnScrollY = currentY;
+        phonePreviewJumpActive = true;
+        setPhonePreviewJumpButton("return");
+        const shellOffset = syncMobileQuestionHeaderOffset() + 10;
+        const previewTop = previewPane.getBoundingClientRect().top + currentY - shellOffset;
+        window.scrollTo({ top: Math.max(0, previewTop), behavior: "smooth" });
+      } else {
+        const returnY = Math.max(0, phonePreviewReturnScrollY || 0);
+        phonePreviewJumpActive = false;
+        setPhonePreviewJumpButton("preview");
+        window.scrollTo({ top: returnY, behavior: "smooth" });
+      }
+
+      setTimeout(toggleScrollTopButton, 180);
+      setTimeout(toggleScrollTopButton, 520);
     }
 
     function bindSymbolDrawer() {
@@ -7154,9 +7848,13 @@ ${buildPrintScopeCss()}
     bindDelegation();
     bindEnterFieldNavigation();
     window.addEventListener("resize", balanceHeaderColumns);
+    window.addEventListener("resize", syncMobileQuestionHeaderOffset, { passive: true });
+    window.addEventListener("resize", syncPhonePreviewScale, { passive: true });
+    window.addEventListener("orientationchange", syncMobileQuestionHeaderOffset, { passive: true });
+    window.addEventListener("orientationchange", syncPhonePreviewScale, { passive: true });
     window.addEventListener("scroll", toggleScrollTopButton, { passive: true });
     document.querySelector(".panel-stack")?.addEventListener("scroll", toggleScrollTopButton, { passive: true });
-    document.getElementById("scrollTopBtn").addEventListener("click", scrollToEditorTop);
+    document.getElementById("scrollTopBtn").addEventListener("click", handlePhonePreviewJump);
     bindSymbolDrawer();
   </script>
 </body>
