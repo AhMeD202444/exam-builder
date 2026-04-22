@@ -4989,16 +4989,40 @@
         if (el) el.value = value ?? "";
       });
 
+      if (shouldAutoSyncExamType(state.meta.examType)) {
+        state.meta.examType = buildAutoExamType(state.meta.round);
+        const examTypeEl = document.getElementById("examType");
+        if (examTypeEl) examTypeEl.value = state.meta.examType;
+      }
+
       fillPrintSettingsFields();
     }
 
+    function buildAutoExamType(roundValue) {
+      const normalizedRound = String(roundValue || "").trim() || "الدور الأول";
+      return `أسئلة الامتحانات النهائية / ${normalizedRound}`;
+    }
+
+    function shouldAutoSyncExamType(currentExamType) {
+      const normalizedExamType = String(currentExamType || "").trim();
+      return !normalizedExamType || normalizedExamType.startsWith("أسئلة الامتحانات النهائية /");
+    }
+
     function syncStaticField(id, value) {
+      const previousExamType = state.meta.examType;
+
       if (["administration","schoolName","basmala","subject","examType","grade","round","academicYear","examDate","note"].includes(id)) {
         state.meta[id] = value;
       } else if (["rightTitle","rightName","leftTitle","leftName"].includes(id)) {
         state.signatures[id] = value;
       } else if (id === "saveName") {
         state.saveName = value;
+      }
+
+      if (id === "round" && shouldAutoSyncExamType(previousExamType)) {
+        state.meta.examType = buildAutoExamType(value);
+        const examTypeEl = document.getElementById("examType");
+        if (examTypeEl) examTypeEl.value = state.meta.examType;
       }
 
       saveDraft();
