@@ -6137,9 +6137,10 @@
             <div class="chip">${escapeHtml(toArabicDigits(block.label || nextLabel(bIndex)))}</div>
           </div>
           <div class="inline-actions">
-            <button class="btn btn-soft" data-action="duplicate-block" data-q="${qIndex}" data-b="${bIndex}">نسخ الفرع</button>
-            <button class="btn btn-danger" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}">حذف الفرع</button>
+            <button class="btn btn-soft branch-duplicate-btn mobile-hide-on-branch-header" data-action="duplicate-block" data-q="${qIndex}" data-b="${bIndex}">نسخ الفرع</button>
+            <button class="btn btn-danger branch-remove-btn" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}">حذف الفرع</button>
             ${renderSymbolButton()}
+            <button class="btn btn-success branch-add-btn mobile-only-branch-add-btn" data-action="add-sticky-branch" data-q="${qIndex}">إضافة فرع</button>
           </div>
         </div>
         <div class="grid-3">
@@ -7518,6 +7519,69 @@ ${buildPrintScopeCss()}
         grid-template-columns: 1fr;
       }
     }
+
+    .mobile-only-branch-add-btn {
+      display: none;
+    }
+
+    @media only screen and (max-width: 920px) {
+      .block-list > .block-item > .question-top {
+        direction: ltr !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+      }
+
+      .block-list > .block-item > .question-top .inline-actions {
+        order: 1 !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        flex-wrap: nowrap !important;
+        direction: ltr !important;
+        overflow-x: hidden !important;
+      }
+
+      .block-list > .block-item > .question-top .head-main {
+        order: 2 !important;
+        flex: 0 0 auto !important;
+        margin-left: 8px !important;
+      }
+
+      .block-list > .block-item > .question-top .inline-actions .btn {
+        flex: 1 1 0 !important;
+        min-width: 0 !important;
+        justify-content: center !important;
+        white-space: nowrap !important;
+        padding: 6px 8px !important;
+        font-size: 11px !important;
+      }
+
+      .block-list > .block-item > .question-top [data-action="open-symbols-context"] {
+        order: 1 !important;
+      }
+
+      .block-list > .block-item > .question-top .branch-remove-btn {
+        order: 2 !important;
+      }
+
+      .block-list > .block-item > .question-top .mobile-only-branch-add-btn {
+        order: 3 !important;
+        display: inline-flex !important;
+      }
+
+      .block-list > .block-item > .question-top .mobile-hide-on-branch-header {
+        display: none !important;
+      }
+
+      .block-list > .block-item > .question-top .chip {
+        direction: rtl !important;
+      }
+    }
+
   </style>
 </head>
 <body>
