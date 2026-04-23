@@ -3857,35 +3857,45 @@
         padding-bottom: calc(34px + env(safe-area-inset-bottom)) !important;
       }
 
+      .app-shell > *:first-child {
+        margin-top: 14px !important;
+      }
+
       .page-footer {
-        display: flex !important;
-        align-items: flex-start !important;
-        justify-content: center !important;
-        left: 50% !important;
-        right: auto !important;
+        left: 8px !important;
+        right: 8px !important;
         bottom: 0 !important;
-        width: calc(100% - 12px) !important;
-        transform: translateX(-50%) !important;
-        min-height: 24px !important;
-        padding: 5px 12px calc(2px + env(safe-area-inset-bottom)) !important;
-        border-radius: 14px !important;
-        font-size: 11.8px !important;
-        line-height: 1.08 !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        text-overflow: ellipsis !important;
-        box-shadow: 0 5px 12px rgba(24, 39, 66, 0.10) !important;
-        z-index: 108 !important;
-        transition: bottom .18s ease, min-height .18s ease, padding .18s ease, font-size .18s ease, box-shadow .18s ease !important;
+        width: auto !important;
+        margin: 0 !important;
+        border-radius: 22px 22px 0 0 !important;
+        padding: 11px 14px calc(11px + env(safe-area-inset-bottom, 0px)) !important;
+        min-height: 60px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        text-align: center !important;
+      }
+
+      .page-footer .footer-copy {
+        width: 100% !important;
+        margin: 0 auto !important;
+        display: block !important;
+        text-align: center !important;
       }
 
       .page-footer.is-compact {
-        bottom: calc(-1 * var(--mobile-footer-compact-sink, 22px)) !important;
-        min-height: var(--mobile-footer-compact-visible, 22px) !important;
-        padding: 3px 12px calc(env(safe-area-inset-bottom)) !important;
-        font-size: 12.4px !important;
-        line-height: 1 !important;
-        box-shadow: 0 4px 10px rgba(24, 39, 66, 0.08) !important;
+        bottom: 0 !important;
+        padding: 6px 14px calc(5px + env(safe-area-inset-bottom, 0px)) !important;
+        min-height: var(--mobile-footer-compact-height, 56px) !important;
+        height: var(--mobile-footer-compact-height, 56px) !important;
+        max-height: var(--mobile-footer-compact-height, 56px) !important;
+        border-radius: 18px 18px 0 0 !important;
+        overflow: hidden !important;
+      }
+
+      .page-footer.is-compact .footer-copy {
+        font-size: 12px !important;
+        line-height: 1.18 !important;
       }
 
       .scroll-top-btn {
@@ -7945,20 +7955,28 @@ ${buildPrintScopeCss()}
     function syncMobileQuestionHeaderOffset() {
       const isPhone = window.innerWidth <= 920;
       const mobileShell = document.querySelector(".mobile-shell");
+      const pageFooter = document.querySelector(".page-footer");
       const shellHeight = isPhone && mobileShell ? Math.ceil(mobileShell.getBoundingClientRect().height) : 0;
+      let compactShellHeight = 56;
+      if (isPhone && mobileShell) {
+        const wasCompact = mobileShell.classList.contains("is-compact");
+        if (!wasCompact) mobileShell.classList.add("is-compact");
+        compactShellHeight = Math.ceil(mobileShell.getBoundingClientRect().height) || 56;
+        if (!wasCompact) mobileShell.classList.remove("is-compact");
+      }
       if (isPhone && shellHeight > 0) {
-        const compactFooterVisible = Math.max(22, Math.round(shellHeight * 0.44));
-        const compactFooterSink = Math.max(18, Math.round(shellHeight * 0.42));
         document.documentElement.style.setProperty("--mobile-shell-current-height", `${shellHeight}px`);
-        document.documentElement.style.setProperty("--mobile-footer-compact-visible", `${compactFooterVisible}px`);
-        document.documentElement.style.setProperty("--mobile-footer-compact-sink", `${compactFooterSink}px`);
-        if (mobileShell.classList.contains("is-compact")) {
-          document.documentElement.style.setProperty("--mobile-compact-shell-height", `${shellHeight}px`);
-        }
+        document.documentElement.style.setProperty("--mobile-compact-shell-height", `${compactShellHeight}px`);
+        document.documentElement.style.setProperty("--mobile-footer-compact-height", `${compactShellHeight}px`);
       }
       const offset = isPhone ? shellHeight + 1 : 10;
+      document.documentElement.style.setProperty("--mobile-fixed-header-height", `${offset}px`);
       document.documentElement.style.setProperty("--mobile-question-sticky-top", `${offset}px`);
       document.documentElement.style.setProperty("--mobile-toast-top", `${offset}px`);
+      if (pageFooter && isPhone) {
+        const footerHeight = Math.ceil(pageFooter.getBoundingClientRect().height) || 60;
+        document.documentElement.style.setProperty("--mobile-fixed-footer-height", `${footerHeight}px`);
+      }
       return offset;
     }
 
