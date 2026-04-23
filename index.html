@@ -3348,7 +3348,7 @@
         top: 0;
         z-index: 120;
         margin: 0;
-        padding: 10px;
+        padding: 12px 10px 10px;
         background: linear-gradient(135deg, #274777 0%, #365a94 60%, #4f76b1 100%);
         border-radius: 0 0 18px 18px;
         box-shadow: 0 14px 28px rgba(27, 50, 89, .18);
@@ -3356,6 +3356,7 @@
 
       .mobile-shell-title {
         margin: 0 0 10px;
+        padding-top: 2px;
         color: #fff;
         font-size: 15px;
         font-weight: 800;
@@ -3848,7 +3849,7 @@
 
       .mobile-shell-title {
         margin-top: 0 !important;
-        padding-top: 0 !important;
+        padding-top: 4px !important;
       }
 
       .app-shell {
@@ -3862,14 +3863,14 @@
         justify-content: center !important;
         left: 50% !important;
         right: auto !important;
-        bottom: 2px !important;
-        width: calc(100% - 16px) !important;
+        bottom: 0 !important;
+        width: calc(100% - 12px) !important;
         transform: translateX(-50%) !important;
-        min-height: 18px !important;
-        padding: 3px 10px calc(1px + env(safe-area-inset-bottom)) !important;
+        min-height: 16px !important;
+        padding: 2px 10px calc(1px + env(safe-area-inset-bottom)) !important;
         border-radius: 14px !important;
-        font-size: 9.3px !important;
-        line-height: 1 !important;
+        font-size: 10.1px !important;
+        line-height: 1.04 !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
@@ -3879,9 +3880,10 @@
       }
 
       .page-footer.is-compact {
-        min-height: 14px !important;
-        padding: 2px 10px calc(1px + env(safe-area-inset-bottom)) !important;
-        font-size: 8.5px !important;
+        min-height: 12px !important;
+        padding: 1px 10px calc(1px + env(safe-area-inset-bottom)) !important;
+        font-size: 9.2px !important;
+        line-height: 1 !important;
         box-shadow: 0 4px 10px rgba(24, 39, 66, 0.08) !important;
       }
 
@@ -5755,7 +5757,7 @@
       if (nextCollapsed) {
         requestAnimationFrame(() => {
           const addQuestionButton = document.getElementById("addQuestionBtn");
-          scrollTargetBelowStickyHero(addQuestionButton);
+          scrollTargetBelowStickyHero(addQuestionButton, 28);
         });
       }
     }
