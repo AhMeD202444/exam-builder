@@ -7945,6 +7945,12 @@ ${buildPrintScopeCss()}
       const isPhone = window.innerWidth <= 920;
       const mobileShell = document.querySelector(".mobile-shell");
       const shellHeight = isPhone && mobileShell ? Math.ceil(mobileShell.getBoundingClientRect().height) : 0;
+      if (isPhone && shellHeight > 0) {
+        document.documentElement.style.setProperty("--mobile-shell-current-height", `${shellHeight}px`);
+        if (mobileShell.classList.contains("is-compact")) {
+          document.documentElement.style.setProperty("--mobile-compact-shell-height", `${shellHeight}px`);
+        }
+      }
       const offset = isPhone ? shellHeight + 1 : 10;
       document.documentElement.style.setProperty("--mobile-question-sticky-top", `${offset}px`);
       document.documentElement.style.setProperty("--mobile-toast-top", `${offset}px`);
