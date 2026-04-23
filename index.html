@@ -3842,8 +3842,13 @@
         width: calc(100% - 10px) !important;
         max-width: 720px !important;
         transform: translateX(-50%) !important;
-        padding: calc(2px + env(safe-area-inset-top)) 10px 8px !important;
+        padding: 0 10px 8px !important;
         z-index: 125 !important;
+      }
+
+      .mobile-shell-title {
+        margin-top: 0 !important;
+        padding-top: 0 !important;
       }
 
       .app-shell {
@@ -3860,16 +3865,24 @@
         bottom: 2px !important;
         width: calc(100% - 16px) !important;
         transform: translateX(-50%) !important;
-        min-height: 16px !important;
-        padding: 2px 10px calc(1px + env(safe-area-inset-bottom)) !important;
+        min-height: 18px !important;
+        padding: 3px 10px calc(1px + env(safe-area-inset-bottom)) !important;
         border-radius: 14px !important;
-        font-size: 8.8px !important;
+        font-size: 9.3px !important;
         line-height: 1 !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
         box-shadow: 0 5px 12px rgba(24, 39, 66, 0.10) !important;
         z-index: 108 !important;
+        transition: min-height .16s ease, padding .16s ease, font-size .16s ease, box-shadow .16s ease !important;
+      }
+
+      .page-footer.is-compact {
+        min-height: 14px !important;
+        padding: 2px 10px calc(1px + env(safe-area-inset-bottom)) !important;
+        font-size: 8.5px !important;
+        box-shadow: 0 4px 10px rgba(24, 39, 66, 0.08) !important;
       }
 
       .scroll-top-btn {
@@ -7916,12 +7929,14 @@ ${buildPrintScopeCss()}
       const hero = document.querySelector(".hero");
       const panelStack = document.querySelector(".panel-stack");
       const mobileShell = document.querySelector(".mobile-shell");
+      const pageFooter = document.querySelector(".page-footer");
       const pageScroll = window.scrollY || document.documentElement.scrollTop || 0;
       const panelScroll = panelStack ? panelStack.scrollTop : 0;
       const compactThreshold = window.innerWidth <= 920 ? 8 : 18;
       const compact = Math.max(pageScroll, panelScroll) > compactThreshold;
       if (hero) hero.classList.toggle("is-compact", compact);
       if (mobileShell) mobileShell.classList.toggle("is-compact", compact);
+      if (pageFooter) pageFooter.classList.toggle("is-compact", compact && window.innerWidth <= 920);
     }
 
     function syncMobileQuestionHeaderOffset() {
