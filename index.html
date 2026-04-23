@@ -3842,7 +3842,7 @@
         width: calc(100% - 10px) !important;
         max-width: 720px !important;
         transform: translateX(-50%) !important;
-        padding-top: calc(8px + env(safe-area-inset-top)) !important;
+        padding: calc(2px + env(safe-area-inset-top)) 10px 8px !important;
         z-index: 125 !important;
       }
 
@@ -3853,20 +3853,22 @@
 
       .page-footer {
         display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
         left: 50% !important;
         right: auto !important;
         bottom: 2px !important;
         width: calc(100% - 16px) !important;
         transform: translateX(-50%) !important;
-        min-height: 18px !important;
-        padding: 3px 10px calc(2px + env(safe-area-inset-bottom)) !important;
+        min-height: 16px !important;
+        padding: 2px 10px calc(1px + env(safe-area-inset-bottom)) !important;
         border-radius: 14px !important;
-        font-size: 8.15px !important;
-        line-height: 1.05 !important;
+        font-size: 8.8px !important;
+        line-height: 1 !important;
         white-space: nowrap !important;
         overflow: hidden !important;
         text-overflow: ellipsis !important;
-        box-shadow: 0 5px 12px rgba(24, 39, 66, 0.12) !important;
+        box-shadow: 0 5px 12px rgba(24, 39, 66, 0.10) !important;
         z-index: 108 !important;
       }
 
