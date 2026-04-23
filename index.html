@@ -2095,7 +2095,7 @@
       width: min(980px, calc(100vw - 20px));
       max-height: 78vh;
       overflow: auto;
-      background: rgba(255,255,255,0.98);
+      background: linear-gradient(180deg, rgba(255,255,255,0.99), rgba(246, 250, 255, 0.98));
       border-radius: 24px;
       box-shadow: 0 24px 60px rgba(15, 23, 42, 0.22);
       padding: 18px 18px 20px;
@@ -2131,10 +2131,19 @@
       padding: 8px 12px;
       font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 8px 16px rgba(28, 51, 92, 0.08);
     }
 
     .symbol-group + .symbol-group {
       margin-top: 14px;
+    }
+
+    .symbol-group {
+      background: linear-gradient(180deg, rgba(255,255,255,0.96), rgba(245,249,255,0.92));
+      border: 1px solid rgba(98, 127, 178, 0.14);
+      border-radius: 18px;
+      padding: 12px;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.75), 0 10px 22px rgba(31, 52, 88, 0.06);
     }
 
     .symbol-group h4 {
@@ -2155,17 +2164,103 @@
 
     .symbol-chip {
       border: 1px solid rgba(37, 73, 122, 0.14);
-      background: #f8fbff;
+      background: linear-gradient(180deg, #ffffff 0%, #eff5ff 100%);
       color: #16324f;
-      border-radius: 12px;
+      border-radius: 14px;
       padding: 10px 8px;
+      min-height: 50px;
       font-size: 17px;
       font-weight: 800;
       cursor: pointer;
+      box-shadow: 0 8px 16px rgba(32, 54, 95, 0.06), inset 0 1px 0 rgba(255,255,255,0.85);
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
     }
 
     .symbol-chip:hover {
-      background: #eef5ff;
+      background: linear-gradient(180deg, #fdfefe 0%, #e8f1ff 100%);
+      box-shadow: 0 10px 18px rgba(32, 54, 95, 0.09), inset 0 1px 0 rgba(255,255,255,0.9);
+    }
+
+    .symbol-chip:active {
+      transform: scale(0.97);
+    }
+
+    @media only screen and (max-width: 920px) {
+      body.symbols-open #scrollTopBtn {
+        opacity: 0 !important;
+        pointer-events: none !important;
+      }
+
+      .symbol-drawer {
+        inset: var(--symbol-drawer-mobile-top, 0px) 0 var(--symbol-drawer-mobile-bottom, 0px) 0;
+        z-index: 107 !important;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 12px;
+        background: linear-gradient(180deg, rgba(14, 23, 38, 0.16), rgba(14, 23, 38, 0.08));
+        backdrop-filter: blur(2px);
+      }
+
+      .symbol-panel {
+        width: min(420px, calc(100vw - 22px));
+        max-height: calc(100vh - var(--symbol-drawer-mobile-top, 0px) - var(--symbol-drawer-mobile-bottom, 0px) - 20px);
+        border-radius: 26px;
+        border: 1px solid rgba(87, 118, 170, 0.16);
+        background: linear-gradient(180deg, rgba(255,255,255,0.99) 0%, rgba(247,250,255,0.97) 100%);
+        box-shadow: 0 22px 38px rgba(22, 39, 68, 0.14), inset 0 1px 0 rgba(255,255,255,0.85);
+        padding: 14px 14px 16px;
+      }
+
+      .symbol-drawer-head {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        margin: -6px -6px 12px;
+        padding: 10px 10px 12px;
+        background: linear-gradient(180deg, rgba(248,251,255,0.98), rgba(248,251,255,0.88));
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(97, 129, 183, 0.10);
+        border-radius: 18px 18px 16px 16px;
+      }
+
+      .symbol-drawer-head h3 {
+        font-size: 20px;
+      }
+
+      .symbol-drawer-head p {
+        font-size: 12.5px;
+      }
+
+      .symbol-close {
+        min-width: 86px;
+        min-height: 40px;
+        border-radius: 14px;
+      }
+
+      .symbol-group {
+        border-radius: 20px;
+        padding: 12px;
+      }
+
+      .symbol-group h4 {
+        font-size: 15px;
+        margin-bottom: 10px;
+      }
+
+      .symbol-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .symbol-grid-wide {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
+      .symbol-chip {
+        min-height: 56px;
+        border-radius: 16px;
+        font-size: 19px;
+      }
     }
 
     @media print {
@@ -3091,6 +3186,49 @@
       display: none !important;
     }
 
+    .header-dual-action-slot {
+      position: relative;
+      display: inline-grid;
+      align-items: stretch;
+      flex: 0 0 auto;
+    }
+
+    .header-dual-action-slot > .btn {
+      grid-area: 1 / 1;
+      transition: opacity 0.34s ease, transform 0.34s ease, filter 0.34s ease;
+      will-change: opacity, transform;
+    }
+
+    .header-dual-action-slot .header-add-branch-btn,
+    .header-dual-action-slot .header-add-block-item-btn {
+      justify-content: center;
+    }
+
+    .header-dual-action-slot.has-context-action .header-add-branch-btn {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .header-dual-action-slot.has-context-action .header-add-block-item-btn {
+      display: inline-flex !important;
+      opacity: 0;
+      transform: translateY(7px) scale(0.96);
+      pointer-events: none;
+    }
+
+    .header-dual-action-slot.has-context-action.is-showing-context .header-add-branch-btn {
+      opacity: 0;
+      transform: translateY(-7px) scale(0.96);
+      pointer-events: none;
+    }
+
+    .header-dual-action-slot.has-context-action.is-showing-context .header-add-block-item-btn {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
 
 
 
@@ -3221,7 +3359,7 @@
       font-size: 10.75px;
     }
 
-    .question-card.header-is-sticky > .question-top [data-action="remove-question"] {
+    .question-card.header-is-sticky > .question-top [data-action="remove-question"]:not(.mobile-direct-remove-btn) {
       display: none !important;
     }
 
@@ -3261,6 +3399,33 @@
     .question-card.header-is-sticky > .question-top .collapse-icon {
       width: 15px;
       height: 15px;
+    }
+
+
+    .mobile-direct-header-action {
+      display: none !important;
+    }
+
+    .question-card > .question-top .mobile-direct-add-btn {
+      background: linear-gradient(180deg, #effaf4, #d9f5e4);
+      color: #1f6b47;
+      border: 1px solid #b8e8cb;
+    }
+
+    .question-card > .question-top .mobile-direct-remove-btn {
+      background: linear-gradient(180deg, #fff4f4, #ffe0e0);
+      color: #b84646;
+      border: 1px solid #f2cbcb;
+    }
+
+    @media only screen and (max-width: 920px) {
+      .question-card > .question-top .mobile-direct-header-action {
+        display: inline-flex !important;
+      }
+
+      .direct-question-actions {
+        display: none !important;
+      }
     }
 
     @media (max-width: 720px) {
@@ -3753,6 +3918,11 @@
       .question-card.header-is-sticky > .question-top {
         padding: 6px 7px !important;
         gap: 4px !important;
+        flex-wrap: nowrap !important;
+      }
+
+      .question-card.header-is-sticky > .question-top .head-main {
+        flex: 0 0 auto !important;
       }
 
       .question-card.header-is-sticky > .question-top .inline-actions,
@@ -3761,6 +3931,8 @@
         flex-wrap: nowrap !important;
         overflow-x: auto !important;
         scrollbar-width: none;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
       }
 
       .question-card.header-is-sticky > .question-top .inline-actions::-webkit-scrollbar,
@@ -3921,6 +4093,86 @@
       }
     }
 
+
+
+    @media (max-width: 820px) {
+      .block-list > .block-item > .question-top {
+        direction: ltr !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 8px !important;
+      }
+
+      .block-list > .block-item > .question-top .inline-actions {
+        order: 1 !important;
+        direction: ltr !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        gap: 8px !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+      }
+
+      .block-list > .block-item > .question-top .head-main {
+        order: 2 !important;
+        margin-inline-start: auto !important;
+        flex: 0 0 auto !important;
+      }
+
+      .block-list > .block-item > .question-top .inline-actions .btn {
+        direction: rtl !important;
+        white-space: nowrap !important;
+        min-width: 0 !important;
+        padding: 8px 10px !important;
+        min-height: 38px !important;
+        font-size: 11px !important;
+      }
+
+      .block-list > .block-item > .question-top .head-main .chip {
+        direction: rtl !important;
+      }
+    }
+
+
+    @media only screen and (max-width: 920px) {
+      .question-card > .question-top {
+        direction: rtl !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        flex-wrap: nowrap !important;
+        gap: 14px !important;
+      }
+
+      .question-card > .question-top .head-main {
+        order: 1 !important;
+        flex: 0 0 auto !important;
+        margin: 0 !important;
+      }
+
+      .question-card > .question-top .question-side-actions {
+        order: 2 !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        margin-right: auto !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        flex-wrap: nowrap !important;
+        direction: rtl !important;
+        gap: 8px !important;
+      }
+
+      .question-card > .question-top .question-side-actions > * {
+        flex: 0 0 auto !important;
+      }
+
+      .question-card > .question-top .head-main .chip {
+        direction: rtl !important;
+      }
+    }
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -4568,10 +4820,10 @@
         <button type="button" class="symbol-chip" data-symbol="÷">÷</button>
         <button type="button" class="symbol-chip" data-symbol="=">=</button>
         <button type="button" class="symbol-chip" data-symbol="≠">≠</button>
-        <button type="button" class="symbol-chip" data-symbol="≈">≈</button>
         <button type="button" class="symbol-chip" data-symbol="≤">≤</button>
         <button type="button" class="symbol-chip" data-symbol="≥">≥</button>
         <button type="button" class="symbol-chip" data-symbol="±">±</button>
+        <button type="button" class="symbol-chip" data-symbol="≈">≈</button>
         <button type="button" class="symbol-chip" data-symbol="√">√</button>
         <button type="button" class="symbol-chip" data-symbol="π">π</button>
         <button type="button" class="symbol-chip" data-symbol="∆">∆</button>
@@ -5888,18 +6140,22 @@
 
     function renderQuestionHeaderQuickAction(question, qIndex) {
       const questionType = question.type || "normal";
-      const headerBranchButton = questionType === "normal"
-        ? `<button class="btn btn-soft header-add-branch-btn" data-action="add-sticky-branch" data-q="${qIndex}">إضافة فرع</button>`
-        : "";
 
-      const headerBlockAction = questionType === "normal" ? getQuestionHeaderBlockAction(question) : null;
-      const headerBlockItemButton = questionType === "normal"
-        ? `<button class="btn btn-success header-add-block-item-btn" data-action="add-point" data-q="${qIndex}" ${headerBlockAction ? `data-b="${headerBlockAction.blockIndex}"` : ``} ${headerBlockAction ? `` : `hidden`} aria-label="${headerBlockAction?.addLabel || ""}" title="${headerBlockAction?.addLabel || ""}">${headerBlockAction?.addLabel || ""}</button>`
-        : "";
+      if (questionType !== "normal") {
+        const addLabel = getQuestionTypeActionLabel(questionType);
+        return `
+          <button class="btn btn-success mobile-direct-header-action mobile-direct-add-btn" data-action="add-question-item" data-q="${qIndex}">${addLabel}</button>
+          <button class="btn btn-danger mobile-direct-header-action mobile-direct-remove-btn" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>
+        `;
+      }
+
+      const headerBranchButton = `<button class="btn btn-soft header-add-branch-btn" data-action="add-sticky-branch" data-q="${qIndex}">إضافة فرع</button>`;
+      const headerBlockAction = getQuestionHeaderBlockAction(question);
+      const headerBlockItemButton = `<button class="btn btn-success header-add-block-item-btn" data-action="add-point" data-q="${qIndex}" ${headerBlockAction ? `data-b="${headerBlockAction.blockIndex}"` : ``} ${headerBlockAction ? `` : `hidden`} aria-label="${headerBlockAction?.addLabel || ""}" title="${headerBlockAction?.addLabel || ""}">${headerBlockAction?.addLabel || ""}</button>`;
+      const headerDualActionSlot = `<div class="header-dual-action-slot ${headerBlockAction ? `has-context-action` : ``}" data-role="header-dual-action-slot" data-state="branch">${headerBranchButton}${headerBlockItemButton}</div>`;
 
       return `
-        ${headerBranchButton}
-        ${headerBlockItemButton}
+        ${headerDualActionSlot}
         <button class="btn btn-success header-sticky-add-btn" data-action="add-question-from-sticky" data-q="${qIndex}">إضافة سؤال</button>
       `;
     }
@@ -6057,7 +6313,15 @@
       };
     }
 
+    function setHeaderDualActionState(slot, state) {
+      if (!slot) return;
+      const normalizedState = state === "context" ? "context" : "branch";
+      slot.dataset.state = normalizedState;
+      slot.classList.toggle("is-showing-context", normalizedState === "context");
+    }
+
     function syncQuestionHeaderQuickAction(card, anchorY) {
+      const slot = card.querySelector('.header-dual-action-slot');
       const button = card.querySelector('.header-add-block-item-btn');
       if (!button) return;
 
@@ -6068,6 +6332,8 @@
         button.removeAttribute('data-b');
         button.setAttribute('aria-label', '');
         button.setAttribute('title', '');
+        slot?.classList.remove('has-context-action');
+        setHeaderDualActionState(slot, 'branch');
         return;
       }
 
@@ -6076,6 +6342,30 @@
       button.textContent = action.addLabel;
       button.setAttribute('aria-label', action.addLabel);
       button.setAttribute('title', action.addLabel);
+      slot?.classList.add('has-context-action');
+      if (!slot?.dataset.state) setHeaderDualActionState(slot, 'branch');
+    }
+
+    function syncStickyHeaderDualActionRotation() {
+      const shouldRotate = window.innerWidth <= 920;
+      document.querySelectorAll('.header-dual-action-slot').forEach(slot => {
+        const card = slot.closest('.question-card');
+        const canRotate = shouldRotate && !!card && card.classList.contains('header-is-sticky') && slot.classList.contains('has-context-action');
+        if (!canRotate) {
+          setHeaderDualActionState(slot, 'branch');
+          return;
+        }
+
+        const nextState = slot.dataset.state === 'context' ? 'branch' : 'context';
+        setHeaderDualActionState(slot, nextState);
+      });
+    }
+
+    let stickyHeaderDualActionTimer = null;
+
+    function startStickyHeaderDualActionRotation() {
+      if (stickyHeaderDualActionTimer) return;
+      stickyHeaderDualActionTimer = window.setInterval(syncStickyHeaderDualActionRotation, 2400);
     }
 
     function renderQuestionPrimaryControls(question, qIndex) {
@@ -6107,7 +6397,7 @@
 
       return `
         ${typeField}
-        <div class="inline-actions action-badge-group">
+        <div class="inline-actions action-badge-group direct-question-actions">
           <button class="btn btn-success" data-action="add-question-item" data-q="${qIndex}">${addLabel}</button>
           <button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>
         </div>
@@ -6137,10 +6427,8 @@
             <div class="chip">${escapeHtml(toArabicDigits(block.label || nextLabel(bIndex)))}</div>
           </div>
           <div class="inline-actions">
-            <button class="btn btn-soft branch-duplicate-btn mobile-hide-on-branch-header" data-action="duplicate-block" data-q="${qIndex}" data-b="${bIndex}">نسخ الفرع</button>
-            <button class="btn btn-danger branch-remove-btn" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}">حذف الفرع</button>
             ${renderSymbolButton()}
-            <button class="btn btn-success branch-add-btn mobile-only-branch-add-btn" data-action="add-sticky-branch" data-q="${qIndex}">إضافة فرع</button>
+            <button class="btn btn-danger" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}">حذف الفرع</button>
           </div>
         </div>
         <div class="grid-3">
@@ -7519,69 +7807,6 @@ ${buildPrintScopeCss()}
         grid-template-columns: 1fr;
       }
     }
-
-    .mobile-only-branch-add-btn {
-      display: none;
-    }
-
-    @media only screen and (max-width: 920px) {
-      .block-list > .block-item > .question-top {
-        direction: ltr !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        flex-wrap: nowrap !important;
-      }
-
-      .block-list > .block-item > .question-top .inline-actions {
-        order: 1 !important;
-        flex: 1 1 auto !important;
-        min-width: 0 !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: flex-start !important;
-        flex-wrap: nowrap !important;
-        direction: ltr !important;
-        overflow-x: hidden !important;
-      }
-
-      .block-list > .block-item > .question-top .head-main {
-        order: 2 !important;
-        flex: 0 0 auto !important;
-        margin-left: 8px !important;
-      }
-
-      .block-list > .block-item > .question-top .inline-actions .btn {
-        flex: 1 1 0 !important;
-        min-width: 0 !important;
-        justify-content: center !important;
-        white-space: nowrap !important;
-        padding: 6px 8px !important;
-        font-size: 11px !important;
-      }
-
-      .block-list > .block-item > .question-top [data-action="open-symbols-context"] {
-        order: 1 !important;
-      }
-
-      .block-list > .block-item > .question-top .branch-remove-btn {
-        order: 2 !important;
-      }
-
-      .block-list > .block-item > .question-top .mobile-only-branch-add-btn {
-        order: 3 !important;
-        display: inline-flex !important;
-      }
-
-      .block-list > .block-item > .question-top .mobile-hide-on-branch-header {
-        display: none !important;
-      }
-
-      .block-list > .block-item > .question-top .chip {
-        direction: rtl !important;
-      }
-    }
-
   </style>
 </head>
 <body>
@@ -7930,11 +8155,27 @@ ${buildPrintScopeCss()}
     let lastFocusedTextInput = null;
     let pendingFocusSelector = "";
 
+    function syncSymbolDrawerBounds() {
+      if (window.innerWidth > 920) return;
+      const root = document.documentElement;
+      const header = document.querySelector(".mobile-shell");
+      const footer = document.querySelector(".page-footer");
+      const headerRect = header?.getBoundingClientRect();
+      const footerRect = footer?.getBoundingClientRect();
+      const safeTop = Math.max(Math.round((headerRect?.bottom || 0) + 10), 10);
+      const safeBottom = Math.max(Math.round(window.innerHeight - (footerRect?.top || window.innerHeight) + 10), 10);
+      root.style.setProperty("--symbol-drawer-mobile-top", `${safeTop}px`);
+      root.style.setProperty("--symbol-drawer-mobile-bottom", `${safeBottom}px`);
+    }
+
     function openSymbolDrawer() {
       const drawer = document.getElementById("symbolDrawer");
       if (!drawer) return;
+      syncSymbolDrawerBounds();
+      document.body.classList.add("symbols-open");
       drawer.classList.add("open");
       drawer.setAttribute("aria-hidden", "false");
+      toggleScrollTopButton();
     }
 
     function closeSymbolDrawer() {
@@ -7942,6 +8183,8 @@ ${buildPrintScopeCss()}
       if (!drawer) return;
       drawer.classList.remove("open");
       drawer.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("symbols-open");
+      toggleScrollTopButton();
     }
 
     function focusFieldAndOpenSymbols(field) {
@@ -8209,13 +8452,16 @@ ${buildPrintScopeCss()}
     window.addEventListener("resize", syncAdvancedStepperInteractionMode, { passive: true });
     window.addEventListener("resize", syncMobileQuestionHeaderOffset, { passive: true });
     window.addEventListener("resize", syncPhonePreviewScale, { passive: true });
+    window.addEventListener("resize", syncSymbolDrawerBounds, { passive: true });
     window.addEventListener("orientationchange", syncAdvancedStepperInteractionMode, { passive: true });
     window.addEventListener("orientationchange", syncMobileQuestionHeaderOffset, { passive: true });
     window.addEventListener("orientationchange", syncPhonePreviewScale, { passive: true });
+    window.addEventListener("orientationchange", syncSymbolDrawerBounds, { passive: true });
     window.addEventListener("scroll", toggleScrollTopButton, { passive: true });
     document.querySelector(".panel-stack")?.addEventListener("scroll", toggleScrollTopButton, { passive: true });
     document.getElementById("scrollTopBtn").addEventListener("click", handlePhonePreviewJump);
     bindSymbolDrawer();
+    startStickyHeaderDualActionRotation();
   </script>
 </body>
 </html>
