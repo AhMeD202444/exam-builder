@@ -4063,7 +4063,7 @@
 
       .app-shell {
         padding-top: calc(var(--mobile-shell-current-height, 118px) + 16px) !important;
-        padding-bottom: calc(34px + env(safe-area-inset-bottom)) !important;
+        padding-bottom: calc(var(--mobile-footer-current-height, 32px) + 16px + env(safe-area-inset-bottom)) !important;
       }
 
       .page-footer {
@@ -4098,7 +4098,7 @@
       }
 
       .scroll-top-btn {
-        bottom: calc(40px + env(safe-area-inset-bottom)) !important;
+        bottom: calc(var(--mobile-footer-current-height, 32px) + 14px + env(safe-area-inset-bottom)) !important;
       }
     }
 
@@ -8441,7 +8441,10 @@ ${buildPrintScopeCss()}
       if (isPhone && shellHeight > 0) {
         const compactFooterVisible = Math.max(22, Math.round(shellHeight * 0.44));
         const compactFooterSink = Math.max(18, Math.round(shellHeight * 0.42));
+        const pageFooter = document.querySelector(".page-footer");
+        const footerHeight = pageFooter ? Math.ceil(pageFooter.getBoundingClientRect().height) : 32;
         document.documentElement.style.setProperty("--mobile-shell-current-height", `${shellHeight}px`);
+        document.documentElement.style.setProperty("--mobile-footer-current-height", `${footerHeight}px`);
         document.documentElement.style.setProperty("--mobile-footer-compact-visible", `${compactFooterVisible}px`);
         document.documentElement.style.setProperty("--mobile-footer-compact-sink", `${compactFooterSink}px`);
         if (mobileShell.classList.contains("is-compact")) {
