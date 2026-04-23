@@ -3406,6 +3406,10 @@
       display: none !important;
     }
 
+    .desktop-direct-remove-btn {
+      display: none !important;
+    }
+
     .question-card > .question-top .mobile-direct-add-btn {
       background: linear-gradient(180deg, #effaf4, #d9f5e4);
       color: #1f6b47;
@@ -3416,6 +3420,39 @@
       background: linear-gradient(180deg, #fff4f4, #ffe0e0);
       color: #b84646;
       border: 1px solid #f2cbcb;
+    }
+
+    @media only screen and (min-width: 921px) {
+      .direct-question-actions {
+        display: none !important;
+      }
+
+      .question-card.header-is-sticky > .question-top .mobile-direct-header-action {
+        display: inline-flex !important;
+      }
+
+      .question-card > .question-top .desktop-direct-remove-btn {
+        display: inline-flex !important;
+      }
+
+      .question-card.header-is-sticky > .question-top .header-dual-action-slot.has-context-action {
+        display: inline-flex !important;
+        align-items: center !important;
+        gap: 8px !important;
+        position: static !important;
+      }
+
+      .question-card.header-is-sticky > .question-top .header-dual-action-slot.has-context-action > .btn {
+        grid-area: auto !important;
+      }
+
+      .question-card.header-is-sticky > .question-top .header-dual-action-slot.has-context-action .header-add-branch-btn,
+      .question-card.header-is-sticky > .question-top .header-dual-action-slot.has-context-action .header-add-block-item-btn {
+        display: inline-flex !important;
+        opacity: 1 !important;
+        transform: none !important;
+        pointer-events: auto !important;
+      }
     }
 
     @media only screen and (max-width: 920px) {
@@ -4173,6 +4210,155 @@
         direction: rtl !important;
       }
     }
+  
+
+    @media only screen and (max-width: 920px) {
+      .question-mobile-meta-layout {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        align-items: stretch;
+      }
+
+      .question-mobile-meta-layout > .question-main-controls-shell,
+      .question-mobile-meta-layout > .question-main-control-card {
+        grid-column: 1;
+        grid-row: 1;
+        margin: 0;
+      }
+
+      .question-mobile-meta-layout > .question-meta-grid {
+        display: contents;
+      }
+
+      .question-mobile-meta-layout .question-degree-field {
+        grid-column: 2;
+        grid-row: 1;
+        margin: 0;
+      }
+
+      .question-mobile-meta-layout .question-title-field {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        margin: 0;
+      }
+
+      .block-item[data-block-type="definitions"],
+      .block-item[data-block-type="points"],
+      .block-item[data-block-type="blanks"] {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        align-items: stretch;
+      }
+
+      .block-item[data-block-type="definitions"] > .question-top,
+      .block-item[data-block-type="points"] > .question-top,
+      .block-item[data-block-type="blanks"] > .question-top {
+        grid-column: 1 / -1;
+      }
+
+      .block-item[data-block-type="definitions"] > .grid-3,
+      .block-item[data-block-type="points"] > .grid-3,
+      .block-item[data-block-type="blanks"] > .grid-3 {
+        display: contents;
+      }
+
+      .block-item[data-block-type="definitions"] > .grid-3 > .field:nth-child(1),
+      .block-item[data-block-type="points"] > .grid-3 > .field:nth-child(1),
+      .block-item[data-block-type="blanks"] > .grid-3 > .field:nth-child(1) {
+        grid-column: 1;
+      }
+
+      .block-item[data-block-type="definitions"] > .grid-3 > .field:nth-child(2),
+      .block-item[data-block-type="points"] > .grid-3 > .field:nth-child(2),
+      .block-item[data-block-type="blanks"] > .grid-3 > .field:nth-child(2) {
+        grid-column: 2;
+      }
+
+      .block-item[data-block-type="definitions"] > .grid-3 > .field:nth-child(3),
+      .block-item[data-block-type="points"] > .grid-3 > .field:nth-child(3),
+      .block-item[data-block-type="blanks"] > .grid-3 > .field:nth-child(3) {
+        grid-column: 1;
+      }
+
+      .block-item[data-block-type="definitions"] > .field,
+      .block-item[data-block-type="points"] > .field,
+      .block-item[data-block-type="blanks"] > .field {
+        grid-column: 2;
+        margin: 0;
+      }
+
+      .block-item[data-block-type="definitions"] > .subitem,
+      .block-item[data-block-type="points"] > .subitem,
+      .block-item[data-block-type="blanks"] > .subitem {
+        grid-column: 1 / -1;
+      }
+
+      .symbol-drawer {
+        background: rgba(10, 18, 32, 0.28);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+      }
+
+      .symbol-panel {
+        box-shadow: 0 26px 60px rgba(14, 28, 52, 0.22), 0 10px 24px rgba(14, 28, 52, 0.12);
+        border: 1px solid rgba(205, 218, 238, 0.96);
+      }
+
+      .symbol-drawer-head {
+        margin-bottom: 8px;
+        padding-bottom: 2px;
+      }
+
+      .symbol-drawer-head h3 {
+        margin: 0;
+      }
+
+      .symbol-drawer-head p {
+        display: none !important;
+      }
+    }
+
+  
+
+    .block-list > .block-item > .question-top .inline-actions {
+      padding: 0 !important;
+      background: transparent !important;
+      border: none !important;
+      box-shadow: none !important;
+      flex: 0 0 auto !important;
+      min-width: auto !important;
+    }
+
+    .block-list > .block-item > .question-top .inline-actions .block-remove-btn {
+      width: 62px;
+      min-width: 62px;
+      height: 62px;
+      min-height: 62px;
+      padding: 0;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 800;
+      line-height: 1;
+      box-shadow: 0 12px 26px rgba(196, 75, 75, 0.16);
+    }
+
+    @media (max-width: 820px) {
+      .block-list > .block-item > .question-top .inline-actions .block-remove-btn {
+        width: 58px !important;
+        min-width: 58px !important;
+        height: 58px !important;
+        min-height: 58px !important;
+        padding: 0 !important;
+        font-size: 14px !important;
+      }
+    }
+
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -4804,10 +4990,7 @@
   <aside class="symbol-drawer" id="symbolDrawer" aria-hidden="true">
     <div class="symbol-panel">
       <div class="symbol-drawer-head">
-        <div>
-          <h3>الرموز السريعة</h3>
-          <p>اضغط أي رمز حتى ينضاف بمكان المؤشر داخل السؤال أو الفرع.</p>
-        </div>
+        <h3>الرموز</h3>
         <button type="button" class="symbol-close" id="closeSymbols">إغلاق</button>
       </div>
 
@@ -6050,6 +6233,7 @@
         updateQuestionLabels(question);
         const questionCollapsed = isQuestionCollapsed(question.id);
         const removeQuestionButton = `<button class="btn btn-danger" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>`;
+        const desktopDirectRemoveQuestionButton = `<button class="btn btn-danger desktop-direct-remove-btn" data-action="remove-question" data-q="${qIndex}">حذف السؤال</button>`;
         const collapsedHeaderActions = `
                 ${removeQuestionButton}
                 ${renderSymbolButton()}
@@ -6071,7 +6255,7 @@
         `;
         const expandedHeaderActions = `
                 ${renderQuestionHeaderQuickAction(question, qIndex)}
-                ${((question.type || "normal") === "normal") ? removeQuestionButton : ``}
+                ${((question.type || "normal") === "normal") ? removeQuestionButton : desktopDirectRemoveQuestionButton}
                 ${renderSymbolButton()}
                 <button type="button" class="collapse-toggle" data-action="toggle-question" data-question-id="${question.id}" aria-expanded="${questionCollapsed ? "false" : "true"}" aria-label="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}" title="${questionCollapsed ? "فتح السؤال" : "طي السؤال"}">
                   <span class="collapse-icon icon-collapsed" aria-hidden="true">
@@ -6100,16 +6284,18 @@
               </div>
             </div>
 
-            ${renderQuestionPrimaryControls(question, qIndex)}
+            <div class="question-mobile-meta-layout">
+              ${renderQuestionPrimaryControls(question, qIndex)}
 
-            <div class="question-meta-grid">
-              <div class="field question-meta-field">
-                <label class="question-meta-badge">منطوق السؤال</label>
-                <textarea data-scope="question" data-field="title" data-q="${qIndex}" data-symbol-preferred="true" placeholder="اكتب نص السؤال الرئيسي هنا...">${escapeHtml(question.title)}</textarea>
-              </div>
-              <div class="field question-meta-field">
-                <label class="question-meta-badge">درجة السؤال</label>
-                <input data-scope="question" data-field="degree" data-q="${qIndex}" type="text" value="${escapeHtml(question.degree)}" placeholder="مثال: 10" />
+              <div class="question-meta-grid">
+                <div class="field question-meta-field question-title-field">
+                  <label class="question-meta-badge">منطوق السؤال</label>
+                  <textarea data-scope="question" data-field="title" data-q="${qIndex}" data-symbol-preferred="true" placeholder="اكتب نص السؤال الرئيسي هنا...">${escapeHtml(question.title)}</textarea>
+                </div>
+                <div class="field question-meta-field question-degree-field">
+                  <label class="question-meta-badge">درجة السؤال</label>
+                  <input data-scope="question" data-field="degree" data-q="${qIndex}" type="text" value="${escapeHtml(question.degree)}" placeholder="مثال: 10" />
+                </div>
               </div>
             </div>
 
@@ -6427,8 +6613,7 @@
             <div class="chip">${escapeHtml(toArabicDigits(block.label || nextLabel(bIndex)))}</div>
           </div>
           <div class="inline-actions">
-            ${renderSymbolButton()}
-            <button class="btn btn-danger" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}">حذف الفرع</button>
+            <button class="btn btn-danger block-remove-btn" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}" title="حذف الفرع" aria-label="حذف الفرع">حذف</button>
           </div>
         </div>
         <div class="grid-3">
@@ -8438,6 +8623,7 @@ ${buildPrintScopeCss()}
           return;
         }
         insertAtCursor(lastFocusedTextInput, button.dataset.symbol || "");
+        closeSymbolDrawer();
       });
     }
 
