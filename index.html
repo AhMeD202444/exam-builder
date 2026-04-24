@@ -8172,16 +8172,38 @@ ${buildPrintScopeCss()}
 </html>`;
     }
 
+    function isValidPrintWindow(candidate) {
+      return !!(
+        candidate &&
+        typeof candidate === "object" &&
+        candidate.document &&
+        typeof candidate.document.open === "function" &&
+        typeof candidate.document.write === "function" &&
+        typeof candidate.document.close === "function"
+      );
+    }
+
     function openPrintWindow(targetWindow = null) {
       const html = getPrintDocumentHtml();
-      const printWindow = targetWindow || window.open("", "_blank", "width=1100,height=900");
-      if (!printWindow) {
+      const providedWindowIsUsable = isValidPrintWindow(targetWindow);
+      const printWindow = providedWindowIsUsable
+        ? targetWindow
+        : window.open("", "_blank", "width=1100,height=900");
+
+      if (!printWindow || !isValidPrintWindow(printWindow)) {
         showToast("المتصفح منع نافذة الطباعة. افتح السماح للـ pop-ups وحاول مرة ثانية.", "error", { duration: 5600 });
         return;
       }
-      printWindow.document.open();
-      printWindow.document.write(html);
-      printWindow.document.close();
+
+      try {
+        printWindow.document.open();
+        printWindow.document.write(html);
+        printWindow.document.close();
+      } catch (error) {
+        try { printWindow.close(); } catch (closeError) {}
+        console.error("Print window error:", error);
+        showToast("تعذر فتح نافذة الطباعة. حاول مرة ثانية.", "error", { duration: 5600 });
+      }
     }
 
     function requestPhonePrintName() {
@@ -8272,8 +8294,8 @@ ${buildPrintScopeCss()}
       document.getElementById("saveBtn").addEventListener("click", saveModel);
       document.getElementById("saveTopBtn").addEventListener("click", saveModel);
       document.getElementById("newBtn").addEventListener("click", resetState);
-      document.getElementById("printBtn")?.addEventListener("click", openPrintWindow);
-      document.getElementById("printTopBtn").addEventListener("click", openPrintWindow);
+      document.getElementById("printBtn")?.addEventListener("click", () => openPrintWindow());
+      document.getElementById("printTopBtn")?.addEventListener("click", () => openPrintWindow());
       document.getElementById("mobileNewBtn")?.addEventListener("click", resetState);
       document.getElementById("mobileSaveBtn")?.addEventListener("click", saveModel);
       document.getElementById("mobileSaveAsBtn")?.addEventListener("click", scrollToQuickSavePanel);
