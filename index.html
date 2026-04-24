@@ -4454,7 +4454,39 @@
         font-size: 11px !important;
       }
     }
-  </style>
+  
+
+    /* إصلاح نهائي لسلوك هيدر الإعدادات بالموبايل:
+       نبقي sticky الطبيعي للديسكتوب، وعلى الهاتف نفعّل طبقة fixed فقط أثناء وجود السكرول داخل نفس الكارت. */
+    @media only screen and (max-width: 920px) {
+      #generalSettingsCard.sticky-fold-card.mobile-settings-fixed-sticky:not(.is-collapsed),
+      .card.advanced-card #advancedSettingsCard.mobile-settings-fixed-sticky[open] {
+        padding-top: var(--mobile-settings-fixed-header-height, 0px) !important;
+      }
+
+      #generalSettingsCard.sticky-fold-card.mobile-settings-fixed-sticky:not(.is-collapsed) > .fold-card-header,
+      .card.advanced-card #advancedSettingsCard.mobile-settings-fixed-sticky[open] > summary {
+        position: fixed !important;
+        top: var(--mobile-question-sticky-top, 10px) !important;
+        left: var(--mobile-settings-fixed-header-left, 0px) !important;
+        width: var(--mobile-settings-fixed-header-width, auto) !important;
+        z-index: 124 !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        background: rgba(255, 255, 255, 0.96) !important;
+        border: 1px solid rgba(83, 119, 175, 0.16) !important;
+        border-radius: 18px !important;
+        box-shadow: 0 14px 30px rgba(32, 54, 95, 0.16) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+      }
+
+      .card.advanced-card #advancedSettingsCard.mobile-settings-fixed-sticky[open] > summary {
+        display: flex !important;
+      }
+    }
+
+</style>
   <style id="advancedDynamicStyle"></style>
 </head>
 <body>
@@ -8603,9 +8635,87 @@ ${buildPrintScopeCss()}
       activeHeader.style.width = `${Math.round(cardRect.width)}px`;
     }
 
+
+
+    function clearMobileSettingsFixedStickyHeaders() {
+      [
+        { card: document.getElementById("generalSettingsCard"), headerSelector: ":scope > .fold-card-header" },
+        { card: document.getElementById("advancedSettingsCard"), headerSelector: ":scope > summary" }
+      ].forEach(({ card, headerSelector }) => {
+        if (!card) return;
+        const header = card.querySelector(headerSelector);
+        card.classList.remove("mobile-settings-fixed-sticky");
+        card.style.removeProperty("--mobile-settings-fixed-header-height");
+        card.style.removeProperty("--mobile-settings-fixed-header-left");
+        card.style.removeProperty("--mobile-settings-fixed-header-width");
+        if (header) {
+          header.style.left = "";
+          header.style.width = "";
+        }
+      });
+    }
+
+    function syncOneMobileSettingsFixedHeader(card, header, stickyOffset) {
+      if (!card || !header) return false;
+      const cardRect = card.getBoundingClientRect();
+      const headerHeight = Math.ceil(header.offsetHeight || header.getBoundingClientRect().height || 0);
+      if (!headerHeight) return false;
+      const shouldStick = cardRect.top <= stickyOffset && cardRect.bottom > stickyOffset + headerHeight + 12;
+      if (!shouldStick) return false;
+
+      const headerWidth = Math.round(cardRect.width);
+      const headerLeft = Math.round(cardRect.left);
+      card.classList.add("mobile-settings-fixed-sticky");
+      card.style.setProperty("--mobile-settings-fixed-header-height", `${headerHeight + 12}px`);
+      card.style.setProperty("--mobile-settings-fixed-header-left", `${headerLeft}px`);
+      card.style.setProperty("--mobile-settings-fixed-header-width", `${headerWidth}px`);
+      header.style.left = `${headerLeft}px`;
+      header.style.width = `${headerWidth}px`;
+      return true;
+    }
+
+    function syncMobileSettingsFixedStickyHeaders(stickyOffset) {
+      clearMobileSettingsFixedStickyHeaders();
+      if (window.innerWidth > 920) return;
+
+      const candidates = [
+        {
+          card: document.getElementById("generalSettingsCard"),
+          header: document.querySelector("#generalSettingsCard > .fold-card-header"),
+          isOpen: () => {
+            const card = document.getElementById("generalSettingsCard");
+            return !!card && !card.classList.contains("is-collapsed");
+          }
+        },
+        {
+          card: document.getElementById("advancedSettingsCard"),
+          header: document.querySelector("#advancedSettingsCard > summary"),
+          isOpen: () => {
+            const card = document.getElementById("advancedSettingsCard");
+            return !!card && card.hasAttribute("open");
+          }
+        }
+      ].filter(item => item.card && item.header && item.isOpen());
+
+      let active = null;
+      candidates.forEach(item => {
+        const rect = item.card.getBoundingClientRect();
+        const headerHeight = Math.ceil(item.header.offsetHeight || item.header.getBoundingClientRect().height || 0);
+        const canStick = rect.top <= stickyOffset && rect.bottom > stickyOffset + headerHeight + 12;
+        if (!canStick) return;
+        if (!active || rect.top > active.rect.top) {
+          active = { ...item, rect };
+        }
+      });
+
+      if (!active) return;
+      syncOneMobileSettingsFixedHeader(active.card, active.header, stickyOffset);
+    }
+
     function syncStickyQuestionHeaders() {
       const stickyOffset = syncMobileQuestionHeaderOffset();
       syncMobileFixedStickyHeaders(stickyOffset);
+      syncMobileSettingsFixedStickyHeaders(stickyOffset);
       const panelStack = document.querySelector(".panel-stack");
       const panelStyle = panelStack ? window.getComputedStyle(panelStack) : null;
       const panelActsAsScrollContainer = !!panelStack && ((panelStyle?.overflowY && panelStyle.overflowY !== "visible") || panelStack.scrollHeight > panelStack.clientHeight + 4);
@@ -8747,11 +8857,11 @@ ${buildPrintScopeCss()}
     bindEnterFieldNavigation();
     window.addEventListener("resize", balanceHeaderColumns);
     window.addEventListener("resize", syncAdvancedStepperInteractionMode, { passive: true });
-    window.addEventListener("resize", syncMobileQuestionHeaderOffset, { passive: true });
+    window.addEventListener("resize", toggleScrollTopButton, { passive: true });
     window.addEventListener("resize", syncPhonePreviewScale, { passive: true });
     window.addEventListener("resize", syncSymbolDrawerBounds, { passive: true });
     window.addEventListener("orientationchange", syncAdvancedStepperInteractionMode, { passive: true });
-    window.addEventListener("orientationchange", syncMobileQuestionHeaderOffset, { passive: true });
+    window.addEventListener("orientationchange", toggleScrollTopButton, { passive: true });
     window.addEventListener("orientationchange", syncPhonePreviewScale, { passive: true });
     window.addEventListener("orientationchange", syncSymbolDrawerBounds, { passive: true });
     window.addEventListener("scroll", toggleScrollTopButton, { passive: true });
