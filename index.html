@@ -4364,12 +4364,13 @@
     @media only screen and (max-width: 920px) {
       :root {
         --mobile-page-edge-gap: 8px;
-        --mobile-preview-fab-gap: 3px;
+        --mobile-preview-fab-gap: 2px;
+        --mobile-bottom-safe-area: 0px;
       }
 
       .app-shell {
         padding-top: calc(var(--mobile-shell-current-height, 118px) + var(--mobile-page-edge-gap)) !important;
-        padding-bottom: calc(var(--mobile-footer-current-height, 32px) + var(--mobile-page-edge-gap) + env(safe-area-inset-bottom)) !important;
+        padding-bottom: calc(var(--mobile-footer-layout-height, 32px) + var(--mobile-page-edge-gap) + var(--mobile-bottom-safe-area, 0px)) !important;
       }
 
       .workspace {
@@ -4387,14 +4388,18 @@
         margin-bottom: 0 !important;
       }
 
+      .page-footer {
+        padding-bottom: calc(2px + var(--mobile-bottom-safe-area, 0px)) !important;
+      }
+
       .scroll-top-btn {
         left: 14px !important;
         right: auto !important;
-        bottom: calc(var(--mobile-footer-current-height, 32px) + var(--mobile-preview-fab-gap) + env(safe-area-inset-bottom)) !important;
-        width: 62px !important;
-        height: 62px !important;
-        min-width: 62px !important;
-        min-height: 62px !important;
+        bottom: calc(var(--mobile-footer-layout-height, 32px) + var(--mobile-preview-fab-gap) + var(--mobile-bottom-safe-area, 0px)) !important;
+        width: 58px !important;
+        height: 58px !important;
+        min-width: 58px !important;
+        min-height: 58px !important;
         border-radius: 50% !important;
         padding: 0 !important;
         display: inline-flex !important;
@@ -4402,7 +4407,7 @@
         justify-content: center !important;
         background: radial-gradient(circle at 30% 25%, #ff8d8d 0%, #f15555 38%, #d43737 100%) !important;
         border: 2px solid rgba(255, 255, 255, 0.72) !important;
-        box-shadow: 0 10px 18px rgba(166, 33, 33, 0.18), inset 0 2px 0 rgba(255,255,255,.26) !important;
+        box-shadow: 0 9px 16px rgba(166, 33, 33, 0.16), inset 0 2px 0 rgba(255,255,255,.24) !important;
         z-index: 140 !important;
         overflow: hidden !important;
       }
@@ -4425,10 +4430,10 @@
         text-align: center !important;
         color: #fff8f4 !important;
         text-shadow: 0 1px 0 rgba(111, 21, 21, 0.14), 0 2px 6px rgba(120, 22, 22, 0.10) !important;
-        font-size: 12px !important;
+        font-size: 11.5px !important;
         font-weight: 800 !important;
         font-style: normal !important;
-        line-height: 1.08 !important;
+        line-height: 1.06 !important;
         letter-spacing: 0 !important;
       }
 
@@ -4438,7 +4443,7 @@
       }
 
       .scroll-top-btn[data-mode="return"] .jump-btn-label {
-        font-size: 11.5px !important;
+        font-size: 11px !important;
       }
     }
   </style>
@@ -8517,25 +8522,38 @@ ${buildPrintScopeCss()}
     }
 
     function syncMobileQuestionHeaderOffset() {
+      const root = document.documentElement;
       const isPhone = window.innerWidth <= 920;
       const mobileShell = document.querySelector(".mobile-shell");
+      const pageFooter = document.querySelector(".page-footer");
+      const ua = navigator.userAgent || "";
+      const isAndroidWebView = /Android/i.test(ua) && (/\bwv\b/i.test(ua) || /; wv\)/i.test(ua) || (/Version\/[\d.]+/i.test(ua) && !/Chrome\/[\d.]+ Mobile/i.test(ua)));
       const shellHeight = isPhone && mobileShell ? Math.ceil(mobileShell.getBoundingClientRect().height) : 0;
+
+      root.style.setProperty("--mobile-bottom-safe-area", isAndroidWebView ? "0px" : "env(safe-area-inset-bottom)");
+
       if (isPhone && shellHeight > 0) {
         const compactFooterVisible = Math.max(22, Math.round(shellHeight * 0.44));
         const compactFooterSink = Math.max(18, Math.round(shellHeight * 0.42));
-        const pageFooter = document.querySelector(".page-footer");
         const footerHeight = pageFooter ? Math.ceil(pageFooter.getBoundingClientRect().height) : 32;
-        document.documentElement.style.setProperty("--mobile-shell-current-height", `${shellHeight}px`);
-        document.documentElement.style.setProperty("--mobile-footer-current-height", `${footerHeight}px`);
-        document.documentElement.style.setProperty("--mobile-footer-compact-visible", `${compactFooterVisible}px`);
-        document.documentElement.style.setProperty("--mobile-footer-compact-sink", `${compactFooterSink}px`);
+        const footerLayoutHeight = pageFooter && pageFooter.classList.contains("is-compact")
+          ? compactFooterVisible
+          : footerHeight;
+        root.style.setProperty("--mobile-shell-current-height", `${shellHeight}px`);
+        root.style.setProperty("--mobile-footer-current-height", `${footerHeight}px`);
+        root.style.setProperty("--mobile-footer-layout-height", `${footerLayoutHeight}px`);
+        root.style.setProperty("--mobile-footer-compact-visible", `${compactFooterVisible}px`);
+        root.style.setProperty("--mobile-footer-compact-sink", `${compactFooterSink}px`);
         if (mobileShell.classList.contains("is-compact")) {
-          document.documentElement.style.setProperty("--mobile-compact-shell-height", `${shellHeight}px`);
+          root.style.setProperty("--mobile-compact-shell-height", `${shellHeight}px`);
         }
+      } else {
+        root.style.setProperty("--mobile-footer-current-height", "32px");
+        root.style.setProperty("--mobile-footer-layout-height", "32px");
       }
       const offset = isPhone ? shellHeight + 1 : 10;
-      document.documentElement.style.setProperty("--mobile-question-sticky-top", `${offset}px`);
-      document.documentElement.style.setProperty("--mobile-toast-top", `${offset}px`);
+      root.style.setProperty("--mobile-question-sticky-top", `${offset}px`);
+      root.style.setProperty("--mobile-toast-top", `${offset}px`);
       return offset;
     }
 
