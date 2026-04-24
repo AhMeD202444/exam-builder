@@ -4359,6 +4359,82 @@
       }
     }
 
+
+
+    @media only screen and (max-width: 920px) {
+      :root {
+        --mobile-page-edge-gap: 12px;
+        --mobile-preview-fab-gap: 5px;
+      }
+
+      .app-shell {
+        padding-top: calc(var(--mobile-shell-current-height, 118px) + var(--mobile-page-edge-gap)) !important;
+        padding-bottom: calc(var(--mobile-footer-current-height, 32px) + var(--mobile-page-edge-gap) + env(safe-area-inset-bottom)) !important;
+      }
+
+      .workspace {
+        padding: 0 8px 0 !important;
+      }
+
+      .panel-stack,
+      #previewPane {
+        padding-bottom: 0 !important;
+      }
+
+      .scroll-top-btn {
+        left: 14px !important;
+        right: auto !important;
+        bottom: calc(var(--mobile-footer-current-height, 32px) + var(--mobile-preview-fab-gap) + env(safe-area-inset-bottom)) !important;
+        width: 72px !important;
+        height: 72px !important;
+        min-width: 72px !important;
+        min-height: 72px !important;
+        border-radius: 50% !important;
+        padding: 0 !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: radial-gradient(circle at 30% 25%, #ff8d8d 0%, #f15555 38%, #d43737 100%) !important;
+        border: 2px solid rgba(255, 255, 255, 0.72) !important;
+        box-shadow: 0 12px 24px rgba(166, 33, 33, 0.20), inset 0 2px 0 rgba(255,255,255,.28) !important;
+        z-index: 140 !important;
+        overflow: hidden !important;
+      }
+
+      .scroll-top-btn[data-mode="return"] {
+        background: radial-gradient(circle at 30% 25%, #ff9d80 0%, #ef6a4b 42%, #c64b33 100%) !important;
+      }
+
+      .scroll-top-btn .jump-btn-icon {
+        display: none !important;
+      }
+
+      .scroll-top-btn .jump-btn-label {
+        display: inline-flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 1px !important;
+        width: 100% !important;
+        text-align: center !important;
+        color: #fff8f4 !important;
+        text-shadow: 0 1px 0 rgba(111, 21, 21, 0.16), 0 2px 8px rgba(120, 22, 22, 0.12) !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        font-style: normal !important;
+        line-height: 1.06 !important;
+        letter-spacing: 0 !important;
+      }
+
+      .scroll-top-btn .jump-btn-label span {
+        display: block !important;
+        font-family: "Amiri", "Noto Naskh Arabic", "Segoe UI", Tahoma, serif !important;
+      }
+
+      .scroll-top-btn[data-mode="return"] .jump-btn-label {
+        font-size: 13px !important;
+      }
+    }
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -4983,7 +5059,7 @@
   </div>
 
 
-  <button type="button" class="scroll-top-btn" id="scrollTopBtn" aria-label="الانتقال إلى المعاينة" data-mode="preview"><span class="jump-btn-icon">⤓</span></button>
+  <button type="button" class="scroll-top-btn" id="scrollTopBtn" aria-label="الانتقال إلى معاينة الأسئلة" data-mode="preview"><span class="jump-btn-label"><span>عاين</span><span>الأسئلة</span></span></button>
 
   <footer class="page-footer" aria-label="حقوق النشر">جميع الحقوق محفوظة للمبرمج أحمد البياتي @ 2026</footer>
 
@@ -8528,10 +8604,10 @@ ${buildPrintScopeCss()}
     function setPhonePreviewJumpButton(mode) {
       const button = document.getElementById("scrollTopBtn");
       if (!button) return;
-      const icon = mode === "return" ? "↺" : "⤓";
+      const lines = mode === "return" ? ["ارجع", "للأسئلة"] : ["عاين", "الأسئلة"];
       button.dataset.mode = mode;
-      button.innerHTML = `<span class="jump-btn-icon">${icon}</span>`;
-      button.setAttribute("aria-label", mode === "return" ? "الرجوع إلى نفس المكان السابق" : "الانتقال إلى معاينة الأسئلة");
+      button.innerHTML = `<span class="jump-btn-label"><span>${lines[0]}</span><span>${lines[1]}</span></span>`;
+      button.setAttribute("aria-label", mode === "return" ? "الرجوع إلى قسم الأسئلة" : "الانتقال إلى معاينة الأسئلة");
     }
 
     function syncPhonePreviewJumpState() {
