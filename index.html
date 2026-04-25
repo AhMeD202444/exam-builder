@@ -4569,6 +4569,38 @@
       }
     }
 
+
+ only screen and (max-width: 920px) {
+  html body .page-footer {
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
+    width: min(calc(100% - 20px), 760px) !important;
+    max-width: min(calc(100% - 20px), 760px) !important;
+    bottom: 0 !important;
+    min-height: 62px !important;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) !important;
+    border-radius: 22px 22px 0 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    font-size: 14px !important;
+    line-height: 1.25 !important;
+    white-space: normal !important;
+    pointer-events: none !important;
+    z-index: 90 !important;
+  }
+  html body .page-footer.is-compact {
+    bottom: 0 !important;
+    min-height: 62px !important;
+    padding: 12px 16px calc(12px + env(safe-area-inset-bottom)) !important;
+    font-size: 14px !important;
+  }
+  html body.has-mobile-shell .container {
+    padding-bottom: calc(92px + env(safe-area-inset-bottom)) !important;
+  }
+}
 </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -8332,18 +8364,28 @@ ${buildPrintScopeCss()}
           (window.Android && typeof window.Android.printPdf === "function" && window.Android);
 
         if (bridge) {
-          try {
-            bridge.printPdf();
-            showToast("جاري فتح نافذة حفظ PDF من أندرويد...", "info", { duration: 2600 });
-            return;
-          } catch (error) {
-            console.error("Android print bridge error:", error);
-            showToast("تعذر تشغيل جسر الطباعة داخل التطبيق. راح نعدله من ملف الأندرويد.", "error", { duration: 5200 });
-            return;
-          }
+          showToast("راح تفتح صفحة النظام، اختار Save as PDF.", "info", {
+            autoClose: false,
+            toastKey: "android-print-confirm",
+            actions: [
+              {
+                label: "متابعة",
+                variant: "primary",
+                onClick: () => {
+                  try {
+                    bridge.printPdf();
+                  } catch (error) {
+                    console.error("Android print bridge error:", error);
+                    showToast("ما كدرنا نفتح نافذة الطباعة. نراجع كود الأندرويد.", "error", { duration: 5200 });
+                  }
+                }
+              }
+            ]
+          });
+          return;
         }
 
-        showToast("زر الطباعة جاهز من جهة HTML، وباقي نربطه بدالة AndroidBridge.printPdf في Android Studio.", "warn", { duration: 6200 });
+        showToast("الطباعة تحتاج ربط AndroidBridge.printPdf داخل Android Studio.", "warning", { duration: 6200 });
         return;
       }
 
@@ -8407,8 +8449,8 @@ ${buildPrintScopeCss()}
       document.getElementById("saveBtn").addEventListener("click", saveModel);
       document.getElementById("saveTopBtn").addEventListener("click", saveModel);
       document.getElementById("newBtn").addEventListener("click", resetState);
-      document.getElementById("printBtn")?.addEventListener("click", () => openPrintWindow());
-      document.getElementById("printTopBtn")?.addEventListener("click", () => openPrintWindow());
+      document.getElementById("printBtn")?.addEventListener("click", handlePhonePrintAction);
+      document.getElementById("printTopBtn")?.addEventListener("click", handlePhonePrintAction);
       document.getElementById("mobileNewBtn")?.addEventListener("click", resetState);
       document.getElementById("mobileSaveBtn")?.addEventListener("click", saveModel);
       document.getElementById("mobileSaveAsBtn")?.addEventListener("click", scrollToQuickSavePanel);
