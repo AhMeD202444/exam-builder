@@ -8375,10 +8375,26 @@ ${buildPrintScopeCss()}
       return finalPayload;
     }
 
+    let __androidPrintDialogScrollY = 0;
+
+    function lockElegantPrintDialogPage() {
+      __androidPrintDialogScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+      document.documentElement.classList.add("print-dialog-open");
+      document.body.classList.add("print-dialog-open");
+      document.body.style.top = `-${__androidPrintDialogScrollY}px`;
+    }
+
+    function unlockElegantPrintDialogPage() {
+      document.documentElement.classList.remove("print-dialog-open");
+      document.body.classList.remove("print-dialog-open");
+      document.body.style.top = "";
+      window.scrollTo(0, __androidPrintDialogScrollY || 0);
+    }
+
     function closeElegantPrintDialog() {
       const oldDialog = document.getElementById("androidElegantPrintDialog");
       if (oldDialog) oldDialog.remove();
-      document.body.classList.remove("print-dialog-open");
+      unlockElegantPrintDialogPage();
     }
 
     function showElegantPrintDialog(payload, bridge) {
@@ -8389,18 +8405,18 @@ ${buildPrintScopeCss()}
       overlay.id = "androidElegantPrintDialog";
       overlay.setAttribute("role", "dialog");
       overlay.setAttribute("aria-modal", "true");
+      overlay.setAttribute("aria-labelledby", "androidPrintTitle");
       overlay.dir = "rtl";
+
       overlay.innerHTML = `
-        <div class="android-print-modal__shade"></div>
+        <div class="android-print-modal__shade" aria-hidden="true"></div>
         <section class="android-print-modal__card" aria-labelledby="androidPrintTitle">
           <div class="android-print-modal__icon">PDF</div>
           <h3 id="androidPrintTitle">حفظ كملف PDF</h3>
-         
-<p class="android-print-modal__hint">
-  راح تفتح صفحة النظام. اختار <b>Save as PDF</b>، وبعدها اضغط حفظ.<br>
-  الملف ينحفظ داخل <b>Download / التنزيلات</b> حسب لغة جهازك.
-</p>
-
+          <p class="android-print-modal__hint">
+            اختار <b>Save as PDF</b> من صفحة النظام، ثم اضغط حفظ.<br>
+            الملف ينحفظ داخل <b>Download / التنزيلات</b>.
+          </p>
           <label class="android-print-modal__label" for="androidPrintFileName">اسم الملف</label>
           <input id="androidPrintFileName" class="android-print-modal__input" type="text" value="${escapeHtml(currentName)}" autocomplete="off" />
           <div class="android-print-modal__actions">
@@ -8412,141 +8428,263 @@ ${buildPrintScopeCss()}
 
       const style = document.createElement("style");
       style.textContent = `
-        body.print-dialog-open { overflow: hidden; }
+        html.print-dialog-open,
+        body.print-dialog-open {
+          overflow: hidden !important;
+          overscroll-behavior: none !important;
+          touch-action: none !important;
+        }
+
+        body.print-dialog-open {
+          position: fixed !important;
+          inset-inline: 0 !important;
+          width: 100% !important;
+        }
+
+        #androidElegantPrintDialog,
+        #androidElegantPrintDialog * {
+          box-sizing: border-box;
+          -webkit-tap-highlight-color: transparent;
+        }
+
         #androidElegantPrintDialog {
           position: fixed;
           inset: 0;
-          z-index: 999999;
-          display: grid;
-          place-items: center;
-          padding: 22px;
+          z-index: 2147483000;
+          width: 100vw;
+          height: 100vh;
+          height: 100dvh;
+          padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom));
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          pointer-events: auto;
           direction: rtl;
-          font-family: inherit;
+          touch-action: none;
+          overscroll-behavior: contain;
         }
+
         #androidElegantPrintDialog .android-print-modal__shade {
           position: absolute;
           inset: 0;
-          background: rgba(7, 16, 32, .58);
+          background:
+            radial-gradient(circle at 50% 18%, rgba(199, 168, 107, .24), transparent 30%),
+            rgba(10, 20, 36, .58);
           backdrop-filter: blur(7px);
           -webkit-backdrop-filter: blur(7px);
+          pointer-events: auto;
         }
+
         #androidElegantPrintDialog .android-print-modal__card {
           position: relative;
-          width: min(92vw, 430px);
+          z-index: 1;
+          width: min(430px, calc(100vw - 32px));
+          max-height: calc(100dvh - 36px);
+          overflow: auto;
+          margin: auto;
+          padding: 24px 20px 18px;
           border-radius: 28px;
-          padding: 24px 22px 20px;
-          background: linear-gradient(180deg, rgba(255,255,255,.98), rgba(245,249,255,.98));
-          border: 1px solid rgba(180, 201, 230, .95);
-          box-shadow: 0 26px 70px rgba(15, 45, 90, .34), inset 0 1px 0 rgba(255,255,255,.85);
-          color: #172a45;
+          border: 1px solid rgba(255,255,255,.78);
+          background:
+            linear-gradient(180deg, rgba(255,255,255,.98), rgba(246,250,255,.98));
+          box-shadow:
+            0 28px 80px rgba(7, 16, 30, .42),
+            0 0 0 1px rgba(33, 53, 85, .08),
+            inset 0 1px 0 rgba(255,255,255,.88);
           text-align: center;
+          color: #172a45;
+          touch-action: auto;
+          overscroll-behavior: contain;
+          animation: androidPrintModalIn .22s ease both;
         }
+
         #androidElegantPrintDialog .android-print-modal__icon {
           width: 62px;
           height: 62px;
           margin: 0 auto 12px;
-          border-radius: 20px;
-          display: grid;
-          place-items: center;
-          background: linear-gradient(135deg, #17365f, #356da8);
+          border-radius: 22px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: linear-gradient(135deg, #213555, #365486);
           color: #fff;
+          font-size: 16px;
           font-weight: 900;
           letter-spacing: .8px;
-          box-shadow: 0 14px 26px rgba(31, 76, 128, .28);
+          box-shadow: 0 16px 30px rgba(33, 53, 85, .24), 0 0 0 5px rgba(199,168,107,.16);
         }
+
         #androidElegantPrintDialog h3 {
-          margin: 0 0 8px;
-          font-size: 25px;
-          font-weight: 950;
-          line-height: 1.25;
+          margin: 0 0 9px;
+          color: #172a45;
+          font-size: 22px;
+          font-weight: 900;
+          line-height: 1.45;
         }
+
         #androidElegantPrintDialog .android-print-modal__hint {
-          margin: 0 auto 18px;
-          color: #5d6c80;
-          font-size: 15px;
-          line-height: 1.8;
-          max-width: 340px;
+          margin: 0 auto 17px;
+          max-width: 360px;
+          color: #52657d;
+          font-size: 13.5px;
+          font-weight: 800;
+          line-height: 1.95;
         }
+
+        #androidElegantPrintDialog .android-print-modal__hint b {
+          color: #203856;
+          font-weight: 900;
+        }
+
         #androidElegantPrintDialog .android-print-modal__label {
           display: block;
-          text-align: right;
-          margin: 0 6px 8px;
-          font-size: 14px;
+          margin: 0 0 8px;
+          color: #203856;
+          font-size: 13px;
           font-weight: 900;
-          color: #28425f;
+          text-align: right;
         }
+
         #androidElegantPrintDialog .android-print-modal__input {
           width: 100%;
-          box-sizing: border-box;
-          border: 1px solid #c8d7ea;
+          min-height: 54px;
+          padding: 13px 15px;
+          border: 1px solid rgba(112, 135, 168, .34);
           border-radius: 18px;
-          padding: 14px 16px;
           background: #fff;
           color: #172a45;
-          font-size: 17px;
-          font-weight: 800;
+          font-family: inherit;
+          font-size: 16px;
+          font-weight: 900;
           outline: none;
-          box-shadow: inset 0 2px 8px rgba(36, 74, 115, .07);
           text-align: right;
+          box-shadow: inset 0 2px 8px rgba(36, 74, 115, .07);
         }
+
         #androidElegantPrintDialog .android-print-modal__input:focus {
           border-color: #356da8;
-          box-shadow: 0 0 0 4px rgba(53,109,168,.14), inset 0 2px 8px rgba(36,74,115,.07);
+          box-shadow:
+            0 0 0 4px rgba(53,109,168,.14),
+            inset 0 2px 8px rgba(36,74,115,.07);
         }
+
         #androidElegantPrintDialog .android-print-modal__actions {
           display: grid;
-          grid-template-columns: 1fr 1.3fr;
-          gap: 12px;
-          margin-top: 18px;
+          grid-template-columns: 1fr 1.25fr;
+          gap: 10px;
+          margin-top: 16px;
         }
+
         #androidElegantPrintDialog .android-print-modal__btn {
+          min-height: 50px;
           border: 0;
           border-radius: 17px;
-          padding: 13px 14px;
-          font: inherit;
-          font-size: 16px;
-          font-weight: 950;
+          padding: 12px 14px;
+          font-family: inherit;
+          font-size: 14px;
+          font-weight: 900;
           cursor: pointer;
+          transition: transform .16s ease, filter .16s ease, box-shadow .16s ease;
         }
+
+        #androidElegantPrintDialog .android-print-modal__btn:active {
+          transform: scale(.98);
+        }
+
+        #androidElegantPrintDialog .android-print-modal__btn--primary {
+          background: linear-gradient(135deg, #213555, #365486);
+          color: #fff;
+          box-shadow: 0 14px 26px rgba(33, 53, 85, .22);
+        }
+
         #androidElegantPrintDialog .android-print-modal__btn--ghost {
           background: #eef4fb;
-          color: #29435f;
-          border: 1px solid #d5e0ee;
+          color: #213555;
+          border: 1px solid #d9e4f2;
         }
-        #androidElegantPrintDialog .android-print-modal__btn--primary {
-          color: #fff;
-          background: linear-gradient(135deg, #17365f, #356da8);
-          box-shadow: 0 12px 24px rgba(31, 76, 128, .24);
+
+        @keyframes androidPrintModalIn {
+          from {
+            opacity: 0;
+            transform: translateY(12px) scale(.975);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+          }
+        }
+
+        @media (max-width: 420px) {
+          #androidElegantPrintDialog {
+            padding-inline: 12px;
+          }
+
+          #androidElegantPrintDialog .android-print-modal__card {
+            width: calc(100vw - 24px);
+            border-radius: 24px;
+            padding: 22px 16px 16px;
+          }
+
+          #androidElegantPrintDialog h3 {
+            font-size: 20px;
+          }
+
+          #androidElegantPrintDialog .android-print-modal__hint {
+            font-size: 13px;
+          }
+
+          #androidElegantPrintDialog .android-print-modal__actions {
+            grid-template-columns: 1fr;
+          }
         }
       `;
 
       overlay.appendChild(style);
       document.body.appendChild(overlay);
-      document.body.classList.add("print-dialog-open");
+      lockElegantPrintDialogPage();
 
+      const card = overlay.querySelector(".android-print-modal__card");
       const input = overlay.querySelector("#androidPrintFileName");
-      const continueBtn = overlay.querySelector('[data-action="continue"]');
-      const cancelBtn = overlay.querySelector('[data-action="cancel"]');
 
       overlay.addEventListener("click", (event) => {
-        // ممنوع إغلاق النافذة بالضغط خارجها.
-        if (event.target === overlay || event.target.classList.contains("android-print-modal__shade")) {
+        if (!event.target.closest(".android-print-modal__card")) {
           event.preventDefault();
           event.stopPropagation();
         }
+      }, true);
+
+      overlay.addEventListener("wheel", (event) => {
+        if (!event.target.closest(".android-print-modal__card")) {
+          event.preventDefault();
+        }
+      }, { passive: false });
+
+      overlay.addEventListener("touchmove", (event) => {
+        if (!event.target.closest(".android-print-modal__card")) {
+          event.preventDefault();
+          event.stopPropagation();
+        }
+      }, { passive: false });
+
+      card.addEventListener("touchmove", (event) => {
+        event.stopPropagation();
+      }, { passive: true });
+
+      overlay.querySelector('[data-action="cancel"]').addEventListener("click", () => {
+        closeElegantPrintDialog();
       });
 
-      cancelBtn.addEventListener("click", closeElegantPrintDialog);
-      continueBtn.addEventListener("click", () => {
-        const typedName = String(input.value || "").trim();
-        if (!typedName) {
+      overlay.querySelector('[data-action="continue"]').addEventListener("click", () => {
+        const nextName = String(input.value || "").trim();
+        if (!nextName) {
           input.focus();
           input.select();
           return;
         }
 
-        updateAndroidPrintPayloadName(payload, typedName);
+        window.__ANDROID_PRINT_PAYLOAD__ = updateAndroidPrintPayloadName(payload, nextName);
         closeElegantPrintDialog();
+
         try {
           bridge.printPdf();
         } catch (error) {
@@ -8558,7 +8696,7 @@ ${buildPrintScopeCss()}
       setTimeout(() => {
         input.focus();
         input.select();
-      }, 80);
+      }, 100);
     }
 
     function handlePhonePrintAction() {
