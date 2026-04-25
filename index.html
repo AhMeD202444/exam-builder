@@ -4487,68 +4487,88 @@
     }
 
 
-
-    /* === Mobile APK restore patch by ChatGPT ===
-       يرجع شكل نسخة الهاتف مثل الصور: الفوتر الأزرق ثابت وكبير ومريح،
-       وزر (طباعة) بالهيدر مخصص لحفظ PDF عبر نافذة الطباعة/Save as PDF. */
-    @media (max-width: 920px) {
-      html, body {
-        min-height: 100%;
-        background: #edf3fb;
-        overscroll-behavior-y: contain;
+    /* === Mobile footer/header exact geometry patch ===
+       نسخة الهاتف فقط:
+       - الفوتر يأخذ نفس عرض وتمركز الهيدر.
+       - الفوتر يبقى ثابت بالأسفل ويتكمّش ويا الهيدر بنفس حالة is-compact.
+       - pointer-events:none حتى لا يغطي اللمس على الصفحة. */
+    @media only screen and (max-width: 920px) {
+      .mobile-shell,
+      .page-footer {
+        left: 50% !important;
+        right: auto !important;
+        width: calc(100% - 10px) !important;
+        max-width: 720px !important;
+        transform: translateX(-50%) !important;
+        box-sizing: border-box !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
       }
 
-      body {
-        padding-top: 0 !important;
-        padding-bottom: calc(86px + env(safe-area-inset-bottom, 0px)) !important;
-      }
-
-      .app-shell {
-        padding-bottom: calc(98px + env(safe-area-inset-bottom, 0px)) !important;
+      .mobile-shell {
+        position: fixed !important;
+        top: 0 !important;
+        bottom: auto !important;
+        z-index: 125 !important;
       }
 
       .page-footer,
       footer.page-footer {
-        position: fixed !important;
-        left: 10px !important;
-        right: 10px !important;
-        bottom: calc(0px + env(safe-area-inset-bottom, 0px)) !important;
-        z-index: 999 !important;
-        min-height: 58px !important;
-        padding: 14px 12px 16px !important;
         display: flex !important;
+        position: fixed !important;
+        top: auto !important;
+        bottom: 0 !important;
+        min-height: 34px !important;
+        height: auto !important;
+        padding: 7px 10px calc(7px + var(--mobile-bottom-safe-area, env(safe-area-inset-bottom, 0px))) !important;
         align-items: center !important;
         justify-content: center !important;
-        border-radius: 18px 18px 0 0 !important;
-        background: linear-gradient(135deg, #18345e 0%, #2d5d99 100%) !important;
-        color: #ffffff !important;
-        font-size: clamp(15px, 4vw, 20px) !important;
-        font-weight: 900 !important;
-        line-height: 1.35 !important;
         text-align: center !important;
-        box-shadow: 0 -10px 28px rgba(18, 48, 91, 0.25) !important;
-        transform: none !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        border-radius: 18px 18px 0 0 !important;
+        background: linear-gradient(135deg, #274777 0%, #365a94 60%, #4f76b1 100%) !important;
+        border: 0 !important;
+        color: #ffffff !important;
+        font-size: 11.2px !important;
+        font-weight: 800 !important;
+        line-height: 1.18 !important;
+        letter-spacing: 0 !important;
+        box-shadow: 0 -14px 28px rgba(27, 50, 89, .18) !important;
+        z-index: 110 !important;
         opacity: 1 !important;
-        pointer-events: auto !important;
+        pointer-events: none !important;
+        transition:
+          padding .18s ease,
+          min-height .18s ease,
+          border-radius .18s ease,
+          font-size .18s ease,
+          box-shadow .18s ease !important;
       }
 
       .page-footer.is-compact,
-      .page-footer.footer-hidden,
-      footer.page-footer.is-compact,
-      footer.page-footer.footer-hidden {
-        transform: none !important;
+      footer.page-footer.is-compact {
+        bottom: 0 !important;
+        min-height: 30px !important;
+        padding: 5px 8px calc(5px + var(--mobile-bottom-safe-area, env(safe-area-inset-bottom, 0px))) !important;
+        border-radius: 12px 12px 0 0 !important;
+        font-size: 10px !important;
+        line-height: 1.1 !important;
+        box-shadow: 0 -8px 16px rgba(27, 50, 89, .14) !important;
+        transform: translateX(-50%) !important;
         opacity: 1 !important;
       }
 
-      .mobile-header-actions .btn-print,
-      #mobilePrintBtn,
-      #printTopBtn {
-        background: linear-gradient(135deg, #c79d45 0%, #e4c268 100%) !important;
-        color: #ffffff !important;
-        border-color: rgba(119, 82, 18, 0.22) !important;
-        box-shadow: 0 10px 22px rgba(156, 116, 36, 0.24) !important;
+      .app-shell {
+        padding-bottom: calc(var(--mobile-footer-current-height, 34px) + 10px + var(--mobile-bottom-safe-area, env(safe-area-inset-bottom, 0px))) !important;
+      }
+
+      .scroll-top-btn {
+        bottom: calc(var(--mobile-footer-current-height, 34px) + 12px + var(--mobile-bottom-safe-area, env(safe-area-inset-bottom, 0px))) !important;
       }
     }
+
 </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -8246,73 +8266,21 @@ ${buildPrintScopeCss()}
       );
     }
 
-    function getSafePdfTitle() {
-      const preferred = normalizeModelTitle(state.saveName || state.examTitle || getPreferredSaveName() || "exam");
-      return preferred || "exam";
-    }
+    function openPrintWindow(targetWindow = null) {
+      const html = getPrintDocumentHtml();
+      const providedWindowIsUsable = isValidPrintWindow(targetWindow);
+      const printWindow = providedWindowIsUsable
+        ? targetWindow
+        : window.open("", "_blank", "width=1100,height=900");
 
-    function ensurePrintFileTitle() {
-      const finalName = getSafePdfTitle();
-      state.saveName = finalName;
-      const saveNameInput = document.getElementById("saveName");
-      if (saveNameInput) saveNameInput.value = finalName;
-      saveDraft({ skipAutoSave: true });
-      renderSavedList();
-      return finalName;
-    }
-
-    function printHtmlUsingHiddenFrame(html, finalName) {
-      const oldFrame = document.getElementById("phonePdfPrintFrame");
-      if (oldFrame) oldFrame.remove();
-
-      const frame = document.createElement("iframe");
-      frame.id = "phonePdfPrintFrame";
-      frame.title = finalName || "exam";
-      frame.setAttribute("aria-hidden", "true");
-      frame.style.position = "fixed";
-      frame.style.right = "0";
-      frame.style.bottom = "0";
-      frame.style.width = "0";
-      frame.style.height = "0";
-      frame.style.border = "0";
-      frame.style.opacity = "0";
-      frame.style.pointerEvents = "none";
-      document.body.appendChild(frame);
-
-      const doc = frame.contentWindow?.document || frame.contentDocument;
-      if (!doc) {
-        showToast("تعذر تجهيز ملف الطباعة. حاول مرة ثانية.", "error", { duration: 5200 });
-        return;
-      }
-
-      doc.open();
-      doc.write(html.replace("<title>نموذج الامتحان</title>", `<title>${escapeHtml(finalName || "exam")}</title>`));
-      doc.close();
-
-      frame.onload = function () {
-        setTimeout(function () {
-          try {
-            frame.contentWindow.focus();
-            frame.contentWindow.print();
-            showToast("اختَر Save as PDF / حفظ كـ PDF من نافذة الطباعة.", "info", { duration: 5200 });
-          } catch (error) {
-            console.error("Hidden frame print error:", error);
-            fallbackOpenPrintWindow(html, finalName);
-          }
-        }, 250);
-      };
-    }
-
-    function fallbackOpenPrintWindow(html, finalName) {
-      const printWindow = window.open("", "_blank", "width=1100,height=900");
       if (!printWindow || !isValidPrintWindow(printWindow)) {
-        showToast("الطباعة انمنعت داخل التطبيق. افتح الملف بالمتصفح أو فعّل WebView PrintManager.", "error", { duration: 6500 });
+        showToast("المتصفح منع نافذة الطباعة. افتح السماح للـ pop-ups وحاول مرة ثانية.", "error", { duration: 5600 });
         return;
       }
 
       try {
         printWindow.document.open();
-        printWindow.document.write(html.replace("<title>نموذج الامتحان</title>", `<title>${escapeHtml(finalName || "exam")}</title>`));
+        printWindow.document.write(html);
         printWindow.document.close();
       } catch (error) {
         try { printWindow.close(); } catch (closeError) {}
@@ -8321,44 +8289,64 @@ ${buildPrintScopeCss()}
       }
     }
 
-    function openPrintWindow(targetWindow = null) {
-      const finalName = ensurePrintFileTitle();
-      const html = getPrintDocumentHtml();
-
-      // إن كان تطبيق الأندرويد مضاف بيه جسر طباعة مستقبلاً، هذا السطر يخليه يحفظ مباشرة.
-      if (window.Android && typeof window.Android.printPdf === "function") {
-        try {
-          window.Android.printPdf(html, finalName);
-          return;
-        } catch (error) {
-          console.error("Android.printPdf error:", error);
-        }
-      }
-
-      if (targetWindow && isValidPrintWindow(targetWindow)) {
-        try {
-          targetWindow.document.open();
-          targetWindow.document.write(html.replace("<title>نموذج الامتحان</title>", `<title>${escapeHtml(finalName || "exam")}</title>`));
-          targetWindow.document.close();
-          return;
-        } catch (error) {
-          try { targetWindow.close(); } catch (closeError) {}
-          console.error("Provided print window error:", error);
-        }
-      }
-
-      if (window.innerWidth <= 920) {
-        printHtmlUsingHiddenFrame(html, finalName);
-      } else {
-        fallbackOpenPrintWindow(html, finalName);
-      }
+    function requestPhonePrintName() {
+      const initialName = getPreferredSaveName();
+      const rawName = window.prompt("اكتب اسم ملف الـ PDF", initialName);
+      if (rawName === null) return null;
+      const finalName = normalizeModelTitle(rawName) || initialName;
+      state.saveName = finalName;
+      const saveNameInput = document.getElementById("saveName");
+      if (saveNameInput) saveNameInput.value = finalName;
+      saveDraft({ skipAutoSave: true });
+      renderSavedList();
+      return finalName;
     }
 
-    function requestPhonePrintName() {
-      return ensurePrintFileTitle();
+    function prepareAndroidPrintPayload() {
+      const finalName = requestPhonePrintName();
+      if (!finalName) return null;
+
+      const cleanFileName = String(finalName || "exam")
+        .replace(/[\\/:*?"<>|]+/g, "-")
+        .replace(/\s+/g, " ")
+        .trim() || "exam";
+
+      const html = getPrintDocumentHtml();
+
+      window.__ANDROID_PRINT_PAYLOAD__ = {
+        title: cleanFileName,
+        fileName: `${cleanFileName}.pdf`,
+        html
+      };
+
+      return window.__ANDROID_PRINT_PAYLOAD__;
     }
 
     function handlePhonePrintAction() {
+      if (window.innerWidth <= 920) {
+        const payload = prepareAndroidPrintPayload();
+        if (!payload) return;
+
+        const bridge =
+          (window.AndroidBridge && typeof window.AndroidBridge.printPdf === "function" && window.AndroidBridge) ||
+          (window.Android && typeof window.Android.printPdf === "function" && window.Android);
+
+        if (bridge) {
+          try {
+            bridge.printPdf();
+            showToast("جاري فتح نافذة حفظ PDF من أندرويد...", "info", { duration: 2600 });
+            return;
+          } catch (error) {
+            console.error("Android print bridge error:", error);
+            showToast("تعذر تشغيل جسر الطباعة داخل التطبيق. راح نعدله من ملف الأندرويد.", "error", { duration: 5200 });
+            return;
+          }
+        }
+
+        showToast("زر الطباعة جاهز من جهة HTML، وباقي نربطه بدالة AndroidBridge.printPdf في Android Studio.", "warn", { duration: 6200 });
+        return;
+      }
+
       openPrintWindow();
     }
 
