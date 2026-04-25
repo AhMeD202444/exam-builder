@@ -8395,7 +8395,12 @@ ${buildPrintScopeCss()}
         <section class="android-print-modal__card" aria-labelledby="androidPrintTitle">
           <div class="android-print-modal__icon">PDF</div>
           <h3 id="androidPrintTitle">حفظ كملف PDF</h3>
-          <p class="android-print-modal__hint">راح تفتح صفحة النظام. من خيار الطابعة اختار <b>Save as PDF</b> وبعدها اضغط حفظ.</p>
+         
+<p class="android-print-modal__hint">
+  راح تفتح صفحة النظام. اختار <b>Save as PDF</b>، وبعدها اضغط حفظ.<br>
+  الملف ينحفظ داخل <b>Download / التنزيلات</b> حسب لغة جهازك.
+</p>
+
           <label class="android-print-modal__label" for="androidPrintFileName">اسم الملف</label>
           <input id="androidPrintFileName" class="android-print-modal__input" type="text" value="${escapeHtml(currentName)}" autocomplete="off" />
           <div class="android-print-modal__actions">
