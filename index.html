@@ -4694,6 +4694,50 @@
       unicode-bidi: plaintext;
     }
 
+
+
+    /* الحالة الافتراضية للهيدر: المادة/الصف مثل المعاينة بالصورة تماماً */
+    .print-scope .head-col.left .meta-stack {
+      width: fit-content !important;
+      max-width: none !important;
+      margin-right: auto !important;
+      margin-left: 0 !important;
+      padding-left: 1.5mm !important;
+    }
+    .print-scope .head-col.left .meta-row {
+      width: auto !important;
+      min-width: 0 !important;
+      display: grid !important;
+      grid-template-columns: 13.5mm auto !important;
+      align-items: baseline !important;
+      column-gap: 1.05mm !important;
+      justify-content: start !important;
+      direction: rtl !important;
+    }
+    .print-scope .head-col.left .meta-label {
+      white-space: nowrap !important;
+      text-align: right !important;
+    }
+    .print-scope .head-col.left .meta-value {
+      width: auto !important;
+      min-width: 0 !important;
+      display: inline-flex !important;
+      align-items: baseline !important;
+      white-space: nowrap !important;
+    }
+    .print-scope .head-col.left .meta-row-default .meta-value {
+      width: 20mm !important;
+      min-width: 20mm !important;
+    }
+    .print-scope .head-col.left .meta-fill-line {
+      display: block !important;
+      flex: 0 0 20mm !important;
+      width: 20mm !important;
+      min-width: 20mm !important;
+      height: 0.72em !important;
+      border-bottom: 1.15px dotted #111 !important;
+      transform: translateY(-0.12em) !important;
+    }
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -5971,6 +6015,68 @@
 }
 .print-scope .meta-stack {
   transform: translate(var(--header-left-shift-x), var(--header-left-shift-y)) !important;
+}
+.print-scope .head-col.left .meta-stack {
+  width: fit-content !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+  padding-left: 1.5mm !important;
+}
+.print-scope .head-col.left .meta-row {
+  display: grid !important;
+  grid-template-columns: 13.5mm auto !important;
+  align-items: baseline !important;
+  column-gap: 0.7mm !important;
+  justify-content: start !important;
+}
+.print-scope .head-col.left .meta-label,
+.print-scope .head-col.left .meta-value {
+  display: inline-block !important;
+  white-space: nowrap !important;
+}
+.print-scope .head-col.left .meta-label {
+  text-align: right !important;
+}
+.print-scope .head-col.left .meta-stack {
+  width: fit-content !important;
+  max-width: none !important;
+  margin-right: auto !important;
+  margin-left: 0 !important;
+  padding-left: 1.5mm !important;
+}
+.print-scope .head-col.left .meta-row {
+  width: auto !important;
+  min-width: 0 !important;
+  display: grid !important;
+  grid-template-columns: 13.5mm auto !important;
+  align-items: baseline !important;
+  column-gap: 1.05mm !important;
+  justify-content: start !important;
+  direction: rtl !important;
+}
+.print-scope .head-col.left .meta-label {
+  white-space: nowrap !important;
+  text-align: right !important;
+}
+.print-scope .head-col.left .meta-value {
+  width: auto !important;
+  min-width: 0 !important;
+  display: inline-flex !important;
+  align-items: baseline !important;
+  white-space: nowrap !important;
+}
+.print-scope .head-col.left .meta-row-default .meta-value {
+  width: 20mm !important;
+  min-width: 20mm !important;
+}
+.print-scope .head-col.left .meta-fill-line {
+  display: block !important;
+  flex: 0 0 20mm !important;
+  width: 20mm !important;
+  min-width: 20mm !important;
+  height: 0.72em !important;
+  border-bottom: 1.15px dotted #111 !important;
+  transform: translateY(-0.12em) !important;
 }
 .print-scope .center-stack {
   transform: translate(var(--header-center-shift-x), var(--header-center-shift-y)) !important;
@@ -7405,6 +7511,12 @@
       const showTeacherSignature = Boolean(String(sig.rightName || "").trim());
       const teacherSignatureTitle = showTeacherSignature ? escapeHtml(sig.rightTitle || "مدرس المادة") : "";
       const teacherSignatureName = showTeacherSignature ? escapeHtml(sig.rightName || "") : "";
+      const subjectMetaIsDefault = !String(meta.subject || "").trim();
+      const gradeMetaIsDefault = !String(meta.grade || "").trim();
+      const subjectMetaClass = subjectMetaIsDefault ? " meta-row-default" : "";
+      const gradeMetaClass = gradeMetaIsDefault ? " meta-row-default" : "";
+      const subjectMetaHtml = subjectMetaIsDefault ? '<span class="meta-fill-line" aria-hidden="true"></span>' : escapeHtml(meta.subject);
+      const gradeMetaHtml = gradeMetaIsDefault ? '<span class="meta-fill-line" aria-hidden="true"></span>' : escapeHtml(meta.grade);
 
       sheet.innerHTML = `
         <div class="print-scope${printLanguageClass}" style="${scopeStyle}">
@@ -7426,8 +7538,8 @@
 
             <div class="head-col left">
               <div class="meta-stack">
-                <div class="head-line meta-row"><span class="meta-label">المادة/</span><span class="meta-value">&#8239;${escapeHtml(meta.subject || "................")}</span></div>
-                <div class="head-line meta-row"><span class="meta-label">الصف/</span><span class="meta-value">&#8239;${escapeHtml(meta.grade || "................")}</span></div>
+                <div class="head-line meta-row${subjectMetaClass}"><span class="meta-label">المادة/</span><span class="meta-value">${subjectMetaHtml}</span></div>
+                <div class="head-line meta-row${gradeMetaClass}"><span class="meta-label">الصف/</span><span class="meta-value">${gradeMetaHtml}</span></div>
               </div>
             </div>
           </div>
