@@ -4782,6 +4782,56 @@
     padding-bottom: calc(92px + env(safe-area-inset-bottom)) !important;
   }
 }
+
+
+    /* FINAL MOBILE STACK FIX: prevent desktop preview sizing from breaking the phone layout */
+    @media only screen and (max-width: 920px) {
+      .workspace {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 10px !important;
+      }
+
+      .panel-stack,
+      #previewPane {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+      }
+
+      .panel-stack {
+        order: 1 !important;
+      }
+
+      #previewPane {
+        order: 2 !important;
+        display: block !important;
+        padding-left: 0 !important;
+      }
+
+      #previewPane .sheet-stage {
+        width: 100% !important;
+        overflow: hidden !important;
+        padding: 8px 0 12px !important;
+      }
+
+      #previewPane .exam-sheet {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        transform-origin: top center !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+        min-height: auto !important;
+        box-sizing: border-box !important;
+      }
+    }
+
 </style>
   <style id="advancedDynamicStyle"></style>
 </head>
