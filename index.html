@@ -6177,6 +6177,7 @@
       if (!hidden) return;
       hidden.value = language === "en" ? "en" : "ar";
       updatePrintSettingField(hidden);
+      renderQuestionEditors();
     }
 
     function updatePrintSettingField(element) {
@@ -6228,6 +6229,31 @@
 
     function nextLabel(index) {
       return AR_LETTERS[index] || toArabicDigits(index + 1);
+    }
+
+    function isEnglishEditorLabels() {
+      return getPrintLanguage && getPrintLanguage() === "en";
+    }
+
+    function formatEditorQuestionLabel(index) {
+      return isEnglishEditorLabels() ? `Q${index + 1}` : `س${toArabicDigits(index + 1)}`;
+    }
+
+    function formatEditorBranchLabel(value, index) {
+      const raw = String(value || "").trim();
+      if (!isEnglishEditorLabels()) return toArabicDigits(raw || nextLabel(index));
+      const source = raw || nextLabel(index);
+      const normalized = source
+        .replace(/[٠-٩]/g, (d) => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+        .replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+      const arIndex = AR_LETTERS.indexOf(source);
+      if (arIndex >= 0) return EN_LETTERS[arIndex] || source;
+      if (/^\d+$/.test(normalized)) {
+        const numericIndex = Number(normalized) - 1;
+        return EN_LETTERS[numericIndex] || normalized;
+      }
+      if (/^[A-Za-z]+$/.test(source)) return source.toUpperCase();
+      return source;
     }
 
     function isLetterBranchLabel(value) {
@@ -6687,7 +6713,7 @@
           <div class="question-card ${questionCollapsed ? "is-collapsed" : ""}" data-q="${qIndex}" data-question-id="${question.id}">
             <div class="question-top ${questionCollapsed ? "question-top-collapsed-clickable" : ""}" ${questionCollapsed ? `data-action="toggle-question" data-question-id="${question.id}" role="button" tabindex="0" aria-label="فتح السؤال"` : ``}>
               <div class="head-main">
-                <div class="chip">س${toArabicDigits(qIndex + 1)}</div>
+                <div class="chip">${formatEditorQuestionLabel(qIndex)}</div>
               </div>
               <div class="question-side-actions">
                 ${questionCollapsed ? collapsedHeaderActions : expandedHeaderActions}
@@ -7020,7 +7046,7 @@
       const commonHeader = `
         <div class="question-top">
           <div class="head-main">
-            <div class="chip">${escapeHtml(toArabicDigits(block.label || nextLabel(bIndex)))}</div>
+            <div class="chip">${escapeHtml(formatEditorBranchLabel(block.label || nextLabel(bIndex), bIndex))}</div>
           </div>
           <div class="inline-actions">
             <button class="btn btn-danger block-remove-btn" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}" title="حذف الفرع" aria-label="حذف الفرع">حذف</button>
@@ -7029,7 +7055,7 @@
         <div class="grid-3">
           <div class="field">
             <label>رمز الفرع</label>
-            <input data-scope="block" data-field="label" data-q="${qIndex}" data-b="${bIndex}" type="text" value="${escapeHtml(toArabicDigits(block.label || ""))}" />
+            <input data-scope="block" data-field="label" data-q="${qIndex}" data-b="${bIndex}" type="text" value="${escapeHtml(formatEditorBranchLabel(block.label || "", bIndex))}" />
           </div>
           <div class="field">
             <label>نوع الفرع</label>
@@ -8068,9 +8094,14 @@
       renderPreview();
       const previewHtml = document.getElementById("sheetPreview").innerHTML;
       const printableTitle = escapeHtml(getPreferredSaveName());
+      const printDocumentLanguage = getPrintLanguage();
+      const printDocumentIsEnglish = printDocumentLanguage === "en";
+      const printDocumentLang = printDocumentIsEnglish ? "en" : "ar";
+      const printDocumentDir = printDocumentIsEnglish ? "ltr" : "rtl";
+      const printDocumentBodyClass = printDocumentIsEnglish ? "print-document-ltr" : "print-document-rtl";
 
       return `<!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="${printDocumentLang}" dir="${printDocumentDir}">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8369,6 +8400,49 @@ ${buildPrintScopeCss()}
       font-size: 12pt;
       font-weight: 900;
     }
+    body.print-document-ltr {
+      direction: ltr;
+    }
+    body.print-document-rtl {
+      direction: rtl;
+    }
+    body.print-document-ltr .print-shell,
+    body.print-document-ltr .print-scope.print-lang-en {
+      direction: ltr;
+    }
+    body.print-document-ltr .print-scope.print-lang-en .sheet-header,
+    body.print-document-ltr .print-scope.print-lang-en .head-col.right,
+    body.print-document-ltr .print-scope.print-lang-en .head-col.left,
+    body.print-document-ltr .print-scope.print-lang-en .school-stack,
+    body.print-document-ltr .print-scope.print-lang-en .meta-stack,
+    body.print-document-ltr .print-scope.print-lang-en .center-stack {
+      direction: rtl;
+    }
+    body.print-document-ltr .print-scope.print-lang-en .questions-area {
+      direction: ltr !important;
+      text-align: left !important;
+    }
+    body.print-document-ltr .print-scope.print-lang-en .question-row,
+    body.print-document-ltr .print-scope.print-lang-en .element-line,
+    body.print-document-ltr .print-scope.print-lang-en .ordering-item,
+    body.print-document-ltr .print-scope.print-lang-en .matching-row {
+      direction: ltr !important;
+      text-align: left !important;
+    }
+    body.print-document-ltr .print-scope.print-lang-en .question-text,
+    body.print-document-ltr .print-scope.print-lang-en .element-body,
+    body.print-document-ltr .print-scope.print-lang-en .ordering-text,
+    body.print-document-ltr .print-scope.print-lang-en .matching-text {
+      direction: ltr !important;
+      text-align: left !important;
+      unicode-bidi: plaintext;
+    }
+    body.print-document-ltr .print-scope.print-lang-en .sheet-note,
+    body.print-document-ltr .print-scope.print-lang-en .sheet-note span {
+      direction: ltr !important;
+      text-align: center !important;
+      unicode-bidi: plaintext;
+    }
     @page {
       size: A4 portrait;
       margin: 5mm;
@@ -8404,7 +8478,7 @@ ${buildPrintScopeCss()}
     }
   </style>
 </head>
-<body>
+<body class="${printDocumentBodyClass}">
   <div class="print-shell">${previewHtml}</div>
 
   <script>
