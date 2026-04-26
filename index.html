@@ -4738,6 +4738,92 @@
       border-bottom: 1.15px dotted #111 !important;
       transform: translateY(-0.12em) !important;
     }
+
+  /* FIX: خلي معاينة التطبيق تستخدم نفس مقاسات ورسم ورقة الطباعة/حفظ الصورة،
+     حتى الهيدر (المادة/الصف/الإدارة/العنوان) يبقى WYSIWYG على الهاتف والديسكتوب. */
+  #previewPane.sheet-stage {
+    overflow: hidden !important;
+    justify-content: center !important;
+    align-items: flex-start !important;
+    padding: 8px 0 !important;
+  }
+  #previewPane .preview-scale-wrap {
+    width: calc(210mm - 16mm) !important;
+    max-width: none !important;
+    min-width: calc(210mm - 16mm) !important;
+    transform-origin: top center !important;
+    will-change: transform;
+  }
+  #sheetPreview.exam-sheet {
+    width: calc(210mm - 16mm) !important;
+    min-width: calc(210mm - 16mm) !important;
+    max-width: none !important;
+    min-height: calc(297mm - 15mm) !important;
+    padding: 12mm 12mm 10mm !important;
+    border-radius: 2px !important;
+    box-sizing: border-box !important;
+  }
+  #previewPane #sheetPreview .sheet-header {
+    display: grid !important;
+    grid-template-columns: var(--header-side-width, 48mm) 1fr var(--header-side-width, 48mm) !important;
+    gap: var(--header-gap, 1mm) !important;
+    align-items: start !important;
+    direction: rtl !important;
+  }
+  #previewPane #sheetPreview .head-col {
+    min-width: 0 !important;
+    white-space: normal !important;
+  }
+  #previewPane #sheetPreview .head-col.right {
+    text-align: center !important;
+    justify-content: center !important;
+  }
+  #previewPane #sheetPreview .head-col.left {
+    direction: rtl !important;
+    text-align: right !important;
+    justify-content: center !important;
+    align-items: stretch !important;
+    padding-inline-start: 0 !important;
+    transform: none !important;
+    overflow: visible !important;
+  }
+  #previewPane #sheetPreview .head-col.left .meta-stack {
+    width: 100% !important;
+  }
+  #previewPane #sheetPreview .head-col.left .meta-line {
+    justify-content: flex-start !important;
+    text-align: right !important;
+    width: 100% !important;
+    overflow: visible !important;
+  }
+  #previewPane #sheetPreview .head-col.left .meta-label,
+  #previewPane #sheetPreview .head-col.left .meta-value {
+    font-size: var(--exam-header-meta-size, 12.1pt) !important;
+    line-height: 1.05 !important;
+    font-weight: 800 !important;
+  }
+  #previewPane #sheetPreview .head-col.left .meta-fill-line {
+    flex: 1 1 auto !important;
+    min-width: 10mm !important;
+    border-bottom: 1px dotted #111 !important;
+    height: .8em !important;
+    margin-inline-start: 1mm !important;
+  }
+  #previewPane #sheetPreview .head-title {
+    font-size: var(--exam-title-size, 15.6pt) !important;
+    line-height: 1.12 !important;
+    margin: 0 !important;
+  }
+  #previewPane #sheetPreview .head-year {
+    font-size: calc(var(--exam-title-size, 15.6pt) * 0.55) !important;
+    line-height: 1.05 !important;
+    margin-top: .6mm !important;
+  }
+  #previewPane #sheetPreview .exam-note {
+    font-size: var(--exam-note-size, 12.5pt) !important;
+    line-height: 1.35 !important;
+  }
+
   </style>
   <style id="advancedDynamicStyle"></style>
 </head>
@@ -7251,17 +7337,11 @@
     }
 
     function balanceHeaderColumns() {
-      const header = document.querySelector(".sheet-header");
-      if (!header) return;
-      const leftContent = header.querySelector(".head-col.left .meta-stack") || header.querySelector(".head-col.left");
-      const rightContent = header.querySelector(".head-col.right .school-stack") || header.querySelector(".head-col.right");
-      if (!leftContent || !rightContent) return;
-
-      header.style.removeProperty("--header-side-width");
-      const leftWidth = Math.ceil(leftContent.getBoundingClientRect().width);
-      const rightWidth = Math.ceil(rightContent.getBoundingClientRect().width);
-      const sideWidth = Math.max(leftWidth, rightWidth) + 10;
-      header.style.setProperty("--header-side-width", `${sideWidth}px`);
+      // المعاينة والطباعة/حفظ الصورة لازم تعتمد نفس عرض أعمدة الهيدر.
+      // لذلك ما نخلي الموبايل يقيس عرض صغير ويغيّر المعاينة وحدها.
+      document.querySelectorAll(".sheet-header").forEach(header => {
+        header.style.removeProperty("--header-side-width");
+      });
     }
 
     function isPhoneStepperMode() {
