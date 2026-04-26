@@ -1724,6 +1724,63 @@
       flex-wrap: wrap;
     }
 
+
+    .print-language-card {
+      display: grid;
+      gap: 10px;
+      padding: 14px;
+      border: 1px solid rgba(37, 99, 235, 0.16);
+      border-radius: 20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.92), rgba(239,246,255,0.9));
+      box-shadow: 0 12px 26px rgba(15, 23, 42, 0.08);
+      margin: 0 0 14px;
+    }
+    .print-language-card__head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      color: #0f172a;
+      font-weight: 900;
+    }
+    .print-language-card__hint {
+      margin: 0;
+      color: #64748b;
+      font-size: 12.5px;
+      line-height: 1.7;
+      font-weight: 700;
+    }
+    .print-language-switch {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px;
+      padding: 6px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.06);
+      border: 1px solid rgba(148, 163, 184, 0.35);
+    }
+    .print-language-switch input { position: absolute; opacity: 0; pointer-events: none; }
+    .print-language-switch span {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 900;
+      color: #334155;
+      cursor: pointer;
+      transition: transform .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease;
+      white-space: nowrap;
+    }
+    .print-language-switch input:checked + span {
+      color: #fff;
+      background: linear-gradient(135deg, #0f2a4d, #2563eb);
+      box-shadow: 0 10px 18px rgba(37, 99, 235, 0.22);
+    }
+    .print-language-switch span:active { transform: scale(.98); }
+
     .advanced-card details {
       border: 1px solid rgba(148, 163, 184, 0.28);
       border-radius: 18px;
@@ -4748,6 +4805,23 @@
           </div>
         </div>
 
+        <div class="print-language-card" aria-label="لغة ورقة الطباعة">
+          <div class="print-language-card__head">
+            <span>لغة النموذج والطباعة</span>
+            <div class="print-language-switch" role="radiogroup" aria-label="اختيار لغة ورقة الطباعة">
+              <label>
+                <input type="radio" name="printLanguage" data-print-setting="printLanguage" value="ar" checked />
+                <span>عربي</span>
+              </label>
+              <label>
+                <input type="radio" name="printLanguage" data-print-setting="printLanguage" value="en" />
+                <span>English</span>
+              </label>
+            </div>
+          </div>
+          <p class="print-language-card__hint">اختيار English يحوّل عناوين الإدخال والطباعة إلى Q1 / A / B، ويجعل جسم الورقة من اليسار إلى اليمين مع بقاء الهيدر بنفس تنسيقه.</p>
+        </div>
+
         <div class="card advanced-card">
           <details id="advancedSettingsCard">
             <summary>
@@ -5308,6 +5382,7 @@
   <script>    const DRAFT_KEY = "exam_builder_pro_draft_v2";
     const SAVED_KEY = "exam_builder_pro_saved_v2";
     const AR_LETTERS = ["أ","ب","ج","د","هـ","و","ز","ح","ط","ي","ك","ل","م","ن","س","ع","ف","ص","ق","ر","ش","ت","ث","خ","ذ","ض","ظ","غ"];
+    const EN_LETTERS = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P","Q","R","S","T","U","V","W","X","Y","Z"];
 
     let state = null;
     let autoSaveTimer = null;
@@ -5391,6 +5466,7 @@
     function defaultPrintSettings() {
       return {
         enabled: false,
+        printLanguage: "ar",
         headerMarginTop: 0,
         headerMarginBottom: 2,
         headerSideWidth: 48,
@@ -5482,6 +5558,7 @@
 
       return {
         enabled: Boolean(source.enabled),
+        printLanguage: sanitizeChoice(source.printLanguage, ["ar","en"], defaults.printLanguage),
         headerMarginTop: sanitizeNumber(source.headerMarginTop, defaults.headerMarginTop),
         headerMarginBottom: sanitizeNumber(source.headerMarginBottom, defaults.headerMarginBottom),
         headerSideWidth: sanitizeNumber(source.headerSideWidth, defaults.headerSideWidth),
@@ -5650,7 +5727,9 @@
 
     function getEffectivePrintSettings() {
       const current = getCurrentPrintSettings();
-      return current.enabled ? current : defaultPrintSettings();
+      const effective = current.enabled ? current : defaultPrintSettings();
+      effective.printLanguage = current.printLanguage || defaultPrintSettings().printLanguage;
+      return effective;
     }
 
     function mapRtlJustify(textAlign) {
@@ -6028,7 +6107,37 @@
 .print-scope .signature-name {
   font-size: var(--signature-name-size);
   font-weight: var(--signature-name-weight);
-}`;
+}
+.print-scope.print-lang-en .sheet-note,
+.print-scope.print-lang-en .questions-area,
+.print-scope.print-lang-en .sheet-footer {
+  direction: ltr !important;
+}
+.print-scope.print-lang-en .sheet-note {
+  text-align: center !important;
+}
+.print-scope.print-lang-en .questions-area,
+.print-scope.print-lang-en .sheet-footer {
+  text-align: left !important;
+}
+.print-scope.print-lang-en .sheet-header {
+  direction: rtl !important;
+}
+.print-scope.print-lang-en .question-block,
+.print-scope.print-lang-en .question-row,
+.print-scope.print-lang-en .question-text,
+.print-scope.print-lang-en .question-elements,
+.print-scope.print-lang-en .element-card,
+.print-scope.print-lang-en .element-content,
+.print-scope.print-lang-en .definitions-list,
+.print-scope.print-lang-en .essay-lines {
+  direction: ltr !important;
+  text-align: left !important;
+}
+.print-scope.print-lang-en .question-row {
+  flex-direction: row !important;
+}
+`;
     }
 
     function syncAdvancedStyleElement() {
@@ -6045,6 +6154,8 @@
         if (!key || !(key in settings)) return;
         if (element.type === "checkbox") {
           element.checked = Boolean(settings[key]);
+        } else if (element.type === "radio") {
+          element.checked = String(element.value) === String(settings[key]);
         } else {
           element.value = settings[key];
         }
@@ -6069,6 +6180,9 @@
 
       if (element.type === "checkbox") {
         value = element.checked;
+      } else if (element.type === "radio") {
+        if (!element.checked) return false;
+        value = element.value;
       } else if (element.dataset.printType === "number" || element.type === "number") {
         value = sanitizeNumber(element.value, defaults[key]);
       } else {
@@ -6079,7 +6193,11 @@
       state.printSettings = normalizePrintSettings(state.printSettings);
       fillPrintSettingsFields();
       saveDraft();
-      renderPreview();
+      if (key === "printLanguage") {
+        renderAll();
+      } else {
+        renderPreview();
+      }
       return true;
     }
 
@@ -6519,7 +6637,7 @@
           <div class="question-card ${questionCollapsed ? "is-collapsed" : ""}" data-q="${qIndex}" data-question-id="${question.id}">
             <div class="question-top ${questionCollapsed ? "question-top-collapsed-clickable" : ""}" ${questionCollapsed ? `data-action="toggle-question" data-question-id="${question.id}" role="button" tabindex="0" aria-label="فتح السؤال"` : ``}>
               <div class="head-main">
-                <div class="chip">س${toArabicDigits(qIndex + 1)}</div>
+                <div class="chip">${questionLabelText(qIndex, getCurrentPrintSettings())}</div>
               </div>
               <div class="question-side-actions">
                 ${questionCollapsed ? collapsedHeaderActions : expandedHeaderActions}
@@ -6852,7 +6970,7 @@
       const commonHeader = `
         <div class="question-top">
           <div class="head-main">
-            <div class="chip">${escapeHtml(toArabicDigits(block.label || nextLabel(bIndex)))}</div>
+            <div class="chip">${escapeHtml(branchLabelText(block.label || nextLabel(bIndex), bIndex, getCurrentPrintSettings()))}</div>
           </div>
           <div class="inline-actions">
             <button class="btn btn-danger block-remove-btn" data-action="remove-block" data-q="${qIndex}" data-b="${bIndex}" title="حذف الفرع" aria-label="حذف الفرع">حذف</button>
@@ -6861,7 +6979,7 @@
         <div class="grid-3">
           <div class="field">
             <label>رمز الفرع</label>
-            <input data-scope="block" data-field="label" data-q="${qIndex}" data-b="${bIndex}" type="text" value="${escapeHtml(toArabicDigits(block.label || ""))}" />
+            <input data-scope="block" data-field="label" data-q="${qIndex}" data-b="${bIndex}" type="text" value="${escapeHtml(branchLabelText(block.label || nextLabel(bIndex), bIndex, getCurrentPrintSettings()))}" />
           </div>
           <div class="field">
             <label>نوع الفرع</label>
@@ -7152,6 +7270,63 @@
       syncAdvancedStepperInteractionMode();
     }
 
+    function getPrintLanguage(settings = getEffectivePrintSettings()) {
+      return settings && settings.printLanguage === "en" ? "en" : "ar";
+    }
+
+    function isEnglishPrint(settings = getEffectivePrintSettings()) {
+      return getPrintLanguage(settings) === "en";
+    }
+
+    function printTerm(arText, enText, settings = getEffectivePrintSettings()) {
+      return isEnglishPrint(settings) ? enText : arText;
+    }
+
+    function questionLabelText(index, settings = getEffectivePrintSettings()) {
+      return isEnglishPrint(settings) ? `Q${index + 1}` : `س${toArabicDigits(index + 1)}`;
+    }
+
+    function hasArabicText(value) {
+      return /[\u0600-\u06FF]/.test(String(value || ""));
+    }
+
+    function branchLabelText(rawLabel, index = 0, settings = getEffectivePrintSettings()) {
+      const raw = String(rawLabel || "").trim();
+      if (!isEnglishPrint(settings)) return raw ? toArabicDigits(raw) : nextLabel(index);
+
+      const arabicIndex = AR_LETTERS.indexOf(raw);
+      if (arabicIndex !== -1) return EN_LETTERS[arabicIndex] || String(arabicIndex + 1);
+
+      const normalizedNumber = toArabicDigits(raw);
+      if (/^\d+$/.test(normalizedNumber)) return normalizedNumber;
+      if (/^[A-Za-z]+$/.test(raw)) return raw.toUpperCase();
+      return EN_LETTERS[index] || normalizedNumber || String(index + 1);
+    }
+
+    function defaultNoteText(settings = getEffectivePrintSettings()) {
+      return isEnglishPrint(settings)
+        ? "Answer five questions only (20 marks each)"
+        : "الإجابة عن خمسة أسئلة فقط (لكل سؤال 20 درجة)";
+    }
+
+    function noteTextForPrint(meta, settings = getEffectivePrintSettings()) {
+      const note = String(meta?.note || "").trim();
+      if (isEnglishPrint(settings)) {
+        return note && !hasArabicText(note) ? note : defaultNoteText(settings);
+      }
+      return note || defaultNoteText(settings);
+    }
+
+    function emptyHintText(arText, enText, settings = getEffectivePrintSettings()) {
+      return isEnglishPrint(settings) ? enText : arText;
+    }
+
+    function degreeText(value, settings = getEffectivePrintSettings()) {
+      const numberText = escapeHtml(String(value));
+      if (isEnglishPrint(settings)) return `${numberText} ${Number(value) === 1 ? "mark" : "marks"}`;
+      return `${numberText} درجة`;
+    }
+
     function renderPreview() {
       syncAdvancedStyleElement();
       const sheet = document.getElementById("sheetPreview");
@@ -7162,11 +7337,12 @@
       const sig = state.signatures;
       const scopeStyle = buildPrintScopeVars();
       const currentPrintSettings = getCurrentPrintSettings();
+      const printLang = getPrintLanguage(currentPrintSettings);
       const letterBranchesGapMm = Math.max(0, sanitizeNumber(currentPrintSettings.elementsGap, defaultPrintSettings().elementsGap));
 
       const questionsHtml = state.questions.map((question, qIndex) => {
-        const degreeText = question.degree ? `(${escapeHtml(formatDegree(question.degree))})` : "";
-        const questionNumberLabel = `س${toArabicDigits(qIndex + 1)}/`;
+        const degreeLabel = question.degree ? `(${degreeText(question.degree, currentPrintSettings)})` : "";
+        const questionNumberLabel = `${questionLabelText(qIndex, currentPrintSettings)}/`;
         const isMainTypedQuestion = ["blanks", "definitions", "points"].includes(question.type);
         const mergeFirstBranch = !isMainTypedQuestion && !String(question.title || "").trim() && Array.isArray(question.blocks) && question.blocks.length && ["normal", "definitions", "points", "blanks"].includes(question.blocks[0].type);
 
@@ -7178,11 +7354,11 @@
                   <strong>${questionNumberLabel}</strong>
                   ${question.title ? nlToBr(question.title) : ''}
                 </div>
-                ${degreeText ? `<div class="degree-badge">${degreeText}</div>` : ``}
+                ${degreeLabel ? `<div class="degree-badge">${degreeLabel}</div>` : ``}
               </div>
             `}
             ${isMainTypedQuestion
-              ? renderQuestionMainTypePreview(question)
+              ? renderQuestionMainTypePreview(question, currentPrintSettings)
               : (question.blocks && question.blocks.length ? `
               <div class="question-elements ${mergeFirstBranch ? "question-elements-merged" : ""}">
                 ${(() => {
@@ -7193,8 +7369,10 @@
                     previousBranchWasLetter = currentBranchIsLetter;
                     return renderBlockPreview(block, {
                       mergedQuestionLabel: mergeFirstBranch && blockIndex === 0 ? questionNumberLabel : "",
-                      mergedQuestionDegree: mergeFirstBranch && blockIndex === 0 && degreeText ? `<span class="degree-badge">${degreeText}</span>` : "",
-                      branchGapBefore
+                      mergedQuestionDegree: mergeFirstBranch && blockIndex === 0 && degreeLabel ? `<span class="degree-badge">${degreeLabel}</span>` : "",
+                      branchGapBefore,
+                      blockIndex,
+                      settings: currentPrintSettings
                     });
                   }).join("");
                 })()}
@@ -7207,11 +7385,11 @@
       const administrationText = escapeHtml(meta.administration || "إدارة");
       const schoolNameLine = meta.schoolName ? `<div class="head-line">${escapeHtml(meta.schoolName)}</div>` : "";
       const showTeacherSignature = Boolean(String(sig.rightName || "").trim());
-      const teacherSignatureTitle = showTeacherSignature ? escapeHtml(sig.rightTitle || "مدرس المادة") : "";
+      const teacherSignatureTitle = showTeacherSignature ? escapeHtml(sig.rightTitle || printTerm("مدرس المادة", "Subject Teacher", currentPrintSettings)) : "";
       const teacherSignatureName = showTeacherSignature ? escapeHtml(sig.rightName || "") : "";
 
       sheet.innerHTML = `
-        <div class="print-scope" style="${scopeStyle}">
+        <div class="print-scope print-lang-${printLang}" dir="${printLang === "en" ? "ltr" : "rtl"}" style="${scopeStyle}">
           <div class="sheet-header">
             <div class="head-col right">
               <div class="school-stack">
@@ -7239,8 +7417,8 @@
           <hr class="sheet-rule" />
 
           <div class="sheet-note">
-            ملاحظة:
-            <span>${meta.note ? nlToBr(meta.note) : "الإجابة عن خمسة أسئلة فقط (لكل سؤال 20 درجة)"}</span>
+            ${printTerm("ملاحظة", "Note", currentPrintSettings)}:
+            <span>${nlToBr(noteTextForPrint(meta, currentPrintSettings))}</span>
           </div>
 
           <div class="questions-area">
@@ -7323,17 +7501,19 @@
 
     function renderBlockPreview(block, options = {}) {
       const rawLabel = String(block.label || "").trim();
-      const label = escapeHtml(rawLabel);
+      const blockIndex = Number.isFinite(Number(options.blockIndex)) ? Number(options.blockIndex) : 0;
+      const previewSettings = options.settings || getEffectivePrintSettings();
+      const label = escapeHtml(branchLabelText(rawLabel, blockIndex, previewSettings));
       const mergedQuestionLabel = options.mergedQuestionLabel || "";
       const mergedQuestionDegree = options.mergedQuestionDegree || "";
       const branchClass = isLetterBranchLabel(rawLabel) ? " letter-branch" : "";
       const branchGapBefore = Math.max(0, Number(options.branchGapBefore || 0));
       const rootStyleAttr = branchGapBefore > 0 ? ` style="margin-top:${branchGapBefore}mm;"` : "";
       const labelPrefix = mergedQuestionLabel
-        ? `<span class="element-label"><strong>${mergedQuestionLabel}</strong> ${escapeHtml(toArabicDigits(label))}-</span>`
-        : (label ? `<span class="element-label">${escapeHtml(toArabicDigits(label))}-</span>` : "");
+        ? `<span class="element-label"><strong>${mergedQuestionLabel}</strong> ${label}-</span>`
+        : (label ? `<span class="element-label">${label}-</span>` : "");
       const degreeBadge = block.degree ? `<span class="element-degree">(${escapeHtml(formatDegree(block.degree))})</span>` : "";
-      const prompt = block.prompt ? nlToBr(block.prompt) : '<span class="empty-hint">فرع فارغ</span>';
+      const prompt = block.prompt ? nlToBr(block.prompt) : `<span class="empty-hint">${emptyHintText("فرع فارغ", "Empty branch", previewSettings)}</span>`;
       const trailingBadge = `${degreeBadge}${mergedQuestionDegree}`;
 
       if (block.type === "definitions") {
@@ -7347,7 +7527,7 @@
                   <div class="def-item">
                     <span class="dot">${toArabicDigits(index + 1)}-</span>
                     <div>
-                      ${renderExamText(item.text || "تعريف فارغ")}
+                      ${renderExamText(item.text || emptyHintText("تعريف فارغ", "Empty definition", previewSettings))}
                       ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
                     </div>
                   </div>
@@ -7366,7 +7546,7 @@
               <div class="ordering-item">
                 <span class="dot">${toArabicDigits(index + 1)}-</span>
                 <div>
-                  ${renderExamText(item.text || "نقطة فارغة")}
+                  ${renderExamText(item.text || emptyHintText("نقطة فارغة", "Empty point", previewSettings))}
                   ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
                 </div>
               </div>
@@ -7406,7 +7586,7 @@
               <div class="ordering-item">
                 <span class="dot">${toArabicDigits(index + 1)}-</span>
                 <div>
-                  ${item.text ? renderBlanks(item.text) : '<span class="empty-hint">اكتب النص واستعمل ___ بمكان الفراغ</span>'}
+                  ${item.text ? renderBlanks(item.text) : `<span class="empty-hint">${emptyHintText("اكتب النص واستعمل ___ بمكان الفراغ", "Write the sentence and use ___ for the blank", previewSettings)}</span>`}
                   ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
                 </div>
               </div>
@@ -7448,7 +7628,8 @@
       `;
     }
 
-    function renderQuestionMainTypePreview(question) {
+    function renderQuestionMainTypePreview(question, settings = getEffectivePrintSettings()) {
+      const previewSettings = settings;
       const items = Array.isArray(question.items) ? question.items : [];
 
       if (question.type === "definitions") {
@@ -7458,7 +7639,7 @@
               ${items.map((item, index) => `
                 <span class="def-pill">
                   <span class="dot">${toArabicDigits(index + 1)}-</span>
-                  <span>${renderExamText(item.text || "تعريف فارغ")}</span>
+                  <span>${renderExamText(item.text || emptyHintText("تعريف فارغ", "Empty definition", previewSettings))}</span>
                   ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
                 </span>
               `).join("")}
@@ -7475,7 +7656,7 @@
                 <div class="ordering-item">
                   <span class="dot">${toArabicDigits(index + 1)}-</span>
                   <div>
-                    ${renderExamText(item.text || "نقطة فارغة")}
+                    ${renderExamText(item.text || emptyHintText("نقطة فارغة", "Empty point", previewSettings))}
                     ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
                   </div>
                 </div>
@@ -7493,7 +7674,7 @@
                 <div class="ordering-item">
                   <span class="dot">${toArabicDigits(index + 1)}-</span>
                   <div>
-                    ${item.text ? renderBlanks(item.text) : '<span class="empty-hint">اكتب النص واستعمل ___ بمكان الفراغ</span>'}
+                    ${item.text ? renderBlanks(item.text) : `<span class="empty-hint">${emptyHintText("اكتب النص واستعمل ___ بمكان الفراغ", "Write the sentence and use ___ for the blank", previewSettings)}</span>`}
                     ${item.degree ? `<span class="mini-degree">(${escapeHtml(formatDegree(item.degree))})</span>` : ""}
                   </div>
                 </div>
