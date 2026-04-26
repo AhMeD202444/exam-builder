@@ -107,7 +107,7 @@
     .toast-stack {
       width: 100%;
       display: grid;
-      gap: 10px;
+      gap: 12px;
       pointer-events: none;
     }
 
@@ -7902,6 +7902,35 @@
       return toast;
     }
 
+    let imageSaveToastQueue = Promise.resolve();
+
+    function showImageSaveToast(message, type = "info", options = {}) {
+      const duration = typeof options.duration === "number"
+        ? options.duration
+        : type === "success"
+          ? 2800
+          : type === "error"
+            ? 5200
+            : 1800;
+      const gapAfter = typeof options.gapAfter === "number" ? options.gapAfter : 520;
+      const minVisible = typeof options.minVisible === "number" ? options.minVisible : Math.min(duration, 2200);
+
+      imageSaveToastQueue = imageSaveToastQueue
+        .catch(() => {})
+        .then(() => new Promise((resolve) => {
+          window.setTimeout(() => {
+            showToast(message, type, {
+              ...options,
+              duration,
+              toastKey: options.toastKey || `image-save::${type}::${String(message || "").trim()}`
+            });
+            window.setTimeout(resolve, minVisible + gapAfter);
+          }, typeof options.delay === "number" ? options.delay : 0);
+        }));
+
+      return imageSaveToastQueue;
+    }
+
     function showConfirmToast(message, onConfirm) {
       showToast(message, "warning", {
         autoClose: false,
@@ -8639,22 +8668,33 @@ ${autoPrintScript}
       style.id = "imageExportPrintParityStyle";
       style.textContent = `
         html, body {
-          width: 210mm !important;
-          min-height: 297mm !important;
+          width: auto !important;
+          min-height: auto !important;
           margin: 0 !important;
           padding: 0 !important;
-          background: #fff !important;
+          background: #ffffff !important;
+          overflow: visible !important;
+        }
+        body {
+          display: flex !important;
+          justify-content: center !important;
+          align-items: flex-start !important;
+        }
+        .image-export-stage {
+          display: inline-block !important;
+          padding: 8px !important;
+          background: #ffffff !important;
           overflow: visible !important;
         }
         .print-shell {
           width: 210mm !important;
           min-height: 297mm !important;
           margin: 0 !important;
-          border: 0 !important;
-          border-radius: 0 !important;
+          border: 1.4px solid #27313f !important;
+          border-radius: 3px !important;
           box-shadow: none !important;
           background: #fff !important;
-          padding: 12mm 13mm 13mm !important;
+          padding: 7mm 8mm 8mm !important;
           overflow: hidden !important;
         }
       `;
@@ -8675,7 +8715,12 @@ ${autoPrintScript}
       let exportFrame = null;
 
       try {
-        showToast("جاري تجهيز الصورة بنفس تنسيق الـ PDF...", "info", { duration: 2200 });
+        showImageSaveToast("جاري تجهيز الصورة بنفس تنسيق الـ PDF...", "info", {
+          duration: 1600,
+          minVisible: 1350,
+          gapAfter: 520,
+          toastKey: "image-save-progress"
+        });
         const html2canvas = await ensureHtml2CanvasLoaded();
         const html = getPrintDocumentHtml({ autoPrint: false });
 
@@ -8704,20 +8749,31 @@ ${autoPrintScript}
         const shell = frameDoc.querySelector(".print-shell");
         if (!shell) throw new Error("print shell not found");
 
-        const shellWidth = Math.ceil(shell.scrollWidth || shell.getBoundingClientRect().width || 794);
-        const shellHeight = Math.ceil(shell.scrollHeight || shell.getBoundingClientRect().height || 1123);
-        const exportScale = Math.min(2.5, Math.max(2, window.devicePixelRatio || 2));
+        let exportTarget = frameDoc.querySelector(".image-export-stage");
+        if (!exportTarget) {
+          exportTarget = frameDoc.createElement("div");
+          exportTarget.className = "image-export-stage";
+          if (shell.parentNode) {
+            shell.parentNode.insertBefore(exportTarget, shell);
+            exportTarget.appendChild(shell);
+          }
+        }
 
-        const canvas = await html2canvas(shell, {
+        const targetRect = exportTarget.getBoundingClientRect();
+        const targetWidth = Math.ceil(exportTarget.scrollWidth || targetRect.width || 810);
+        const targetHeight = Math.ceil(exportTarget.scrollHeight || targetRect.height || 1140);
+        const exportScale = Math.min(3, Math.max(2.2, window.devicePixelRatio || 2));
+
+        const canvas = await html2canvas(exportTarget, {
           backgroundColor: "#ffffff",
           scale: exportScale,
           useCORS: true,
           allowTaint: true,
           logging: false,
-          width: shellWidth,
-          height: shellHeight,
-          windowWidth: shellWidth,
-          windowHeight: shellHeight,
+          width: targetWidth,
+          height: targetHeight,
+          windowWidth: targetWidth,
+          windowHeight: targetHeight,
           scrollX: 0,
           scrollY: 0
         });
@@ -8729,14 +8785,29 @@ ${autoPrintScript}
 
         if (bridge) {
           bridge.saveBase64Image(dataUrl, fileName);
-          showToast("تم إرسال الصورة للحفظ داخل معرض الصور.", "success", { duration: 3600 });
+          showImageSaveToast("تم تجهيز الصورة وإرسالها للحفظ.", "success", {
+            duration: 2800,
+            minVisible: 1600,
+            gapAfter: 620,
+            toastKey: "image-save-bridge-success"
+          });
         } else {
           downloadDataUrl(dataUrl, fileName);
-          showToast("تم تنزيل الصورة بصيغة PNG.", "success", { duration: 3600 });
+          showImageSaveToast("تم تنزيل الصورة بصيغة PNG.", "success", {
+            duration: 2800,
+            minVisible: 1600,
+            gapAfter: 620,
+            toastKey: "image-save-download-success"
+          });
         }
       } catch (error) {
         console.error("Save image error:", error);
-        showToast("تعذر حفظ الصورة. تأكد من اتصال الإنترنت وجرب مرة ثانية.", "error", { duration: 6200 });
+        showImageSaveToast("تعذر حفظ الصورة. تأكد من اتصال الإنترنت وجرب مرة ثانية.", "error", {
+          duration: 5600,
+          minVisible: 2200,
+          gapAfter: 700,
+          toastKey: "image-save-error"
+        });
       } finally {
         if (exportFrame && exportFrame.parentNode) {
           exportFrame.parentNode.removeChild(exportFrame);
