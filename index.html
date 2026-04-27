@@ -4741,6 +4741,7 @@
 
   /* WYSIWYG A4 FIX: المعاينة هي مصدر الحقيقة للحفظ والصورة والـ PDF.
      الورقة تبقى A4 حقيقية 210mm × 297mm، وعلى الهاتف تنعرض بالتصغير فقط بدون تغيير تخطيط الهيدر أو الهوامش. */
+  /* BORDER INSET FIX: البوردر صار مرسوم 2mm داخل الورقة حتى لا يلتصق بالحافة في المعاينة أو حفظ الصورة أو PDF. */
   #previewPane .sheet-stage {
     position: relative !important;
     display: flex !important;
@@ -4759,7 +4760,7 @@
     margin: 0 !important;
     padding: 7mm 8mm 8mm !important;
     background: #ffffff !important;
-    border: 1.4px solid #27313f !important;
+    border: 1.4px solid transparent !important;
     border-radius: 3px !important;
     box-sizing: border-box !important;
     overflow: hidden !important;
@@ -4884,11 +4885,12 @@
     border-color: transparent !important;
   }
 
+  #sheetPreview.exam-sheet::before,
   .wysiwyg-a4-export-stage .exam-sheet::before {
     content: "" !important;
     display: block !important;
     position: absolute !important;
-    inset: 0 !important;
+    inset: 2mm !important;
     border: 1.4px solid #27313f !important;
     border-radius: 2px !important;
     pointer-events: none !important;
@@ -8468,7 +8470,7 @@ ${buildPrintScopeCss()}
       content: "";
       display: block;
       position: absolute;
-      inset: 0;
+      inset: 2mm;
       border: 1.4px solid #27313f;
       border-radius: 2px;
       pointer-events: none;
@@ -9018,7 +9020,7 @@ ${autoPrintScript}
           content: "" !important;
           display: block !important;
           position: absolute !important;
-          inset: 0 !important;
+          inset: 2mm !important;
           border: 1.4px solid #27313f !important;
           border-radius: 2px !important;
           pointer-events: none !important;
