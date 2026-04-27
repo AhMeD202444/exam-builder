@@ -4881,6 +4881,18 @@
     transform: none !important;
     transform-origin: top left !important;
     box-shadow: none !important;
+    border-color: transparent !important;
+  }
+
+  .wysiwyg-a4-export-stage .exam-sheet::before {
+    content: "" !important;
+    display: block !important;
+    position: absolute !important;
+    inset: 0 !important;
+    border: 1.4px solid #27313f !important;
+    border-radius: 2px !important;
+    pointer-events: none !important;
+    z-index: 20 !important;
   }
 
   @media only screen and (max-width: 920px) {
@@ -8444,7 +8456,7 @@ ${buildPrintScopeCss()}
       margin: 0 auto;
       background: #fff;
       border-radius: 3px;
-      border: 1.4px solid #27313f;
+      border: 1.4px solid transparent;
       box-shadow: 0 14px 40px rgba(15, 23, 42, 0.18);
       padding: 7mm 8mm 8mm;
       position: relative;
@@ -8453,7 +8465,14 @@ ${buildPrintScopeCss()}
       line-height: 1.74;
     }
     .print-shell::before {
-      display: none;
+      content: "";
+      display: block;
+      position: absolute;
+      inset: 0;
+      border: 1.4px solid #27313f;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 20;
     }
     .sheet-header {
       display: grid;
@@ -8988,12 +9007,22 @@ ${autoPrintScript}
           margin: 0 !important;
           padding: 7mm 8mm 8mm !important;
           background: #ffffff !important;
-          border: 1.4px solid #27313f !important;
+          border: 1.4px solid transparent !important;
           border-radius: 3px !important;
           box-shadow: none !important;
           overflow: hidden !important;
           font-size: 13.2pt !important;
           line-height: 1.74 !important;
+        }
+        .wysiwyg-a4-export-stage .exam-sheet::before {
+          content: "" !important;
+          display: block !important;
+          position: absolute !important;
+          inset: 0 !important;
+          border: 1.4px solid #27313f !important;
+          border-radius: 2px !important;
+          pointer-events: none !important;
+          z-index: 20 !important;
         }
         .wysiwyg-a4-export-stage .sheet-header {
           display: grid !important;
@@ -9113,8 +9142,8 @@ ${autoPrintScript}
 
         const sheet = exportTarget.clonedSheet;
         const targetRect = sheet.getBoundingClientRect();
-        const targetWidth = Math.ceil(sheet.scrollWidth || targetRect.width || 794);
-        const targetHeight = Math.ceil(sheet.scrollHeight || targetRect.height || 1123);
+        const targetWidth = Math.ceil(targetRect.width || sheet.offsetWidth || sheet.scrollWidth || 794);
+        const targetHeight = Math.ceil(targetRect.height || sheet.offsetHeight || sheet.scrollHeight || 1123);
         const exportScale = Math.min(3, Math.max(2.2, window.devicePixelRatio || 2));
 
         const canvas = await html2canvas(sheet, {
