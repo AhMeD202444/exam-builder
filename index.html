@@ -8902,140 +8902,210 @@ ${autoPrintScript}
       link.remove();
     }
 
-    async function savePrintSheetAsImage() {
-      const fileName = getPreferredImageFileName();
-      let exportFrame = null;
-
-      try {
-        showImageSaveToast("جاري تجهيز الصورة بنفس تنسيق الـ PDF...", "info", {
-          duration: 1600,
-          minVisible: 1350,
-          gapAfter: 520,
-          toastKey: "image-save-progress"
-        });
-        const html2canvas = await ensureHtml2CanvasLoaded();
-        const html = getPrintDocumentHtml({ autoPrint: false });
-
-        exportFrame = document.createElement("iframe");
-        exportFrame.setAttribute("aria-hidden", "true");
-        exportFrame.style.position = "fixed";
-        exportFrame.style.insetInlineStart = "-12000px";
-        exportFrame.style.top = "0";
-        exportFrame.style.width = "210mm";
-        exportFrame.style.height = "297mm";
-        exportFrame.style.border = "0";
-        exportFrame.style.opacity = "0";
-        exportFrame.style.pointerEvents = "none";
-        document.body.appendChild(exportFrame);
-
-        const frameDoc = exportFrame.contentDocument || exportFrame.contentWindow.document;
-        frameDoc.open();
-        frameDoc.write(html);
-        frameDoc.close();
-
-        await waitForIframeReady(exportFrame);
-        applyImageExportPrintParity(frameDoc);
-        await waitForDocumentFonts(frameDoc);
-        await waitForMs(160);
-
-        const shell = frameDoc.querySelector(".print-shell");
-        if (!shell) throw new Error("print shell not found");
-
-        let exportTarget = frameDoc.querySelector(".image-export-stage");
-        if (!exportTarget) {
-          exportTarget = frameDoc.createElement("div");
-          exportTarget.className = "image-export-stage";
-          if (shell.parentNode) {
-            shell.parentNode.insertBefore(exportTarget, shell);
-            exportTarget.appendChild(shell);
-          }
+    function downloadCanvasAsPng(canvas, filename) {
+      return new Promise((resolve, reject) => {
+        if (!canvas) {
+          reject(new Error("Canvas not available"));
+          return;
         }
 
-        const targetRect = exportTarget.getBoundingClientRect();
-        const targetWidth = Math.ceil(exportTarget.scrollWidth || targetRect.width || 810);
-        const targetHeight = Math.ceil(exportTarget.scrollHeight || targetRect.height || 1140);
-        const exportScale = Math.min(3, Math.max(2.2, window.devicePixelRatio || 2));
+        const saveDataUrl = (dataUrl) => {
+          if (window.AndroidBridge && typeof window.AndroidBridge.saveBase64Image === "function") {
+            window.AndroidBridge.saveBase64Image(dataUrl, filename);
+          } else {
+            downloadDataUrl(dataUrl, filename);
+          }
+        };
 
-        const canvas = await html2canvas(exportTarget, {
+        const fallbackToDataUrl = () => {
+          try {
+            const dataUrl = canvas.toDataURL("image/png");
+            saveDataUrl(dataUrl);
+            resolve();
+          } catch (error) {
+            reject(error);
+          }
+        };
+
+        if (typeof canvas.toBlob === "function" && !(window.AndroidBridge && typeof window.AndroidBridge.saveBase64Image === "function")) {
+          try {
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                fallbackToDataUrl();
+                return;
+              }
+              try {
+                const objectUrl = URL.createObjectURL(blob);
+                downloadDataUrl(objectUrl, filename);
+                setTimeout(() => {
+                  try { URL.revokeObjectURL(objectUrl); } catch (_) {}
+                }, 3500);
+                resolve();
+              } catch (error) {
+                fallbackToDataUrl();
+              }
+            }, "image/png");
+          } catch (error) {
+            fallbackToDataUrl();
+          }
+          return;
+        }
+
+        fallbackToDataUrl();
+      });
+    }
+
+    async function renderCurrentPreviewSheetCanvas() {
+      const liveSheet = document.getElementById("sheetPreview");
+      if (!liveSheet) {
+        throw new Error("Preview sheet not found");
+      }
+
+      updatePrintPreview();
+      updatePreviewScale();
+      await waitForFontsReady();
+
+      const html2canvas = await ensureHtml2CanvasLoaded();
+      const rect = liveSheet.getBoundingClientRect();
+      const naturalWidth = Math.max(1, Math.ceil(liveSheet.scrollWidth || liveSheet.offsetWidth || rect.width || 794));
+      const naturalHeight = Math.max(1, Math.ceil(liveSheet.scrollHeight || liveSheet.offsetHeight || rect.height || 1123));
+
+      const holder = document.createElement("div");
+      holder.id = "previewPane";
+      holder.className = "preview-wrap image-export-preview-holder";
+      holder.setAttribute("data-image-export-holder", "true");
+      holder.style.setProperty("position", "fixed", "important");
+      holder.style.setProperty("left", "-20000px", "important");
+      holder.style.setProperty("top", "0", "important");
+      holder.style.setProperty("width", naturalWidth + "px", "important");
+      holder.style.setProperty("height", naturalHeight + "px", "important");
+      holder.style.setProperty("min-height", naturalHeight + "px", "important");
+      holder.style.setProperty("max-height", "none", "important");
+      holder.style.setProperty("padding", "0", "important");
+      holder.style.setProperty("margin", "0", "important");
+      holder.style.setProperty("overflow", "visible", "important");
+      holder.style.setProperty("background", "#ffffff", "important");
+      holder.style.setProperty("border", "0", "important");
+      holder.style.setProperty("box-shadow", "none", "important");
+      holder.style.setProperty("z-index", "-1", "important");
+      holder.style.setProperty("direction", "rtl", "important");
+
+      const stage = document.createElement("div");
+      stage.className = "sheet-stage";
+      stage.style.setProperty("position", "relative", "important");
+      stage.style.setProperty("width", naturalWidth + "px", "important");
+      stage.style.setProperty("height", naturalHeight + "px", "important");
+      stage.style.setProperty("min-height", naturalHeight + "px", "important");
+      stage.style.setProperty("padding", "0", "important");
+      stage.style.setProperty("margin", "0", "important");
+      stage.style.setProperty("overflow", "visible", "important");
+      stage.style.setProperty("background", "#ffffff", "important");
+      stage.style.setProperty("border", "0", "important");
+      stage.style.setProperty("border-radius", "0", "important");
+      stage.style.setProperty("box-shadow", "none", "important");
+
+      const clone = liveSheet.cloneNode(true);
+      clone.setAttribute("data-image-export-clone", "true");
+      clone.style.setProperty("position", "relative", "important");
+      clone.style.setProperty("inset", "auto", "important");
+      clone.style.setProperty("top", "0", "important");
+      clone.style.setProperty("right", "auto", "important");
+      clone.style.setProperty("bottom", "auto", "important");
+      clone.style.setProperty("left", "0", "important");
+      clone.style.setProperty("transform", "none", "important");
+      clone.style.setProperty("transform-origin", "top left", "important");
+      clone.style.setProperty("width", naturalWidth + "px", "important");
+      clone.style.setProperty("min-width", naturalWidth + "px", "important");
+      clone.style.setProperty("max-width", "none", "important");
+      clone.style.setProperty("min-height", naturalHeight + "px", "important");
+      clone.style.setProperty("height", "auto", "important");
+      clone.style.setProperty("margin", "0", "important");
+      clone.style.setProperty("box-sizing", "border-box", "important");
+      clone.style.setProperty("background", "#ffffff", "important");
+
+      stage.appendChild(clone);
+      holder.appendChild(stage);
+      document.body.appendChild(holder);
+
+      try {
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        return await html2canvas(clone, {
+          scale: 2,
           backgroundColor: "#ffffff",
-          scale: exportScale,
           useCORS: true,
           allowTaint: true,
           logging: false,
-          width: targetWidth,
-          height: targetHeight,
-          windowWidth: targetWidth,
-          windowHeight: targetHeight,
+          width: naturalWidth,
+          height: naturalHeight,
+          windowWidth: Math.max(naturalWidth, document.documentElement.clientWidth || 0),
+          windowHeight: Math.max(naturalHeight, document.documentElement.clientHeight || 0),
           scrollX: 0,
           scrollY: 0
         });
-
-        const dataUrl = canvas.toDataURL("image/png", 1.0);
-        const bridge =
-          (window.AndroidBridge && typeof window.AndroidBridge.saveBase64Image === "function" && window.AndroidBridge) ||
-          (window.Android && typeof window.Android.saveBase64Image === "function" && window.Android);
-
-        if (bridge) {
-          bridge.saveBase64Image(dataUrl, fileName);
-          showImageSaveToast("تم تجهيز الصورة وإرسالها للحفظ.", "success", {
-            duration: 2800,
-            minVisible: 1600,
-            gapAfter: 620,
-            toastKey: "image-save-bridge-success"
-          });
-        } else {
-          downloadDataUrl(dataUrl, fileName);
-          showImageSaveToast("تم تنزيل الصورة بصيغة PNG.", "success", {
-            duration: 2800,
-            minVisible: 1600,
-            gapAfter: 620,
-            toastKey: "image-save-download-success"
-          });
-        }
-      } catch (error) {
-        console.error("Save image error:", error);
-        showImageSaveToast("تعذر حفظ الصورة. تأكد من اتصال الإنترنت وجرب مرة ثانية.", "error", {
-          duration: 5600,
-          minVisible: 2200,
-          gapAfter: 700,
-          toastKey: "image-save-error"
-        });
       } finally {
-        if (exportFrame && exportFrame.parentNode) {
-          exportFrame.parentNode.removeChild(exportFrame);
-        }
+        holder.remove();
       }
     }
 
-    function requestPhonePrintName() {
-      // الاسم الافتراضي يؤخذ من اسم النموذج الحالي، والنافذة الأنيقة تسمح بتغييره قبل التحويل للنظام.
-      const finalName = getPreferredSaveName() || "exam";
-      state.saveName = finalName;
-      const saveNameInput = document.getElementById("saveName");
-      if (saveNameInput) saveNameInput.value = finalName;
-      saveDraft({ skipAutoSave: true });
-      renderSavedList();
-      return finalName;
+    async function savePrintSheetAsImageFallback(filename) {
+      const html2canvas = await ensureHtml2CanvasLoaded();
+      const printHtml = getPrintDocumentHtml({ forImage: true });
+      const iframe = document.createElement("iframe");
+      iframe.style.position = "fixed";
+      iframe.style.left = "-10000px";
+      iframe.style.top = "0";
+      iframe.style.width = "900px";
+      iframe.style.height = "1300px";
+      iframe.setAttribute("aria-hidden", "true");
+      document.body.appendChild(iframe);
+
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+      iframeDoc.open();
+      iframeDoc.write(printHtml);
+      iframeDoc.close();
+      await new Promise(resolve => setTimeout(resolve, 450));
+      const target = iframeDoc.querySelector(".exam-sheet");
+      if (!target) throw new Error("Fallback print sheet not found");
+      const canvas = await html2canvas(target, {
+        scale: 2,
+        backgroundColor: "#ffffff",
+        useCORS: true,
+        logging: false,
+        width: target.scrollWidth,
+        height: target.scrollHeight,
+        windowWidth: 900,
+        windowHeight: 1300
+      });
+      iframe.remove();
+      await downloadCanvasAsPng(canvas, filename);
     }
 
-    function prepareAndroidPrintPayload() {
-      const finalName = requestPhonePrintName();
-      if (!finalName) return null;
+    async function savePrintSheetAsImage() {
+      if (savingImage) return;
+      savingImage = true;
+      const triggerBtn = document.getElementById("saveImageBtn");
+      const originalText = triggerBtn ? triggerBtn.textContent : "حفظ صورة";
+      if (triggerBtn) triggerBtn.textContent = "جارٍ الحفظ...";
+      showToast("⏳ جاري تجهيز الصورة بنفس شكل المعاينة...");
 
-      const cleanFileName = String(finalName || "exam")
-        .replace(/[\\/:*?"<>|]+/g, "-")
-        .replace(/\s+/g, " ")
-        .trim() || "exam";
-
-      const html = getPrintDocumentHtml();
-
-      window.__ANDROID_PRINT_PAYLOAD__ = {
-        title: cleanFileName,
-        fileName: `${cleanFileName}.pdf`,
-        html
-      };
-
-      return window.__ANDROID_PRINT_PAYLOAD__;
+      try {
+        const title = getPreviewTitle() || "اسئلة";
+        const filename = sanitizeFileName(`${title}_${new Date().toISOString().slice(0,10)}`) + ".png";
+        try {
+          const canvas = await renderCurrentPreviewSheetCanvas();
+          await downloadCanvasAsPng(canvas, filename);
+        } catch (previewError) {
+          console.warn("Preview image export failed, using fallback print renderer", previewError);
+          await savePrintSheetAsImageFallback(filename);
+        }
+        showToast("✅ تم حفظ الصورة");
+      } catch (error) {
+        console.error(error);
+        showToast("تعذر حفظ الصورة. جرّب مرة ثانية.");
+      } finally {
+        if (triggerBtn) triggerBtn.textContent = originalText;
+        savingImage = false;
+      }
     }
 
     function updateAndroidPrintPayloadName(payload, nextName) {
