@@ -8902,108 +8902,79 @@ ${autoPrintScript}
       link.remove();
     }
 
+
     async function savePrintSheetAsImage() {
       const fileName = getPreferredImageFileName();
-      let exportFrame = null;
+      const sheet = document.getElementById("sheetPreview");
 
       try {
-        showImageSaveToast("جاري تجهيز الصورة بنفس تنسيق الـ PDF...", "info", {
-          duration: 1600,
-          minVisible: 1350,
+        showImageSaveToast("جاري حفظ نفس المعاينة الظاهرة...", "info", {
+          duration: 1500,
+          minVisible: 1200,
           gapAfter: 520,
           toastKey: "image-save-progress"
         });
+
         const html2canvas = await ensureHtml2CanvasLoaded();
-        const html = getPrintDocumentHtml({ autoPrint: false });
 
-        exportFrame = document.createElement("iframe");
-        exportFrame.setAttribute("aria-hidden", "true");
-        exportFrame.style.position = "fixed";
-        exportFrame.style.insetInlineStart = "-12000px";
-        exportFrame.style.top = "0";
-        exportFrame.style.width = "210mm";
-        exportFrame.style.height = "297mm";
-        exportFrame.style.border = "0";
-        exportFrame.style.opacity = "0";
-        exportFrame.style.pointerEvents = "none";
-        document.body.appendChild(exportFrame);
-
-        const frameDoc = exportFrame.contentDocument || exportFrame.contentWindow.document;
-        frameDoc.open();
-        frameDoc.write(html);
-        frameDoc.close();
-
-        await waitForIframeReady(exportFrame);
-        applyImageExportPrintParity(frameDoc);
-        await waitForDocumentFonts(frameDoc);
-        await waitForMs(160);
-
-        const shell = frameDoc.querySelector(".print-shell");
-        if (!shell) throw new Error("print shell not found");
-
-        let exportTarget = frameDoc.querySelector(".image-export-stage");
-        if (!exportTarget) {
-          exportTarget = frameDoc.createElement("div");
-          exportTarget.className = "image-export-stage";
-          if (shell.parentNode) {
-            shell.parentNode.insertBefore(exportTarget, shell);
-            exportTarget.appendChild(shell);
-          }
+        // WYSIWYG image export:
+        // capture the real preview element itself instead of generating a separate print/PDF document.
+        // This keeps subject/class automatic header offsets, spacing, scaling and borders identical
+        // to what the user sees inside "المعاينة النهائية للطباعة".
+        if (typeof renderPreview === "function") renderPreview();
+        await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
+        if (document.fonts && document.fonts.ready) {
+          try { await document.fonts.ready; } catch (_) {}
         }
 
-        const targetRect = exportTarget.getBoundingClientRect();
-        const targetWidth = Math.ceil(exportTarget.scrollWidth || targetRect.width || 810);
-        const targetHeight = Math.ceil(exportTarget.scrollHeight || targetRect.height || 1140);
-        const exportScale = Math.min(3, Math.max(2.2, window.devicePixelRatio || 2));
+        const liveSheet = document.getElementById("sheetPreview");
+        if (!liveSheet) throw new Error("لم يتم العثور على صفحة المعاينة.");
 
-        const canvas = await html2canvas(exportTarget, {
-          backgroundColor: "#ffffff",
-          scale: exportScale,
-          useCORS: true,
-          allowTaint: true,
-          logging: false,
-          width: targetWidth,
-          height: targetHeight,
-          windowWidth: targetWidth,
-          windowHeight: targetHeight,
-          scrollX: 0,
-          scrollY: 0
+        const rect = liveSheet.getBoundingClientRect();
+        const width = Math.ceil(Math.max(liveSheet.scrollWidth || 0, liveSheet.offsetWidth || 0, rect.width || 0));
+        const height = Math.ceil(Math.max(liveSheet.scrollHeight || 0, liveSheet.offsetHeight || 0, rect.height || 0));
+        const scale = Math.min(4, Math.max(2.6, window.devicePixelRatio || 2.6));
+
+        liveSheet.classList.add("image-export-live-preview");
+        try {
+          const canvas = await html2canvas(liveSheet, {
+            backgroundColor: "#ffffff",
+            scale,
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            width,
+            height,
+            scrollX: 0,
+            scrollY: -window.scrollY,
+            windowWidth: Math.max(document.documentElement.clientWidth || 0, width + 40),
+            windowHeight: Math.max(document.documentElement.clientHeight || 0, height + 40)
+          });
+
+          const link = document.createElement("a");
+          link.href = canvas.toDataURL("image/png", 1);
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+        } finally {
+          liveSheet.classList.remove("image-export-live-preview");
+        }
+
+        showImageSaveToast("تم حفظ الصورة بنفس شكل المعاينة.", "success", {
+          duration: 2600,
+          minVisible: 1900,
+          gapAfter: 650,
+          toastKey: "image-save-success"
         });
-
-        const dataUrl = canvas.toDataURL("image/png", 1.0);
-        const bridge =
-          (window.AndroidBridge && typeof window.AndroidBridge.saveBase64Image === "function" && window.AndroidBridge) ||
-          (window.Android && typeof window.Android.saveBase64Image === "function" && window.Android);
-
-        if (bridge) {
-          bridge.saveBase64Image(dataUrl, fileName);
-          showImageSaveToast("تم تجهيز الصورة وإرسالها للحفظ.", "success", {
-            duration: 2800,
-            minVisible: 1600,
-            gapAfter: 620,
-            toastKey: "image-save-bridge-success"
-          });
-        } else {
-          downloadDataUrl(dataUrl, fileName);
-          showImageSaveToast("تم تنزيل الصورة بصيغة PNG.", "success", {
-            duration: 2800,
-            minVisible: 1600,
-            gapAfter: 620,
-            toastKey: "image-save-download-success"
-          });
-        }
-      } catch (error) {
-        console.error("Save image error:", error);
-        showImageSaveToast("تعذر حفظ الصورة. تأكد من اتصال الإنترنت وجرب مرة ثانية.", "error", {
-          duration: 5600,
-          minVisible: 2200,
+      } catch (err) {
+        console.error("فشل حفظ الصورة:", err);
+        showImageSaveToast("تعذر حفظ الصورة، حاول مرة أخرى.", "error", {
+          duration: 3600,
+          minVisible: 2400,
           gapAfter: 700,
           toastKey: "image-save-error"
         });
-      } finally {
-        if (exportFrame && exportFrame.parentNode) {
-          exportFrame.parentNode.removeChild(exportFrame);
-        }
       }
     }
 
