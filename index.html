@@ -4739,153 +4739,175 @@
       transform: translateY(-0.12em) !important;
     }
 
-  /* FIX: خلي معاينة التطبيق تستخدم نفس مقاسات ورسم ورقة الطباعة/حفظ الصورة،
-     حتى الهيدر (المادة/الصف/الإدارة/العنوان) يبقى WYSIWYG على الهاتف والديسكتوب. */
-  #previewPane.sheet-stage {
-    overflow: hidden !important;
+  /* WYSIWYG A4 FIX: المعاينة هي مصدر الحقيقة للحفظ والصورة والـ PDF.
+     الورقة تبقى A4 حقيقية 210mm × 297mm، وعلى الهاتف تنعرض بالتصغير فقط بدون تغيير تخطيط الهيدر أو الهوامش. */
+  #previewPane .sheet-stage {
+    position: relative !important;
+    display: flex !important;
     justify-content: center !important;
     align-items: flex-start !important;
-    padding: 8px 0 !important;
-  }
-  #previewPane .preview-scale-wrap {
-    width: calc(210mm - 16mm) !important;
-    max-width: none !important;
-    min-width: calc(210mm - 16mm) !important;
-    transform-origin: top center !important;
-    will-change: transform;
-  }
-  #sheetPreview.exam-sheet {
-    width: calc(210mm - 16mm) !important;
-    min-width: calc(210mm - 16mm) !important;
-    max-width: none !important;
-    min-height: calc(297mm - 15mm) !important;
-    padding: 12mm 12mm 10mm !important;
-    border-radius: 2px !important;
-    box-sizing: border-box !important;
-  }
-  #previewPane #sheetPreview .sheet-header {
-    display: grid !important;
-    grid-template-columns: var(--header-side-width, 48mm) 1fr var(--header-side-width, 48mm) !important;
-    gap: var(--header-gap, 1mm) !important;
-    align-items: start !important;
-    direction: rtl !important;
-  }
-  #previewPane #sheetPreview .head-col {
-    min-width: 0 !important;
-    white-space: normal !important;
-  }
-  #previewPane #sheetPreview .head-col.right {
-    text-align: center !important;
-    justify-content: center !important;
-  }
-  #previewPane #sheetPreview .head-col.left {
-    direction: rtl !important;
-    text-align: right !important;
-    justify-content: center !important;
-    align-items: stretch !important;
-    padding-inline-start: 0 !important;
-    transform: none !important;
-    overflow: visible !important;
-  }
-  #previewPane #sheetPreview .head-col.left .meta-stack {
-    width: 100% !important;
-  }
-  #previewPane #sheetPreview .head-col.left .meta-line {
-    justify-content: flex-start !important;
-    text-align: right !important;
-    width: 100% !important;
-    overflow: visible !important;
-  }
-  #previewPane #sheetPreview .head-col.left .meta-label,
-  #previewPane #sheetPreview .head-col.left .meta-value {
-    font-size: var(--exam-header-meta-size, 12.1pt) !important;
-    line-height: 1.05 !important;
-    font-weight: 800 !important;
-  }
-  #previewPane #sheetPreview .head-col.left .meta-fill-line {
-    flex: 1 1 auto !important;
-    min-width: 10mm !important;
-    border-bottom: 1px dotted #111 !important;
-    height: .8em !important;
-    margin-inline-start: 1mm !important;
-  }
-  #previewPane #sheetPreview .head-title {
-    font-size: var(--exam-title-size, 15.6pt) !important;
-    line-height: 1.12 !important;
-    margin: 0 !important;
-  }
-  #previewPane #sheetPreview .head-year {
-    font-size: calc(var(--exam-title-size, 15.6pt) * 0.55) !important;
-    line-height: 1.05 !important;
-    margin-top: .6mm !important;
-  }
-  #previewPane #sheetPreview .exam-note {
-    font-size: var(--exam-note-size, 12.5pt) !important;
-    line-height: 1.35 !important;
+    overflow: auto !important;
+    padding: 8px !important;
   }
 
-  
-
-/* === A4 WYSIWYG FINAL LOCK: نفس أبعاد المعاينة تُستخدم للصورة والـ PDF === */
-#previewPane .sheet-stage{
-  --sheet-scale: 1;
-  width: 100% !important;
-  overflow: hidden !important;
-  display: flex !important;
-  justify-content: center !important;
-  align-items: flex-start !important;
-  padding: 0 !important;
-  min-height: 0 !important;
-  max-width: 100% !important;
-}
-#previewPane .sheet-stage #sheetPreview.exam-sheet{
-  width: 210mm !important;
-  min-width: 210mm !important;
-  max-width: 210mm !important;
-  height: 297mm !important;
-  min-height: 297mm !important;
-  max-height: 297mm !important;
-  margin: 0 auto !important;
-  padding: var(--page-margin-top, 7mm) var(--page-margin-right, 8mm) var(--page-margin-bottom, 8mm) var(--page-margin-left, 8mm) !important;
-  box-sizing: border-box !important;
-  border: 1px solid #27313f !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  background: #fff !important;
-  overflow: hidden !important;
-  flex: 0 0 210mm !important;
-  transform: scale(var(--sheet-scale)) !important;
-  transform-origin: top center !important;
-}
-#previewPane .sheet-stage #sheetPreview.exam-sheet::before{
-  display: none !important;
-}
-#previewPane .sheet-stage #sheetPreview .sheet-header{
-  grid-template-columns: var(--header-side-width, 48mm) minmax(0, 1fr) var(--header-side-width, 48mm) !important;
-}
-#previewPane .sheet-stage #sheetPreview .sheet-footer{
-  grid-template-columns: 1fr auto 1fr !important;
-}
-#previewPane .sheet-stage #sheetPreview .matching-grid{
-  grid-template-columns: 1fr 1fr !important;
-}
-@media (max-width: 820px){
-  #previewPane .sheet-stage{
-    padding: 0 !important;
-    min-height: 0 !important;
-    max-width: 100% !important;
-  }
-  #previewPane .sheet-stage #sheetPreview.exam-sheet{
+  #sheetPreview.exam-sheet,
+  .wysiwyg-a4-export-stage .exam-sheet {
     width: 210mm !important;
     min-width: 210mm !important;
     max-width: 210mm !important;
-    height: 297mm !important;
     min-height: 297mm !important;
-    max-height: 297mm !important;
-    padding: var(--page-margin-top, 7mm) var(--page-margin-right, 8mm) var(--page-margin-bottom, 8mm) var(--page-margin-left, 8mm) !important;
+    margin: 0 !important;
+    padding: 7mm 8mm 8mm !important;
+    background: #ffffff !important;
+    border: 1.4px solid #27313f !important;
+    border-radius: 3px !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    font-size: 13.2pt !important;
+    line-height: 1.74 !important;
   }
-}
-</style>
+
+  #previewPane #sheetPreview .sheet-header,
+  .wysiwyg-a4-export-stage .sheet-header {
+    display: grid !important;
+    grid-template-columns: var(--header-side-width, 48mm) minmax(0, 1fr) var(--header-side-width, 48mm) !important;
+    gap: var(--header-gap, 1mm) !important;
+    align-items: start !important;
+    margin-top: var(--header-margin-top, 0mm) !important;
+    margin-bottom: var(--header-margin-bottom, 2mm) !important;
+    direction: rtl !important;
+  }
+
+  #previewPane #sheetPreview .matching-grid,
+  .wysiwyg-a4-export-stage .matching-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  #previewPane #sheetPreview .head-col,
+  .wysiwyg-a4-export-stage .head-col {
+    min-width: 0 !important;
+    white-space: normal !important;
+  }
+
+  #previewPane #sheetPreview .head-col.right,
+  .wysiwyg-a4-export-stage .head-col.right {
+    text-align: var(--header-right-align, right) !important;
+    padding-right: var(--header-right-padding, 2mm) !important;
+  }
+
+  #previewPane #sheetPreview .head-col.left,
+  .wysiwyg-a4-export-stage .head-col.left {
+    text-align: var(--header-left-align, left) !important;
+    padding-left: var(--header-left-padding, 0mm) !important;
+    direction: rtl !important;
+    overflow: visible !important;
+  }
+
+  #previewPane #sheetPreview .head-col.left .meta-stack,
+  .wysiwyg-a4-export-stage .head-col.left .meta-stack {
+    width: fit-content !important;
+    max-width: none !important;
+    margin-right: auto !important;
+    margin-left: 0 !important;
+    padding-left: 1.5mm !important;
+  }
+
+  #previewPane #sheetPreview .head-col.left .meta-row,
+  .wysiwyg-a4-export-stage .head-col.left .meta-row {
+    width: auto !important;
+    min-width: 0 !important;
+    display: grid !important;
+    grid-template-columns: 13.5mm auto !important;
+    align-items: baseline !important;
+    column-gap: 1.05mm !important;
+    justify-content: start !important;
+    direction: rtl !important;
+  }
+
+  #previewPane #sheetPreview .head-col.left .meta-label,
+  .wysiwyg-a4-export-stage .head-col.left .meta-label,
+  #previewPane #sheetPreview .head-col.left .meta-value,
+  .wysiwyg-a4-export-stage .head-col.left .meta-value {
+    display: inline-block !important;
+    white-space: nowrap !important;
+  }
+
+  #previewPane #sheetPreview .head-col.left .meta-label,
+  .wysiwyg-a4-export-stage .head-col.left .meta-label {
+    text-align: right !important;
+  }
+
+  #previewPane #sheetPreview .head-col.left .meta-row-default .meta-value,
+  .wysiwyg-a4-export-stage .head-col.left .meta-row-default .meta-value {
+    width: 20mm !important;
+    min-width: 20mm !important;
+  }
+
+  #previewPane #sheetPreview .head-col.left .meta-fill-line,
+  .wysiwyg-a4-export-stage .head-col.left .meta-fill-line {
+    display: block !important;
+    flex: 0 0 20mm !important;
+    width: 20mm !important;
+    min-width: 20mm !important;
+    height: 0.72em !important;
+    border-bottom: 1.15px dotted #111 !important;
+    transform: translateY(-0.12em) !important;
+  }
+
+  .wysiwyg-a4-export-stage {
+    position: fixed !important;
+    inset-block-start: 0 !important;
+    inset-inline-start: -12000px !important;
+    width: 210mm !important;
+    min-height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+    overflow: visible !important;
+    pointer-events: none !important;
+    z-index: -1 !important;
+  }
+
+  .wysiwyg-a4-export-stage,
+  .wysiwyg-a4-export-stage * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .wysiwyg-a4-export-stage .exam-sheet {
+    position: relative !important;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    transform-origin: top left !important;
+    box-shadow: none !important;
+  }
+
+  @media only screen and (max-width: 920px) {
+    #previewPane {
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    #previewPane .sheet-stage {
+      display: block !important;
+      width: 100% !important;
+      overflow: hidden !important;
+      padding: 8px 0 12px !important;
+      border-radius: 18px !important;
+      background: linear-gradient(180deg, rgba(241, 245, 252, .96), rgba(231, 238, 248, .94)) !important;
+    }
+
+    #previewPane #sheetPreview.exam-sheet {
+      position: absolute !important;
+      top: 8px !important;
+      left: 50% !important;
+      transform-origin: top center !important;
+      will-change: transform !important;
+    }
+  }
+
+  </style>
   <style id="advancedDynamicStyle"></style>
 </head>
 <body>
@@ -7712,30 +7734,40 @@
     }
 
     function syncPhonePreviewScale() {
-      const stage = document.querySelector("#previewPane .sheet-stage");
       const sheet = document.getElementById("sheetPreview");
-      if (!stage || !sheet) return;
+      const stage = sheet ? sheet.closest(".sheet-stage") : null;
+      if (!sheet || !stage) return;
 
-      // الورقة تبقى A4 حقيقية 210mm × 297mm؛ التصغير فقط transform للعرض داخل الموبايل.
-      sheet.style.position = "";
-      sheet.style.top = "";
-      sheet.style.left = "";
-      const availableWidth = Math.max(0, stage.clientWidth - 2);
-      const naturalWidth = sheet.offsetWidth || sheet.scrollWidth || 1;
-      const naturalHeight = sheet.offsetHeight || sheet.scrollHeight || 1;
-      const scale = Math.min(1, availableWidth / naturalWidth);
-
-      stage.style.setProperty("--sheet-scale", String(scale));
-      sheet.style.transform = `scale(${scale})`;
-      sheet.style.transformOrigin = "top center";
-
-      if (scale < 1) {
-        stage.style.height = `${Math.ceil(naturalHeight * scale)}px`;
-        stage.style.minHeight = `${Math.ceil(naturalHeight * scale)}px`;
-      } else {
+      const isPhone = window.innerWidth <= 920;
+      if (!isPhone) {
+        sheet.style.position = "";
+        sheet.style.top = "";
+        sheet.style.left = "";
+        sheet.style.transform = "";
         stage.style.height = "";
         stage.style.minHeight = "";
+        return;
       }
+
+      const availableWidth = Math.max(0, stage.clientWidth - 4);
+      if (!availableWidth) return;
+
+      sheet.style.width = "210mm";
+      sheet.style.minWidth = "210mm";
+      sheet.style.maxWidth = "210mm";
+      sheet.style.minHeight = "297mm";
+      sheet.style.padding = "7mm 8mm 8mm";
+      sheet.style.position = "absolute";
+      sheet.style.top = "8px";
+      sheet.style.left = "50%";
+      sheet.style.transform = "translateX(-50%) scale(1)";
+      const naturalWidth = sheet.offsetWidth || 1;
+      const naturalHeight = sheet.offsetHeight || 1;
+      const scale = Math.min(1, availableWidth / naturalWidth);
+      sheet.style.transform = `translateX(-50%) scale(${scale})`;
+      const scaledHeight = Math.ceil(naturalHeight * scale);
+      stage.style.height = `${scaledHeight + 16}px`;
+      stage.style.minHeight = `${scaledHeight + 16}px`;
     }
 
     function applyAdaptiveDefinitions(root = document) {
@@ -8408,22 +8440,17 @@ ${buildPrintScopeCss()}
     }
     .print-shell {
       width: 210mm;
-      min-width: 210mm;
-      max-width: 210mm;
-      height: 297mm;
       min-height: 297mm;
-      max-height: 297mm;
       margin: 0 auto;
       background: #fff;
-      border-radius: 0;
-      border: 1px solid #27313f;
-      box-shadow: none;
-      padding: var(--page-margin-top, 7mm) var(--page-margin-right, 8mm) var(--page-margin-bottom, 8mm) var(--page-margin-left, 8mm);
+      border-radius: 3px;
+      border: 1.4px solid #27313f;
+      box-shadow: 0 14px 40px rgba(15, 23, 42, 0.18);
+      padding: 7mm 8mm 8mm;
       position: relative;
       overflow: hidden;
       font-size: 13.2pt;
       line-height: 1.74;
-      box-sizing: border-box;
     }
     .print-shell::before {
       display: none;
@@ -8739,9 +8766,7 @@ ${buildPrintScopeCss()}
     @media print {
       html, body {
         width: 210mm;
-        height: 297mm;
-        margin: 0;
-        padding: 0;
+        min-height: 297mm;
         background: #fff;
       }
       body {
@@ -8751,34 +8776,30 @@ ${buildPrintScopeCss()}
         width: 210mm;
         min-width: 210mm;
         max-width: 210mm;
-        height: 297mm;
         min-height: 297mm;
-        max-height: 297mm;
-        margin: 0;
-        border-radius: 0;
+        margin: 0 auto;
+        border-radius: 3px;
         box-shadow: none;
-        padding: var(--page-margin-top, 7mm) var(--page-margin-right, 8mm) var(--page-margin-bottom, 8mm) var(--page-margin-left, 8mm);
+        padding: 7mm 8mm 8mm;
       }
     }
     @media screen and (max-width: 900px) {
-      body { padding: 0; }
+      body {
+        padding: 8px;
+        overflow: auto;
+      }
       .print-shell {
         width: 210mm;
         min-width: 210mm;
         max-width: 210mm;
-        height: 297mm;
         min-height: 297mm;
-        max-height: 297mm;
-        padding: var(--page-margin-top, 7mm) var(--page-margin-right, 8mm) var(--page-margin-bottom, 8mm) var(--page-margin-left, 8mm);
+        padding: 7mm 8mm 8mm;
       }
       .sheet-header {
-        grid-template-columns: var(--header-side-width, 48mm) minmax(0, 1fr) var(--header-side-width, 48mm);
-      }
-      .sheet-footer {
-        grid-template-columns: 1fr auto 1fr;
+        grid-template-columns: var(--header-side-width, 48mm) minmax(0, 1fr) var(--header-side-width, 48mm) !important;
       }
       .matching-grid {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: 1fr 1fr !important;
       }
     }
   </style>
@@ -8932,42 +8953,136 @@ ${autoPrintScript}
       }
     }
 
-    function applyImageExportPrintParity(doc) {
-      const style = doc.createElement("style");
-      style.id = "imageExportPrintParityStyle";
-      style.textContent = `
-        html, body {
-          width: auto !important;
-          min-height: auto !important;
+    function getA4WysiwygExportCssText() {
+      return `
+        .wysiwyg-a4-export-stage,
+        .wysiwyg-a4-export-stage * {
+          box-sizing: border-box !important;
+          -webkit-print-color-adjust: exact !important;
+          print-color-adjust: exact !important;
+        }
+        .wysiwyg-a4-export-stage {
+          position: fixed !important;
+          inset-block-start: 0 !important;
+          inset-inline-start: -12000px !important;
+          width: 210mm !important;
+          min-height: 297mm !important;
           margin: 0 !important;
           padding: 0 !important;
           background: #ffffff !important;
           overflow: visible !important;
+          pointer-events: none !important;
+          opacity: 1 !important;
+          z-index: -1 !important;
         }
-        body {
-          display: flex !important;
-          justify-content: center !important;
-          align-items: flex-start !important;
-        }
-        .image-export-stage {
-          display: inline-block !important;
-          padding: 8px !important;
-          background: #ffffff !important;
-          overflow: visible !important;
-        }
-        .print-shell {
+        .wysiwyg-a4-export-stage .exam-sheet {
+          position: relative !important;
+          top: auto !important;
+          left: auto !important;
+          transform: none !important;
+          transform-origin: top left !important;
           width: 210mm !important;
+          min-width: 210mm !important;
+          max-width: 210mm !important;
           min-height: 297mm !important;
           margin: 0 !important;
+          padding: 7mm 8mm 8mm !important;
+          background: #ffffff !important;
           border: 1.4px solid #27313f !important;
           border-radius: 3px !important;
           box-shadow: none !important;
-          background: #fff !important;
-          padding: 7mm 8mm 8mm !important;
           overflow: hidden !important;
+          font-size: 13.2pt !important;
+          line-height: 1.74 !important;
+        }
+        .wysiwyg-a4-export-stage .sheet-header {
+          display: grid !important;
+          grid-template-columns: var(--header-side-width, 48mm) minmax(0, 1fr) var(--header-side-width, 48mm) !important;
+          gap: var(--header-gap, 1mm) !important;
+          align-items: start !important;
+          margin-top: var(--header-margin-top, 0mm) !important;
+          margin-bottom: var(--header-margin-bottom, 2mm) !important;
+          direction: rtl !important;
+        }
+        .wysiwyg-a4-export-stage .matching-grid {
+          grid-template-columns: 1fr 1fr !important;
+        }
+        .wysiwyg-a4-export-stage .head-col {
+          min-width: 0 !important;
+          white-space: normal !important;
+        }
+        .wysiwyg-a4-export-stage .head-col.right {
+          text-align: var(--header-right-align, right) !important;
+          padding-right: var(--header-right-padding, 2mm) !important;
+        }
+        .wysiwyg-a4-export-stage .head-col.left {
+          text-align: var(--header-left-align, left) !important;
+          padding-left: var(--header-left-padding, 0mm) !important;
+          direction: rtl !important;
+          overflow: visible !important;
+        }
+        .wysiwyg-a4-export-stage .head-col.left .meta-stack {
+          width: fit-content !important;
+          max-width: none !important;
+          margin-right: auto !important;
+          margin-left: 0 !important;
+          padding-left: 1.5mm !important;
+        }
+        .wysiwyg-a4-export-stage .head-col.left .meta-row {
+          width: auto !important;
+          min-width: 0 !important;
+          display: grid !important;
+          grid-template-columns: 13.5mm auto !important;
+          align-items: baseline !important;
+          column-gap: 1.05mm !important;
+          justify-content: start !important;
+          direction: rtl !important;
+        }
+        .wysiwyg-a4-export-stage .head-col.left .meta-label,
+        .wysiwyg-a4-export-stage .head-col.left .meta-value {
+          display: inline-block !important;
+          white-space: nowrap !important;
+        }
+        .wysiwyg-a4-export-stage .head-col.left .meta-label {
+          text-align: right !important;
+        }
+        .wysiwyg-a4-export-stage .head-col.left .meta-row-default .meta-value {
+          width: 20mm !important;
+          min-width: 20mm !important;
+        }
+        .wysiwyg-a4-export-stage .head-col.left .meta-fill-line {
+          display: block !important;
+          flex: 0 0 20mm !important;
+          width: 20mm !important;
+          min-width: 20mm !important;
+          height: 0.72em !important;
+          border-bottom: 1.15px dotted #111 !important;
+          transform: translateY(-0.12em) !important;
         }
       `;
-      doc.head.appendChild(style);
+    }
+
+    function buildA4WysiwygExportTarget() {
+      renderPreview();
+      const sourceSheet = document.getElementById("sheetPreview");
+      if (!sourceSheet) throw new Error("preview sheet not found");
+
+      const exportStage = document.createElement("div");
+      exportStage.className = "wysiwyg-a4-export-stage";
+
+      const style = document.createElement("style");
+      style.textContent = getA4WysiwygExportCssText();
+
+      const clonedSheet = sourceSheet.cloneNode(true);
+      clonedSheet.id = "sheetPreviewA4ExportClone";
+      clonedSheet.removeAttribute("style");
+
+      exportStage.appendChild(style);
+      exportStage.appendChild(clonedSheet);
+      document.body.appendChild(exportStage);
+
+      applyAdaptiveDefinitions(clonedSheet);
+      return { exportStage, clonedSheet };
     }
 
     function downloadDataUrl(dataUrl, fileName) {
@@ -8981,59 +9096,28 @@ ${autoPrintScript}
 
     async function savePrintSheetAsImage() {
       const fileName = getPreferredImageFileName();
-      let exportFrame = null;
+      let exportTarget = null;
 
       try {
-        showImageSaveToast("جاري تجهيز الصورة بنفس تنسيق الـ PDF...", "info", {
+        showImageSaveToast("جاري حفظ نفس ورقة المعاينة A4...", "info", {
           duration: 1600,
           minVisible: 1350,
           gapAfter: 520,
           toastKey: "image-save-progress"
         });
+
         const html2canvas = await ensureHtml2CanvasLoaded();
-        const html = getPrintDocumentHtml({ autoPrint: false });
+        exportTarget = buildA4WysiwygExportTarget();
+        await waitForDocumentFonts(document, 2600);
+        await waitForMs(120);
 
-        exportFrame = document.createElement("iframe");
-        exportFrame.setAttribute("aria-hidden", "true");
-        exportFrame.style.position = "fixed";
-        exportFrame.style.insetInlineStart = "-12000px";
-        exportFrame.style.top = "0";
-        exportFrame.style.width = "210mm";
-        exportFrame.style.height = "297mm";
-        exportFrame.style.border = "0";
-        exportFrame.style.opacity = "0";
-        exportFrame.style.pointerEvents = "none";
-        document.body.appendChild(exportFrame);
-
-        const frameDoc = exportFrame.contentDocument || exportFrame.contentWindow.document;
-        frameDoc.open();
-        frameDoc.write(html);
-        frameDoc.close();
-
-        await waitForIframeReady(exportFrame);
-        applyImageExportPrintParity(frameDoc);
-        await waitForDocumentFonts(frameDoc);
-        await waitForMs(160);
-
-        const shell = frameDoc.querySelector(".print-shell");
-        if (!shell) throw new Error("print shell not found");
-
-        let exportTarget = frameDoc.querySelector(".image-export-stage");
-        if (!exportTarget) {
-          exportTarget = frameDoc.createElement("div");
-          exportTarget.className = "image-export-stage";
-          if (shell.parentNode) {
-            shell.parentNode.insertBefore(exportTarget, shell);
-            exportTarget.appendChild(shell);
-          }
-        }
-
-        const targetRect = exportTarget.getBoundingClientRect();
-        const targetWidth = Math.ceil(exportTarget.scrollWidth || targetRect.width || 810);
-        const targetHeight = Math.ceil(exportTarget.scrollHeight || targetRect.height || 1140);
+        const sheet = exportTarget.clonedSheet;
+        const targetRect = sheet.getBoundingClientRect();
+        const targetWidth = Math.ceil(sheet.scrollWidth || targetRect.width || 794);
+        const targetHeight = Math.ceil(sheet.scrollHeight || targetRect.height || 1123);
         const exportScale = Math.min(3, Math.max(2.2, window.devicePixelRatio || 2));
 
-        const canvas = await html2canvas(exportTarget, {
+        const canvas = await html2canvas(sheet, {
           backgroundColor: "#ffffff",
           scale: exportScale,
           useCORS: true,
@@ -9054,7 +9138,7 @@ ${autoPrintScript}
 
         if (bridge) {
           bridge.saveBase64Image(dataUrl, fileName);
-          showImageSaveToast("تم تجهيز الصورة وإرسالها للحفظ.", "success", {
+          showImageSaveToast("تم تجهيز صورة A4 المطابقة للمعاينة وإرسالها للحفظ.", "success", {
             duration: 2800,
             minVisible: 1600,
             gapAfter: 620,
@@ -9062,7 +9146,7 @@ ${autoPrintScript}
           });
         } else {
           downloadDataUrl(dataUrl, fileName);
-          showImageSaveToast("تم تنزيل الصورة بصيغة PNG.", "success", {
+          showImageSaveToast("تم تنزيل صورة A4 مطابقة للمعاينة بصيغة PNG.", "success", {
             duration: 2800,
             minVisible: 1600,
             gapAfter: 620,
@@ -9078,9 +9162,10 @@ ${autoPrintScript}
           toastKey: "image-save-error"
         });
       } finally {
-        if (exportFrame && exportFrame.parentNode) {
-          exportFrame.parentNode.removeChild(exportFrame);
+        if (exportTarget && exportTarget.exportStage && exportTarget.exportStage.parentNode) {
+          exportTarget.exportStage.parentNode.removeChild(exportTarget.exportStage);
         }
+        syncPhonePreviewScale();
       }
     }
 
@@ -10129,6 +10214,12 @@ ${autoPrintScript}
     window.addEventListener("resize", toggleScrollTopButton, { passive: true });
     window.addEventListener("resize", syncPhonePreviewScale, { passive: true });
     window.addEventListener("resize", syncSymbolDrawerBounds, { passive: true });
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        balanceHeaderColumns();
+        syncPhonePreviewScale();
+      }).catch(() => {});
+    }
     window.addEventListener("orientationchange", syncAdvancedStepperInteractionMode, { passive: true });
     window.addEventListener("orientationchange", toggleScrollTopButton, { passive: true });
     window.addEventListener("orientationchange", syncPhonePreviewScale, { passive: true });
